@@ -1,8 +1,16 @@
+using AppTaxi.Servicios;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
-
+builder.Services.AddScoped<I_Conductor>();
+builder.Services.AddScoped<I_Empresa>();
+builder.Services.AddScoped<I_Horario>();
+builder.Services.AddScoped<I_Invitado>();
+builder.Services.AddScoped<I_Propietario>();
+builder.Services.AddScoped<I_Rol>();
+builder.Services.AddScoped<I_Usuario>();
+builder.Services.AddScoped<I_Vehiculo>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
