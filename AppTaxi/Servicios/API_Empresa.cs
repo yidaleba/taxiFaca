@@ -1,33 +1,98 @@
 ﻿using AppTaxi.Models;
+using Newtonsoft.Json;
+using System.Text;
 
 namespace AppTaxi.Servicios
 {
-    public class API_Empresa : I_Empresa
+    public class API_Empresa : Autenticacion, I_Empresa
     {
 
-        public Task<bool> Editar(Empresa empresa)
+        public async Task<List<Empresa>> Lista()
         {
-            throw new NotImplementedException();
+            List<Empresa> lista = new List<Empresa>();
+            await Autenticar();
+
+            var response = await _httpClient.GetAsync("api/Empresa/Lista");
+
+            if (response.IsSuccessStatusCode)
+            {
+                var json_respuesta = await response.Content.ReadAsStringAsync();
+                var resultado = JsonConvert.DeserializeObject<ResultadoApi<List<Empresa>>>(json_respuesta);
+                lista = resultado.Response;
+
+            }
+            return lista;
+
         }
 
-        public Task<bool> Eliminar(int IdEmpresa)
+        public async Task<Empresa> Obtener(int IdEmpresa)
         {
-            throw new NotImplementedException();
+            Empresa empresa = new Empresa();
+            await Autenticar();
+
+            var response = await _httpClient.GetAsync($"api/Empresa/Obtener/{IdEmpresa}");
+
+            if (response.IsSuccessStatusCode)
+            {
+                var json_respuesta = await response.Content.ReadAsStringAsync();
+                var resultado = JsonConvert.DeserializeObject<ResultadoApi<Empresa>>(json_respuesta);
+                empresa = resultado.Response;
+
+            }
+            return empresa;
         }
 
-        public Task<bool> Guardar(Empresa empresa)
+        public async Task<bool> Guardar(Empresa empresa)
         {
-            throw new NotImplementedException();
+            bool Respuesta = false;
+            await Autenticar();
+
+            var contenido = new StringContent(JsonConvert.SerializeObject(empresa), Encoding.UTF8, "application/json");
+
+            var response = await _httpClient.PostAsync("api/Empresa/Guardar/", contenido);
+
+            if (response.IsSuccessStatusCode)
+            {
+                Respuesta = true;
+
+            }
+            return Respuesta;
         }
 
-        public Task<List<Empresa>> Lista()
+        public async Task<bool> Editar(Empresa empresa)
         {
-            throw new NotImplementedException();
+            bool Respuesta = false;
+            await Autenticar();
+
+            var contenido = new StringContent(JsonConvert.SerializeObject(empresa), Encoding.UTF8, "application/json");
+
+            var response = await _httpClient.PutAsync("api/Empresa/Editar/", contenido);
+
+            if (response.IsSuccessStatusCode)
+            {
+                Respuesta = true;
+
+            }
+            return Respuesta;
         }
 
-        public Task<Empresa> Obtener(int IdEmpresa)
+        public async Task<bool> Eliminar(int IdEmpresa)
         {
-            throw new NotImplementedException();
+            bool Respuesta = false;
+            await Autenticar();
+
+            var response = await _httpClient.DeleteAsync($"api/Empresa/Eliminar/{IdEmpresa}");
+
+            if (response.IsSuccessStatusCode)
+            {
+                Respuesta = true;
+
+            }
+            return Respuesta;
         }
+
+
+        
+
     }
 }

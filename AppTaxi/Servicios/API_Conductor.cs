@@ -6,9 +6,9 @@ using System.Text;
 
 namespace AppTaxi.Servicios
 {
-    public class API_Conductor:I_Conductor
+    public class API_Conductor:Autenticacion,I_Conductor
     {
-        private static string _correo;
+        /*private static string _correo;
         private static string _contrasena;
         private static string _baseUrl;
         private static string _token;
@@ -38,19 +38,19 @@ namespace AppTaxi.Servicios
             var resultado = JsonConvert.DeserializeObject<ResultadoCredencial>(json_respuesta);
             _token = resultado.Token;
         }
-
+        */
         public async Task<bool> Editar(Conductor conductor)
         {
             bool Respuesta = false;
             await Autenticar();
 
-            var cliente = new HttpClient();
+            /*var cliente = new HttpClient();
             cliente.BaseAddress = new Uri(_baseUrl);
-            cliente.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _token);
+            cliente.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _token);*/
 
             var contenido = new StringContent(JsonConvert.SerializeObject(conductor), Encoding.UTF8, "application/json");
 
-            var response = await cliente.PutAsync("api/Conductor/Editar/", contenido);
+            var response = await _httpClient.PutAsync("api/Conductor/Editar/", contenido);
 
             if (response.IsSuccessStatusCode)
             {
@@ -65,13 +65,13 @@ namespace AppTaxi.Servicios
             bool Respuesta = false;
             await Autenticar();
 
-            var cliente = new HttpClient();
+            /*var cliente = new HttpClient();
             cliente.BaseAddress = new Uri(_baseUrl);
-            cliente.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _token);
+            cliente.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _token); */
 
          
 
-            var response = await cliente.DeleteAsync($"api/Conductor/Eliminar/{IdConductor}");
+            var response = await _httpClient.DeleteAsync($"api/Conductor/Eliminar/{IdConductor}");
 
             if (response.IsSuccessStatusCode)
             {
@@ -86,13 +86,13 @@ namespace AppTaxi.Servicios
             bool Respuesta = false;
             await Autenticar();
 
-            var cliente = new HttpClient();
+            /*var cliente = new HttpClient();
             cliente.BaseAddress = new Uri(_baseUrl);
-            cliente.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _token);
+            cliente.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _token);*/
 
             var contenido = new StringContent(JsonConvert.SerializeObject(conductor), Encoding.UTF8, "application/json");
 
-            var response = await cliente.PostAsync("api/Conductor/Guardar/",contenido);
+            var response = await _httpClient.PostAsync("api/Conductor/Guardar/",contenido);
 
             if (response.IsSuccessStatusCode)
             {
@@ -107,10 +107,10 @@ namespace AppTaxi.Servicios
             List<Conductor> lista = new List<Conductor>();
             await Autenticar();
 
-            var cliente = new HttpClient();
+            /*var cliente = new HttpClient();
             cliente.BaseAddress = new Uri(_baseUrl);
-            cliente.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _token);
-            var response = await cliente.GetAsync("api/Conductor/Lista");
+            cliente.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _token);*/
+            var response = await _httpClient.GetAsync("api/Conductor/Lista");
 
             if (response.IsSuccessStatusCode)
             {
@@ -127,10 +127,10 @@ namespace AppTaxi.Servicios
             Conductor conductor = new Conductor();
             await Autenticar();
 
-            var cliente = new HttpClient();
+            /*var cliente = new HttpClient();
             cliente.BaseAddress = new Uri(_baseUrl);
-            cliente.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _token);
-            var response = await cliente.GetAsync($"api/Conductor/Obtener/{IdConductor}");
+            cliente.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _token);*/
+            var response = await _httpClient.GetAsync($"api/Conductor/Obtener/{IdConductor}");
 
             if (response.IsSuccessStatusCode)
             {
