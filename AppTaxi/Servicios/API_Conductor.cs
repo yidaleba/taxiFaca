@@ -1,4 +1,4 @@
-﻿using APITaxi.Models;
+﻿
 using AppTaxi.Models;
 using Newtonsoft.Json;
 using System.Net.Http.Headers;
@@ -6,14 +6,14 @@ using System.Text;
 
 namespace AppTaxi.Servicios
 {
-    public class Servicio_API:IServicio_API
+    public class API_Conductor:I_Conductor
     {
         private static string _correo;
         private static string _contrasena;
         private static string _baseUrl;
         private static string _token;
 
-        public Servicio_API()
+        public API_Conductor()
         {
             var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json").Build();
             _correo = builder.GetSection("ApiSettings:correo").Value;

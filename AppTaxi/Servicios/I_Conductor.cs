@@ -1,7 +1,7 @@
-﻿using APITaxi.Models;
+﻿using AppTaxi.Models;
 namespace AppTaxi.Servicios
 {
-    public interface IServicio_API
+    public interface I_Conductor
     {
         //Interfaces de Conductor:
         Task<List<Conductor>> Lista();

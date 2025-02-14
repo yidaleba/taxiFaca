@@ -1,4 +1,4 @@
-﻿namespace APITaxi.Models
+﻿namespace AppTaxi.Models
 {
     public class Propietario
     {
