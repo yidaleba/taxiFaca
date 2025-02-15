@@ -1,36 +1,35 @@
-﻿@model AppTaxi.Models.Consulta
-
+﻿@model Consulta
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Consultar Taxi";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Index</h1>
+<h1>Datos de los vehiculos autorizados</h1>
 
-<h4>Consulta</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Index">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Documento" class="control-label"></label>
-                <input asp-for="Documento" class="form-control" />
-                <span asp-validation-for="Documento" class="text-danger"></span>
+<div class="card">
+    <div class="card-header">
+        Ingresa los Datos
+    </div>
+    <div class="card-body">
+        <form asp-action="Consultar" asp-controller="Inicio" method="post">
+           <h3>Digite alguno de los dos datos:</h3> 
+            <div class="mb-2">
+                <label class="form-label">Numero de Documento:</label>
+                <input type="text" placeholder="1234567890" class="form-control form-control-sm" asp-for="Documento" />
+                             
             </div>
-            <div class="form-group">
-                <label asp-for="Placa" class="control-label"></label>
-                <input asp-for="Placa" class="form-control" />
-                <span asp-validation-for="Placa" class="text-danger"></span>
+            <hr />
+            <div class="mb-2">
+                <label class="form-label">Placa del Vehículo:</label>
+                <input type="text" placeholder="AAA123" class="form-control form-control-sm" asp-for="Placa" />
+
             </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
+            <div> @ViewBag.Mensaje</div>
+            <button type="submit" class="btn btn-success btn-sm">Consultar</button>
+
         </form>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
+
 

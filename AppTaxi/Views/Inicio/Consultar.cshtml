@@ -1,0 +1,52 @@
+﻿@model Invitado
+@{
+    ViewData["Title"] = "Consultar";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Ficha Técnica</h1>
+
+@if(Model != null)
+{
+    <div class="card mb-3" style="max-width: 540px;">
+        <div class="row g-0">
+            <div class="col-md-4">
+                <!-- Imagen-->
+                <img src="@Model.Foto" class="img-fluid rounded-start" alt="https://icons.veryicon.com/png/o/internet--web/prejudice/user-128.png">
+            </div>
+            <div class="col-md-8">
+                <div class="card-body">
+                    <h5 class="card-title">Información</h5>
+                    <!-- Los textos-->
+                    <p class="card-text"><strong>Nombre : </strong>@Model.Nombre</p>
+                    <p class="card-text"><strong>Cedula : </strong>@Model.NumeroCedula</p>
+                    <p class="card-text"><strong>RH : </strong>@Model.GrupoSanguineo</p>
+                    <p class="card-text"><strong>EPS : </strong>@Model.Eps</p>
+                    <p class="card-text"><strong>ARL : </strong>@Model.Arl</p>
+                    <p class="card-text"><strong>Estado: </strong>@(Model.EstadoConductor ? "Activo" : "Inactivo")</p>
+                    <hr />
+                    <p class="card-text"><strong>Empresa : </strong>@Model.NombreEmpresa</p>
+                    <p class="card-text"><strong>NIT : </strong>@Model.Nit</p>
+                    <hr />
+                    <p class="card-text"><strong>Placa : </strong>@Model.Placa</p>
+                    <p class="card-text"><strong>Estado Vehículo : </strong>@(Model.EstadoVehiculo ? "Habilitado" : "No Habilitado")</p>
+                    <p class="card-text"><strong>SOAT : </strong>@Model.Soat</p>
+                    <p class="card-text"><strong>Tecno Mecanica : </strong>@Model.TecnicoMecanica</p>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <div class="card text-dark bg-warning mb-3" style="max-width: 18rem;">
+        <div class="card-header">Error al Buscar</div>
+        <div class="card-body">
+            <h5 class="card-title">No se encontraron registros</h5>
+            <p class="card-text">Prueba a revisar tus datos ingresados</p>
+        </div>
+    </div>
+}
+<hr />
+<a asp-action="Index" asp-controller="Inicio" class="btn btn-success mt-3"> Volver </a>
+

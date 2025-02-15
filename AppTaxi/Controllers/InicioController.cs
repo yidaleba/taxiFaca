@@ -20,22 +20,35 @@ namespace AppTaxi.Controllers
             return View();
         }
 
-
         [HttpPost]
         public async Task<IActionResult> Consultar(Consulta consulta)
         {
-            Invitado invitado = new Invitado();
-
-            if (consulta.Placa != null || consulta.Documento != 0)
-            {
-                invitado = await _invitado.Consulta(consulta);
-            }
-            else
+            ViewBag.Mensaje = "";
+            Invitado inv = new Invitado();
+            if (string.IsNullOrEmpty(consulta.Placa) && consulta.Documento == 0)
             {
                 ViewBag.Mensaje = "Se debe digitar los campos solicitados";
+                return View("Index"); 
             }
 
-            return View(invitado);
+            inv = await _invitado.Consulta(consulta);
+
+            if (inv == null)
+            {
+                ViewBag.Mensaje = "No se encontraron datos para la consulta.";
+                return View("Index"); 
+            }
+            return View(inv);
         }
+
+        public IActionResult Login()
+        {
+
+            return View();
+        }
+
+
+
+
     }
 }
