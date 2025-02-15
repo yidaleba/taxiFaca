@@ -1,6 +1,7 @@
 ﻿using AppTaxi.Models;
 using AppTaxi.Servicios;
 using Microsoft.AspNetCore.Mvc;
+using NPOI.SS.Formula.Functions;
 
 namespace AppTaxi.Controllers
 {
@@ -15,9 +16,26 @@ namespace AppTaxi.Controllers
 
         public IActionResult Index()
         {
+            
+            return View();
+        }
+
+
+        [HttpPost]
+        public async Task<IActionResult> Consultar(Consulta consulta)
+        {
             Invitado invitado = new Invitado();
 
-            return View();
+            if (consulta.Placa != null || consulta.Documento != 0)
+            {
+                invitado = await _invitado.Consulta(consulta);
+            }
+            else
+            {
+                ViewBag.Mensaje = "Se debe digitar los campos solicitados";
+            }
+
+            return View(invitado);
         }
     }
 }
