@@ -43,6 +43,11 @@ namespace AppTaxi.Controllers
 
         public IActionResult Login()
         {
+            return View();
+        }
+
+        public async Task<IActionResult> Autenticar(Login login)
+        {
 
             return View();
         }
