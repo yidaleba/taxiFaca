@@ -7,10 +7,10 @@ namespace AppTaxi.Servicios
     public class API_Horario : Autenticacion, I_Horario
     {
 
-        public async Task<List<Horario>> Lista()
+        public async Task<List<Horario>> Lista(Login login)
         {
             List<Horario> lista = new List<Horario>();
-            await Autenticar();
+            await Autenticar(login);
 
             var response = await _httpClient.GetAsync("api/Horario/Lista");
 
@@ -25,10 +25,10 @@ namespace AppTaxi.Servicios
 
         }
 
-        public async Task<Horario> Obtener(int IdHorario)
+        public async Task<Horario> Obtener(int IdHorario, Login login)
         {
             Horario horario = new Horario();
-            await Autenticar();
+            await Autenticar(login);
 
             var response = await _httpClient.GetAsync($"api/Horario/Obtener/{IdHorario}");
 
@@ -42,10 +42,10 @@ namespace AppTaxi.Servicios
             return horario;
         }
 
-        public async Task<bool> Guardar(Horario horario)
+        public async Task<bool> Guardar(Horario horario, Login login)
         {
             bool Respuesta = false;
-            await Autenticar();
+            await Autenticar(login);
 
             var contenido = new StringContent(JsonConvert.SerializeObject(horario), Encoding.UTF8, "application/json");
 
@@ -59,10 +59,10 @@ namespace AppTaxi.Servicios
             return Respuesta;
         }
 
-        public async Task<bool> Editar(Horario horario)
+        public async Task<bool> Editar(Horario horario, Login login)
         {
             bool Respuesta = false;
-            await Autenticar();
+            await Autenticar(login);
 
             var contenido = new StringContent(JsonConvert.SerializeObject(horario), Encoding.UTF8, "application/json");
 
@@ -76,10 +76,10 @@ namespace AppTaxi.Servicios
             return Respuesta;
         }
 
-        public async Task<bool> Eliminar(int IdHorario)
+        public async Task<bool> Eliminar(int IdHorario, Login login)
         {
             bool Respuesta = false;
-            await Autenticar();
+            await Autenticar(login);
 
             var response = await _httpClient.DeleteAsync($"api/Horario/Eliminar/{IdHorario}");
 

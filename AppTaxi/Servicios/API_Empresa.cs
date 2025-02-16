@@ -7,10 +7,10 @@ namespace AppTaxi.Servicios
     public class API_Empresa : Autenticacion, I_Empresa
     {
 
-        public async Task<List<Empresa>> Lista()
+        public async Task<List<Empresa>> Lista(Login login)
         {
             List<Empresa> lista = new List<Empresa>();
-            await Autenticar();
+            await Autenticar(login);
 
             var response = await _httpClient.GetAsync("api/Empresa/Lista");
 
@@ -25,10 +25,10 @@ namespace AppTaxi.Servicios
 
         }
 
-        public async Task<Empresa> Obtener(int IdEmpresa)
+        public async Task<Empresa> Obtener(int IdEmpresa, Login login)
         {
             Empresa empresa = new Empresa();
-            await Autenticar();
+            await Autenticar(login);
 
             var response = await _httpClient.GetAsync($"api/Empresa/Obtener/{IdEmpresa}");
 
@@ -42,10 +42,10 @@ namespace AppTaxi.Servicios
             return empresa;
         }
 
-        public async Task<bool> Guardar(Empresa empresa)
+        public async Task<bool> Guardar(Empresa empresa, Login login)
         {
             bool Respuesta = false;
-            await Autenticar();
+            await Autenticar(login);
 
             var contenido = new StringContent(JsonConvert.SerializeObject(empresa), Encoding.UTF8, "application/json");
 
@@ -59,10 +59,10 @@ namespace AppTaxi.Servicios
             return Respuesta;
         }
 
-        public async Task<bool> Editar(Empresa empresa)
+        public async Task<bool> Editar(Empresa empresa, Login login)
         {
             bool Respuesta = false;
-            await Autenticar();
+            await Autenticar(login);
 
             var contenido = new StringContent(JsonConvert.SerializeObject(empresa), Encoding.UTF8, "application/json");
 
@@ -76,10 +76,10 @@ namespace AppTaxi.Servicios
             return Respuesta;
         }
 
-        public async Task<bool> Eliminar(int IdEmpresa)
+        public async Task<bool> Eliminar(int IdEmpresa, Login login)
         {
             bool Respuesta = false;
-            await Autenticar();
+            await Autenticar(login);
 
             var response = await _httpClient.DeleteAsync($"api/Empresa/Eliminar/{IdEmpresa}");
 

@@ -4,10 +4,10 @@ namespace AppTaxi.Servicios
 {
     public interface I_Usuario
     {
-        Task<List<Usuario>> Lista();
-        Task<Usuario> Obtener(int IdUsuario);
-        Task<bool> Guardar(Usuario usuario);
-        Task<bool> Editar(Usuario usuario);
-        Task<bool> Eliminar(int IdUsuario);
+        Task<List<Usuario>> Lista(Login login);
+        Task<Usuario> Obtener(int IdUsuario, Login login);
+        Task<bool> Guardar(Usuario usuario, Login login);
+        Task<bool> Editar(Usuario usuario, Login login);
+        Task<bool> Eliminar(int IdUsuario, Login login);
     }
 }

@@ -7,10 +7,10 @@ namespace AppTaxi.Servicios
     public class API_Propietario : Autenticacion, I_Propietario
     {
 
-        public async Task<List<Propietario>> Lista()
+        public async Task<List<Propietario>> Lista(Login login)
         {
             List<Propietario> lista = new List<Propietario>();
-            await Autenticar();
+            await Autenticar(login);
 
             var response = await _httpClient.GetAsync("api/Propietario/Lista");
 
@@ -25,10 +25,10 @@ namespace AppTaxi.Servicios
 
         }
 
-        public async Task<Propietario> Obtener(int IdPropietario)
+        public async Task<Propietario> Obtener(int IdPropietario, Login login)
         {
             Propietario propietario = new Propietario();
-            await Autenticar();
+            await Autenticar(login);
 
             var response = await _httpClient.GetAsync($"api/Propietario/Obtener/{IdPropietario}");
 
@@ -42,10 +42,10 @@ namespace AppTaxi.Servicios
             return propietario;
         }
 
-        public async Task<bool> Guardar(Propietario propietario)
+        public async Task<bool> Guardar(Propietario propietario, Login login)
         {
             bool Respuesta = false;
-            await Autenticar();
+            await Autenticar(login);
 
             var contenido = new StringContent(JsonConvert.SerializeObject(propietario), Encoding.UTF8, "application/json");
 
@@ -59,10 +59,10 @@ namespace AppTaxi.Servicios
             return Respuesta;
         }
 
-        public async Task<bool> Editar(Propietario propietario)
+        public async Task<bool> Editar(Propietario propietario, Login login)
         {
             bool Respuesta = false;
-            await Autenticar();
+            await Autenticar(login);
 
             var contenido = new StringContent(JsonConvert.SerializeObject(propietario), Encoding.UTF8, "application/json");
 
@@ -76,10 +76,10 @@ namespace AppTaxi.Servicios
             return Respuesta;
         }
 
-        public async Task<bool> Eliminar(int IdPropietario)
+        public async Task<bool> Eliminar(int IdPropietario, Login login)
         {
             bool Respuesta = false;
-            await Autenticar();
+            await Autenticar(login);
 
             var response = await _httpClient.DeleteAsync($"api/Propietario/Eliminar/{IdPropietario}");
 

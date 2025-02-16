@@ -8,45 +8,11 @@ namespace AppTaxi.Servicios
 {
     public class API_Conductor:Autenticacion,I_Conductor
     {
-        /*private static string _correo;
-        private static string _contrasena;
-        private static string _baseUrl;
-        private static string _token;
-
-        public API_Conductor()
-        {
-            var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json").Build();
-            _correo = builder.GetSection("ApiSettings:correo").Value;
-            _contrasena = builder.GetSection("ApiSettings:contrasena").Value;
-            _baseUrl = builder.GetSection("ApiSettings:baseUrl").Value;
-        }
-
-        public async Task Autenticar()
-        {
-            var cliente = new HttpClient();
-            cliente.BaseAddress = new Uri(_baseUrl);
-            var credenciales = new Login()
-            {
-                Correo = _correo,
-                Contrasena = _contrasena
-            };
-
-            var content = new StringContent(JsonConvert.SerializeObject(credenciales),Encoding.UTF8,"application/json");
-            var response = await cliente.PostAsync("api/Autenticacion/Validar",content);
-            var json_respuesta = await response.Content.ReadAsStringAsync();
-
-            var resultado = JsonConvert.DeserializeObject<ResultadoCredencial>(json_respuesta);
-            _token = resultado.Token;
-        }
-        */
-        public async Task<bool> Editar(Conductor conductor)
+        
+        public async Task<bool> Editar(Conductor conductor, Login login)
         {
             bool Respuesta = false;
-            await Autenticar();
-
-            /*var cliente = new HttpClient();
-            cliente.BaseAddress = new Uri(_baseUrl);
-            cliente.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _token);*/
+            await Autenticar(login);
 
             var contenido = new StringContent(JsonConvert.SerializeObject(conductor), Encoding.UTF8, "application/json");
 
@@ -60,14 +26,10 @@ namespace AppTaxi.Servicios
             return Respuesta;
         }
 
-        public async Task<bool> Eliminar(int IdConductor)
+        public async Task<bool> Eliminar(int IdConductor, Login login)
         {
             bool Respuesta = false;
-            await Autenticar();
-
-            /*var cliente = new HttpClient();
-            cliente.BaseAddress = new Uri(_baseUrl);
-            cliente.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _token); */
+            await Autenticar(login);
 
          
 
@@ -81,14 +43,10 @@ namespace AppTaxi.Servicios
             return Respuesta;
         }
 
-        public async Task<bool> Guardar(Conductor conductor)
+        public async Task<bool> Guardar(Conductor conductor, Login login)
         {
             bool Respuesta = false;
-            await Autenticar();
-
-            /*var cliente = new HttpClient();
-            cliente.BaseAddress = new Uri(_baseUrl);
-            cliente.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _token);*/
+            await Autenticar(login);
 
             var contenido = new StringContent(JsonConvert.SerializeObject(conductor), Encoding.UTF8, "application/json");
 
@@ -102,14 +60,10 @@ namespace AppTaxi.Servicios
             return Respuesta;
         }
 
-        public async Task<List<Conductor>> Lista()
+        public async Task<List<Conductor>> Lista(Login login)
         {
             List<Conductor> lista = new List<Conductor>();
-            await Autenticar();
-
-            /*var cliente = new HttpClient();
-            cliente.BaseAddress = new Uri(_baseUrl);
-            cliente.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _token);*/
+            await Autenticar(login);
             var response = await _httpClient.GetAsync("api/Conductor/Lista");
 
             if (response.IsSuccessStatusCode)
@@ -122,14 +76,12 @@ namespace AppTaxi.Servicios
             return lista;
         }
 
-        public async Task<Conductor> Obtener(int IdConductor)
+        public async Task<Conductor> Obtener(int IdConductor, Login login)
         {
             Conductor conductor = new Conductor();
-            await Autenticar();
+            await Autenticar(login);
 
-            /*var cliente = new HttpClient();
-            cliente.BaseAddress = new Uri(_baseUrl);
-            cliente.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _token);*/
+            
             var response = await _httpClient.GetAsync($"api/Conductor/Obtener/{IdConductor}");
 
             if (response.IsSuccessStatusCode)

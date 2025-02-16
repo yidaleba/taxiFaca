@@ -4,10 +4,10 @@ namespace AppTaxi.Servicios
 {
     public interface I_Rol
     {
-        Task<List<Rol>> Lista();
-        Task<Rol> Obtener(int IdRol);
-        Task<bool> Guardar(Rol rol);
-        Task<bool> Editar(Rol rol);
-        Task<bool> Eliminar(int IdRol);
+        Task<List<Rol>> Lista(Login login);
+        Task<Rol> Obtener(int IdRol, Login login);
+        Task<bool> Guardar(Rol rol, Login login);
+        Task<bool> Editar(Rol rol, Login login);
+        Task<bool> Eliminar(int IdRol, Login login);
     }
 }

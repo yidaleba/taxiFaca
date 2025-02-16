@@ -7,11 +7,12 @@ namespace AppTaxi.Servicios
     public class API_Usuario : Autenticacion, I_Usuario
     {
 
-        public async Task<List<Usuario>> Lista()
+        public async Task<List<Usuario>> Lista(Login login)
         {
             List<Usuario> lista = new List<Usuario>();
-            await Autenticar();
-
+            
+            await Autenticar(login);
+            
             var response = await _httpClient.GetAsync("api/Usuario/Lista");
 
             if (response.IsSuccessStatusCode)
@@ -25,10 +26,10 @@ namespace AppTaxi.Servicios
 
         }
 
-        public async Task<Usuario> Obtener(int IdUsuario)
+        public async Task<Usuario> Obtener(int IdUsuario, Login login)
         {
             Usuario usuario = new Usuario();
-            await Autenticar();
+            await Autenticar(login);
 
             var response = await _httpClient.GetAsync($"api/Usuario/Obtener/{IdUsuario}");
 
@@ -42,10 +43,10 @@ namespace AppTaxi.Servicios
             return usuario;
         }
 
-        public async Task<bool> Guardar(Usuario usuario)
+        public async Task<bool> Guardar(Usuario usuario, Login login)
         {
             bool Respuesta = false;
-            await Autenticar();
+            await Autenticar(login);
 
             var contenido = new StringContent(JsonConvert.SerializeObject(usuario), Encoding.UTF8, "application/json");
 
@@ -59,10 +60,10 @@ namespace AppTaxi.Servicios
             return Respuesta;
         }
 
-        public async Task<bool> Editar(Usuario usuario)
+        public async Task<bool> Editar(Usuario usuario, Login login)
         {
             bool Respuesta = false;
-            await Autenticar();
+            await Autenticar(login);
 
             var contenido = new StringContent(JsonConvert.SerializeObject(usuario), Encoding.UTF8, "application/json");
 
@@ -76,10 +77,10 @@ namespace AppTaxi.Servicios
             return Respuesta;
         }
 
-        public async Task<bool> Eliminar(int IdUsuario)
+        public async Task<bool> Eliminar(int IdUsuario, Login login)
         {
             bool Respuesta = false;
-            await Autenticar();
+            await Autenticar(login);
 
             var response = await _httpClient.DeleteAsync($"api/Usuario/Eliminar/{IdUsuario}");
 

@@ -7,10 +7,10 @@ namespace AppTaxi.Servicios
     public class API_Rol : Autenticacion, I_Rol
     {
 
-        public async Task<List<Rol>> Lista()
+        public async Task<List<Rol>> Lista(Login login)
         {
             List<Rol> lista = new List<Rol>();
-            await Autenticar();
+            await Autenticar(login);
 
             var response = await _httpClient.GetAsync("api/Rol/Lista");
 
@@ -25,10 +25,10 @@ namespace AppTaxi.Servicios
 
         }
 
-        public async Task<Rol> Obtener(int IdRol)
+        public async Task<Rol> Obtener(int IdRol, Login login)
         {
             Rol rol = new Rol();
-            await Autenticar();
+            await Autenticar(login);
 
             var response = await _httpClient.GetAsync($"api/Rol/Obtener/{IdRol}");
 
@@ -42,10 +42,10 @@ namespace AppTaxi.Servicios
             return rol;
         }
 
-        public async Task<bool> Guardar(Rol rol)
+        public async Task<bool> Guardar(Rol rol, Login login)
         {
             bool Respuesta = false;
-            await Autenticar();
+            await Autenticar(login);
 
             var contenido = new StringContent(JsonConvert.SerializeObject(rol), Encoding.UTF8, "application/json");
 
@@ -59,10 +59,10 @@ namespace AppTaxi.Servicios
             return Respuesta;
         }
 
-        public async Task<bool> Editar(Rol rol)
+        public async Task<bool> Editar(Rol rol, Login login)
         {
             bool Respuesta = false;
-            await Autenticar();
+            await Autenticar(login);
 
             var contenido = new StringContent(JsonConvert.SerializeObject(rol), Encoding.UTF8, "application/json");
 
@@ -76,10 +76,10 @@ namespace AppTaxi.Servicios
             return Respuesta;
         }
 
-        public async Task<bool> Eliminar(int IdRol)
+        public async Task<bool> Eliminar(int IdRol, Login login)
         {
             bool Respuesta = false;
-            await Autenticar();
+            await Autenticar(login);
 
             var response = await _httpClient.DeleteAsync($"api/Rol/Eliminar/{IdRol}");
 

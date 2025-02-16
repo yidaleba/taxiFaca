@@ -6,21 +6,29 @@
 
 <h1>Iniciar Sesión</h1>
 
-<form asp-action="Validar" asp-controller="Inicio" method="post">
+<form asp-action="Autenticar" asp-controller="Inicio" method="post">
     <!-- Email input -->
     <div data-mdb-input-init class="form-outline mb-4">
-        <input type="email" id="form2Example1" class="form-control" asp-for="@Model.Correo"/>
-        <label class="form-label" for="form2Example1">Email address</label>
+
+        <label class="form-label">Correo Electronico:</label>
+        <input type="text" placeholder="ejemplo@gmail.com" class="form-control form-control-sm" asp-for="Correo" />
+        
     </div>
 
     <!-- Password input -->
     <div data-mdb-input-init class="form-outline mb-4">
-        <input type="password" id="form2Example2" class="form-control" asp-for="@Model.Contrasena" />
-        <label class="form-label" for="form2Example2">Password</label>
+        
+        <label class="form-label">Contraseña:</label>
+        <input type="text" placeholder="" class="form-control form-control-sm" asp-for="Contrasena" />
+        
     </div>
 
     <!-- Submit button -->
-    <button type="button" data-mdb-button-init data-mdb-ripple-init class="btn btn-primary btn-block mb-4">Sign in</button>
+    <button type="submit" data-mdb-button-init data-mdb-ripple-init class="btn btn-primary btn-block mb-4">Sign in</button>
 
 </form>
+
+<p>@ViewBag.Mensaje</p>
+
+
 

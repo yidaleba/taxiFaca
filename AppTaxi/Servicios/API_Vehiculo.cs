@@ -7,10 +7,10 @@ namespace AppTaxi.Servicios
     public class API_Vehiculo : Autenticacion, I_Vehiculo
     {
 
-        public async Task<List<Vehiculo>> Lista()
+        public async Task<List<Vehiculo>> Lista(Login login)
         {
             List<Vehiculo> lista = new List<Vehiculo>();
-            await Autenticar();
+            await Autenticar(login);
 
             var response = await _httpClient.GetAsync("api/Vehiculo/Lista");
 
@@ -25,10 +25,10 @@ namespace AppTaxi.Servicios
 
         }
 
-        public async Task<Vehiculo> Obtener(int IdVehiculo)
+        public async Task<Vehiculo> Obtener(int IdVehiculo, Login login)
         {
             Vehiculo vehiculo = new Vehiculo();
-            await Autenticar();
+            await Autenticar(login);
 
             var response = await _httpClient.GetAsync($"api/Vehiculo/Obtener/{IdVehiculo}");
 
@@ -42,10 +42,10 @@ namespace AppTaxi.Servicios
             return vehiculo;
         }
 
-        public async Task<bool> Guardar(Vehiculo vehiculo)
+        public async Task<bool> Guardar(Vehiculo vehiculo, Login login)
         {
             bool Respuesta = false;
-            await Autenticar();
+            await Autenticar(login);
 
             var contenido = new StringContent(JsonConvert.SerializeObject(vehiculo), Encoding.UTF8, "application/json");
 
@@ -59,10 +59,10 @@ namespace AppTaxi.Servicios
             return Respuesta;
         }
 
-        public async Task<bool> Editar(Vehiculo vehiculo)
+        public async Task<bool> Editar(Vehiculo vehiculo, Login login)
         {
             bool Respuesta = false;
-            await Autenticar();
+            await Autenticar(login);
 
             var contenido = new StringContent(JsonConvert.SerializeObject(vehiculo), Encoding.UTF8, "application/json");
 
@@ -76,10 +76,10 @@ namespace AppTaxi.Servicios
             return Respuesta;
         }
 
-        public async Task<bool> Eliminar(int IdVehiculo)
+        public async Task<bool> Eliminar(int IdVehiculo, Login login)
         {
             bool Respuesta = false;
-            await Autenticar();
+            await Autenticar(login);
 
             var response = await _httpClient.DeleteAsync($"api/Vehiculo/Eliminar/{IdVehiculo}");
 
