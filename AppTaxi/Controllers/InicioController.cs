@@ -59,20 +59,22 @@ namespace AppTaxi.Controllers
                 ViewBag.Mensaje = "Se debe digitar los campos solicitados";
                 return View("Login");
             }
-            ViewBag.Mensaje = $"Correo = {login.Correo}, contraseña = {login.Contrasena}";
-            lista = await _usuario.Lista(login);
             
+            lista = await _usuario.Lista(login);
+
             if (lista != null && lista.Any())
             {
-                string msg = $"Si hay datos: {lista.FirstOrDefault().Nombre}";
+                usuario = lista.Where(item => item.Correo == login.Correo && item.Contrasena == item.Contrasena).FirstOrDefault();
+                string msg = $"Bienvenido {usuario.Nombre}";
                 ViewBag.Mensaje = msg;
             }
             else
             {
-                string msg = "No hay datos disponibles.";
+                string msg = "Usuario o Contraseña incorrecta";
                 ViewBag.Mensaje = msg;
             }
             
+
 
             return View("Login");
         }
