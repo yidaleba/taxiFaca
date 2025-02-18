@@ -36,6 +36,12 @@ namespace AppTaxi.Controllers
                 return View("Index"); 
             }
 
+            if (!ValidacionDato.ValidarTexto(consulta.Placa))
+            {
+                ViewBag.Mensaje = "No se admite simbolos o signos";
+                return View("Index");
+            }
+
             inv = await _invitado.Consulta(consulta);
 
             if (inv == null)

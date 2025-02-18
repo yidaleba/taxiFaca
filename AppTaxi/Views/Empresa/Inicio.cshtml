@@ -30,7 +30,7 @@
                 <td class="col-Placa">@item.Placa</td>
                 <td class="col-Propietario">@item.NombrePropietario</td>
                 <td class="col-Conductor">@item.Conductor</td>
-                <td class="col-Fecha">@item.Fecha</td>
+                <td class="col-Fecha">@item.Fecha.ToString("yyyy-MM-dd")</td>
                 <td class="col-Desde">@item.HoraInicio</td>
                 <td class="col-Hasta">@item.HoraFin</td>
                 <td><a asp-action="#" asp-controller="#" asp-route-idVehiculo="@item.IdVehiculo" class="btn btn-primary btn-sm">Detalle</a></td>
