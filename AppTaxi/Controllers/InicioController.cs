@@ -2,6 +2,7 @@
 using AppTaxi.Servicios;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualBasic;
+using Newtonsoft.Json;
 using NPOI.SS.Formula.Functions;
 
 namespace AppTaxi.Controllers
@@ -67,16 +68,19 @@ namespace AppTaxi.Controllers
                 usuario = lista.Where(item => item.Correo == login.Correo && item.Contrasena == item.Contrasena).FirstOrDefault();
                 string msg = $"Bienvenido {usuario.Nombre}";
                 ViewBag.Mensaje = msg;
+                TempData["Usuario"] = JsonConvert.SerializeObject(usuario);
+                return RedirectToAction("Inicio", "Empresa");
             }
             else
             {
                 string msg = "Usuario o Contraseña incorrecta";
                 ViewBag.Mensaje = msg;
+                return View("Login");
             }
+
+
+
             
-
-
-            return View("Login");
         }
 
 
