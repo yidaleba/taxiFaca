@@ -1,38 +1,67 @@
-﻿@model Usuario
+﻿@model List<DatosEmpresa>
 @{
     ViewData["Title"] = "Inicio";
     Layout = "~/Views/Shared/_LayoutEmpresa.cshtml";
 }
 
 <h1>@ViewBag.Mensaje</h1>
-
+<td><a asp-action="#" asp-controller="#" class="btn btn-secondary btn-sm">Filtrar</a></td>
 <table class="table">
     <thead>
         <tr>
-            <th scope="col">#</th>
-            <th scope="col">First</th>
-            <th scope="col">Last</th>
-            <th scope="col">Handle</th>
+            <th scope="col">Placa</th>
+            <th scope="col">Propietario</th>
+            <th scope="col">Conductor</th>
+            <th scope="col">Fecha</th>
+            <th scope="col">Desde</th>
+            <th scope="col">Hasta</th>
+            <th scope="col">Detalles</th>
         </tr>
     </thead>
     <tbody>
-        <tr>
-            <th scope="row">1</th>
-            <td>Mark</td>
-            <td>Otto</td>
-            <td>Xd</td>
-        </tr>
-        <tr>
-            <th scope="row">2</th>
-            <td>Jacob</td>
-            <td>Thornton</td>
-            <td>Xd</td>
-        </tr>
-        <tr>
-            <th scope="row">3</th>
-            <td colspan="2">Larry the Bird</td>
-            <td>Twitter</td>
-        </tr>
+        @foreach(var item in Model)
+        {
+            <tr>
+                <td>@item.Placa</td>
+                <td>@item.NombrePropietario</td>
+                <td>@item.Conductor</td>
+                <td>@item.Fecha</td>
+                <td>@item.HoraInicio</td>
+                <td>@item.HoraFin</td>
+                <td><a asp-action="#" asp-controller="#" asp-route-idVehiculo="@item.IdVehiculo" class="btn btn-primary btn-sm">Detalle</a></td>
+
+
+            </tr>
+        }
+        
     </tbody>
 </table>
+
+<div class="form-check">
+    <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked" checked>
+    <label class="form-check-label" for="flexCheckChecked">Placa</label>
+
+</div>
+
+<div class="form-check">
+    <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked" checked>
+    <label class="form-check-label" for="flexCheckChecked">Propietario</label>
+</div>
+
+<div class="form-check">
+    <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked" checked>
+    <label class="form-check-label" for="flexCheckChecked">Fecha</label>
+</div>
+
+<div class="form-check">
+    <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked" checked>
+    <label class="form-check-label" for="flexCheckChecked">Desde</label>
+</div>
+
+<div class="form-check">
+    <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked" checked>
+    <label class="form-check-label" for="flexCheckChecked">Hasta</label>
+</div>
+
+
 

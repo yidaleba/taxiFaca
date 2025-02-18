@@ -1,4 +1,5 @@
-﻿using AppTaxi.Models;
+﻿using AppTaxi.Funciones;
+using AppTaxi.Models;
 using AppTaxi.Servicios;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualBasic;
@@ -58,6 +59,12 @@ namespace AppTaxi.Controllers
             if (string.IsNullOrEmpty(login.Correo) || string.IsNullOrEmpty(login.Contrasena))
             {
                 ViewBag.Mensaje = "Se debe digitar los campos solicitados";
+                return View("Login");
+            }
+
+            if(!ValidacionDato.ValidarTexto(login.Correo) || !ValidacionDato.ValidarTexto(login.Contrasena))
+            {
+                ViewBag.Mensaje = "Error, intenta ingresar caracteres no permitidos";
                 return View("Login");
             }
             
