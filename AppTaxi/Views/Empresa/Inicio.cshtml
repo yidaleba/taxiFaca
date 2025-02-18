@@ -3,6 +3,9 @@
     ViewData["Title"] = "Inicio";
     Layout = "~/Views/Shared/_LayoutEmpresa.cshtml";
 }
+@section Scripts {
+    <script src="~/js/toggleColumns.js"></script>
+}
 
 <h1>@ViewBag.Mensaje</h1>
 <br />
@@ -11,58 +14,59 @@
 <table class="table">
     <thead>
         <tr>
-            <th scope="col">Placa</th>
-            <th scope="col">Propietario</th>
-            <th scope="col">Conductor</th>
-            <th scope="col">Fecha</th>
-            <th scope="col">Desde</th>
-            <th scope="col">Hasta</th>
+            <th scope="col" class="col-Placa">Placa</th>
+            <th scope="col" class="col-Propietario">Propietario</th>
+            <th scope="col" class="col-Conductor">Conductor</th>
+            <th scope="col" class="col-Fecha">Fecha</th>
+            <th scope="col" class="col-Desde">Desde</th>
+            <th scope="col" class="col-Hasta">Hasta</th>
             <th scope="col">Detalles</th>
         </tr>
     </thead>
     <tbody>
-        @foreach(var item in Model)
+        @foreach (var item in Model)
         {
             <tr>
-                <td>@item.Placa</td>
-                <td>@item.NombrePropietario</td>
-                <td>@item.Conductor</td>
-                <td>@item.Fecha</td>
-                <td>@item.HoraInicio</td>
-                <td>@item.HoraFin</td>
+                <td class="col-Placa">@item.Placa</td>
+                <td class="col-Propietario">@item.NombrePropietario</td>
+                <td class="col-Conductor">@item.Conductor</td>
+                <td class="col-Fecha">@item.Fecha</td>
+                <td class="col-Desde">@item.HoraInicio</td>
+                <td class="col-Hasta">@item.HoraFin</td>
                 <td><a asp-action="#" asp-controller="#" asp-route-idVehiculo="@item.IdVehiculo" class="btn btn-primary btn-sm">Detalle</a></td>
-
-
             </tr>
         }
-        
     </tbody>
 </table>
 
 <div class="form-check">
-    <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked" checked>
-    <label class="form-check-label" for="flexCheckChecked">Placa</label>
-
+    <input class="form-check-input column-toggle" type="checkbox" value="Placa" id="chkPlaca" checked>
+    <label class="form-check-label" for="chkPlaca">Placa</label>
 </div>
 
 <div class="form-check">
-    <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked" checked>
-    <label class="form-check-label" for="flexCheckChecked">Propietario</label>
+    <input class="form-check-input column-toggle" type="checkbox" value="Propietario" id="chkPropietario" checked>
+    <label class="form-check-label" for="chkPropietario">Propietario</label>
 </div>
 
 <div class="form-check">
-    <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked" checked>
-    <label class="form-check-label" for="flexCheckChecked">Fecha</label>
+    <input class="form-check-input column-toggle" type="checkbox" value="Conductor" id="chkConductor" checked>
+    <label class="form-check-label" for="chkConductor">Conductor</label>
 </div>
 
 <div class="form-check">
-    <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked" checked>
-    <label class="form-check-label" for="flexCheckChecked">Desde</label>
+    <input class="form-check-input column-toggle" type="checkbox" value="Fecha" id="chkFecha" checked>
+    <label class="form-check-label" for="chkFecha">Fecha</label>
 </div>
 
 <div class="form-check">
-    <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked" checked>
-    <label class="form-check-label" for="flexCheckChecked">Hasta</label>
+    <input class="form-check-input column-toggle" type="checkbox" value="Desde" id="chkDesde" checked>
+    <label class="form-check-label" for="chkDesde">Desde</label>
+</div>
+
+<div class="form-check">
+    <input class="form-check-input column-toggle" type="checkbox" value="Hasta" id="chkHasta" checked>
+    <label class="form-check-label" for="chkHasta">Hasta</label>
 </div>
 
 
