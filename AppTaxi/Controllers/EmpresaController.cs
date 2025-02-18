@@ -1,4 +1,5 @@
-﻿using AppTaxi.Models;
+﻿using AppTaxi.Funciones;
+using AppTaxi.Models;
 using AppTaxi.Servicios;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages;
@@ -23,91 +24,77 @@ namespace AppTaxi.Controllers
             _conductor = conductor;
         }
 
-        
+
 
         public async Task<IActionResult> Inicio()
         {
-            List<Vehiculo> vehiculos_totales = new List<Vehiculo>();
-            List<Vehiculo> vehiculos_empresa = new List<Vehiculo>();
-            List<Horario> horarios_totales = new List<Horario>();
-            List<DatosEmpresa> datos_iniciales = new List<DatosEmpresa>();
-            List<Empresa> empresas_totales = new List<Empresa>();  // Todas las Empresas
-
-            Empresa empresa = new Empresa(); //Obtiene la empresa Logeada
-
+            // Obtener el usuario de la sesión
             var usuarioJson = HttpContext.Session.GetString("Usuario");
-            var usuario = JsonConvert.DeserializeObject<Usuario>(usuarioJson);
-
-            Models.Login login = new Models.Login() 
-            { 
-                Correo = usuario.Correo, 
-                Contrasena = usuario.Contrasena 
-            };
-
-            empresas_totales = await _empresa.Lista(login);
-            vehiculos_totales = await _vehiculo.Lista(login);
-            horarios_totales = await _horario.Lista(login);
-
-            if (empresas_totales == null && !empresas_totales.Any())
+            if (string.IsNullOrEmpty(usuarioJson))
             {
-                ViewBag.Mensaje = "La lista Empresa está vacía";
+                ViewBag.Mensaje = "Usuario no autenticado.";
                 return View();
             }
-            
-            empresa = empresas_totales.Where(item => item.IdUsuario == usuario.IdUsuario).FirstOrDefault();
-            
+
+            var usuario = JsonConvert.DeserializeObject<Usuario>(usuarioJson);
+            var login = new Models.Login { Correo = usuario.Correo, Contrasena = usuario.Contrasena };
+
+            // Obtener listas de datos
+            var empresasTotales = await _empresa.Lista(login);
+            var vehiculosTotales = await _vehiculo.Lista(login);
+            var horariosTotales = await _horario.Lista(login);
+
+            // Validar listas
+            if (empresasTotales == null || !empresasTotales.Any())
+            {
+                ViewBag.Mensaje = "La lista de empresas está vacía.";
+                return View();
+            }
+
+            // Obtener la empresa asociada al usuario
+            var empresa = empresasTotales.FirstOrDefault(item => item.IdUsuario == usuario.IdUsuario);
             if (empresa == null)
             {
-                ViewBag.Mensaje = "No hay empresa asociada a su usuario";
+                ViewBag.Mensaje = "No hay empresa asociada a su usuario.";
                 return View();
             }
 
-            //ViewBag.Mensaje = $"Bienvenido {usuario.Nombre} encargado de {empresa.Nombre}";  //Prueba si el objeto empresa se llena
-
-            if (vehiculos_totales == null && !vehiculos_totales.Any())
+            // Filtrar vehículos de la empresa
+            var vehiculosEmpresa = vehiculosTotales?.Where(v => v.IdEmpresa == empresa.IdEmpresa).ToList();
+            if (vehiculosEmpresa == null || !vehiculosEmpresa.Any())
             {
-                ViewBag.Mensaje = "La lista Vehiculo está vacía";
+                ViewBag.Mensaje = "La lista de vehículos está vacía.";
                 return View();
             }
-            //ViewBag.Mensaje = $"Bienvenido {usuario.Nombre} encargado de {vehiculos_totales.FirstOrDefault().Placa}";//Prueba si la lista Vehiculos se llena
-            
-            foreach(Vehiculo v in vehiculos_totales)
-            {
-                if (v.IdEmpresa == empresa.IdEmpresa)
-                {
-                    vehiculos_empresa.Add(v);
-                }
-            }
+
+            // Construir la lista de datos iniciales
+            var datosIniciales = new List<DatosEmpresa>();
             int i = 1;
-            foreach (Vehiculo v in vehiculos_empresa)
+
+            foreach (var vehiculo in vehiculosEmpresa)
             {
-                Propietario p = new Propietario();
-                Conductor c = new Conductor();
-                Horario h = new Horario();
-                DatosEmpresa dE = new DatosEmpresa();
+                var horario = horariosTotales.FirstOrDefault(h => h.IdVehiculo == vehiculo.IdVehiculo);
+                if (horario == null) continue;
 
-                h = horarios_totales.Where(item => item.IdVehiculo == v.IdVehiculo).FirstOrDefault();
-                p = await _propietario.Obtener(v.IdPropietario,login);
-                c = await _conductor.Obtener(h.IdConductor,login);
+                var propietario = await _propietario.Obtener(vehiculo.IdPropietario, login);
+                var conductor = await _conductor.Obtener(horario.IdConductor, login);
 
-                dE.IdDato = i;
-                dE.Placa = v.Placa;
-                dE.IdVehiculo = v.IdVehiculo;
-                dE.NombrePropietario = p.Nombre;
-                dE.Conductor = c.Nombre;
-                dE.Fecha = h.Fecha;
-                dE.HoraInicio = h.HoraInicio;
-                dE.HoraFin = h.HoraFin;
-                
-                datos_iniciales.Add(dE);
-                i++;
+                datosIniciales.Add(new DatosEmpresa
+                {
+                    IdDato = i++,
+                    Placa = vehiculo.Placa,
+                    IdVehiculo = vehiculo.IdVehiculo,
+                    NombrePropietario = propietario?.Nombre,
+                    Conductor = conductor?.Nombre,
+                    Fecha = horario.Fecha,
+                    HoraInicio = horario.HoraInicio,
+                    HoraFin = horario.HoraFin
+                });
             }
 
-            //ViewBag.Mensaje = $"Añadidos {datos_iniciales.Count()} registros";//Prueba si la lista Vehiculos de empresa se llena
             ViewBag.Mensaje = $"Bienvenid@ {usuario.Nombre}";
+            return View(datosIniciales);
+        } 
 
-
-            return View(datos_iniciales);
-        }
     }
 }
