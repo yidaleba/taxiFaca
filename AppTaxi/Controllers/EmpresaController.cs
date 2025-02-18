@@ -23,6 +23,8 @@ namespace AppTaxi.Controllers
             _conductor = conductor;
         }
 
+        
+
         public async Task<IActionResult> Inicio()
         {
             List<Vehiculo> vehiculos_totales = new List<Vehiculo>();
@@ -33,8 +35,8 @@ namespace AppTaxi.Controllers
 
             Empresa empresa = new Empresa(); //Obtiene la empresa Logeada
 
-            var usuarioJson = TempData["Usuario"] as string; //Obtiene los datos del usuario logeado
-            var usuario = JsonConvert.DeserializeObject<Usuario>(usuarioJson); //Deserializa el objeto en usuario
+            var usuarioJson = HttpContext.Session.GetString("Usuario");
+            var usuario = JsonConvert.DeserializeObject<Usuario>(usuarioJson);
 
             Models.Login login = new Models.Login() 
             { 

@@ -73,11 +73,10 @@ namespace AppTaxi.Controllers
             if (lista != null && lista.Any())
             {
                 usuario = lista.Where(item => item.Correo == login.Correo && item.Contrasena == item.Contrasena).FirstOrDefault();
-                string msg = $"Bienvenido {usuario.Nombre}";
-                ViewBag.Mensaje = msg;
-                TempData["Usuario"] = JsonConvert.SerializeObject(usuario);
+                ViewBag.Mensaje = $"Bienvenido {usuario.Nombre}";
+                HttpContext.Session.SetString("Usuario", JsonConvert.SerializeObject(usuario));
 
-                switch(usuario.IdRol)
+                switch (usuario.IdRol)
                 {
                     case 1:
                         return RedirectToAction("Inicio", "Empresa");
@@ -96,6 +95,15 @@ namespace AppTaxi.Controllers
                 return View("Login");
             }
   
+        }
+
+        public IActionResult CerrarSesion()
+        {
+            // Limpiar todos los datos de la sesión
+            HttpContext.Session.Clear();
+
+            // Opcional: Redirigir a la página de inicio o login
+            return RedirectToAction("Login");
         }
 
 
