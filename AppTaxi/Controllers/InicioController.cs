@@ -69,7 +69,18 @@ namespace AppTaxi.Controllers
                 string msg = $"Bienvenido {usuario.Nombre}";
                 ViewBag.Mensaje = msg;
                 TempData["Usuario"] = JsonConvert.SerializeObject(usuario);
-                return RedirectToAction("Inicio", "Empresa");
+
+                switch(usuario.IdRol)
+                {
+                    case 1:
+                        return RedirectToAction("Inicio", "Empresa");
+                    case 2:
+                        return RedirectToAction("Inicio", "Secretaria");
+                    case 1004:
+                        return RedirectToAction("Inicio", "Admin");
+                    default:
+                        return View("Login");
+                }
             }
             else
             {
@@ -77,10 +88,7 @@ namespace AppTaxi.Controllers
                 ViewBag.Mensaje = msg;
                 return View("Login");
             }
-
-
-
-            
+  
         }
 
 
