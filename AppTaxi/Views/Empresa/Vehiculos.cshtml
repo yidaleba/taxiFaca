@@ -6,32 +6,40 @@
 
 <h1>Vehiculos</h1>
 
-<h1>@ViewBag.Mensaje</h1>
-<br />
-<p>Vehiculos de la empresa:</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th scope="col" >ID Vehiculo</th>
-            <th scope="col" >Placa</th>
-            <th scope="col" >Estado</th>
-            <th scope="col" >SOAT</th>
-            <th scope="col" >Tecnico Mecanica</th>
-            <th scope="col">Detalles</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
+@if(Model != null)
+{
+    <h1>@ViewBag.Mensaje</h1>
+    <br />
+    <p>Vehiculos de la empresa:</p>
+    <table class="table">
+        <thead>
             <tr>
-                <td>@item.IdVehiculo</td>
-                <td class="col-Placa">@item.Placa</td>
-                <td class="col-Propietario">@(item.Estado ? "Habilitado" : "No Habilitado")</td>
-                <td class="col-Fecha">@((item.Soat != null) ? "Si" : "No")</td>
-                <td class="col-Fecha">@((item.TecnicoMecanica != null) ? "Si" : "No")</td>
-                <td><a asp-action="#" asp-controller="Empresa" asp-route-idDato="@item.IdVehiculo" class="btn btn-primary btn-sm">Ver</a></td>
+                <th scope="col">ID Vehiculo</th>
+                <th scope="col">Placa</th>
+                <th scope="col">Estado</th>
+                <th scope="col">SOAT</th>
+                <th scope="col">Tecnico Mecanica</th>
+                <th scope="col">Detalles</th>
             </tr>
-        }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.IdVehiculo</td>
+                    <td class="col-Placa">@item.Placa</td>
+                    <td class="col-Propietario">@(item.Estado ? "Habilitado" : "No Habilitado")</td>
+                    <td class="col-Fecha">@((item.Soat != null) ? "Si" : "No")</td>
+                    <td class="col-Fecha">@((item.TecnicoMecanica != null) ? "Si" : "No")</td>
+                    <td><a asp-action="Detalle_Vehiculo" asp-controller="Empresa" asp-route-IdVehiculo="@item.IdVehiculo" class="btn btn-primary btn-sm">Ver</a></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>No se encontraron vehiculos registrados</p>
+}
+
 

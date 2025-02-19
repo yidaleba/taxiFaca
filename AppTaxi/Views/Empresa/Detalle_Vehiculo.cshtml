@@ -1,0 +1,35 @@
+﻿@model Vehiculo
+@{
+    ViewData["Title"] = "Detalle_Vehiculo";
+    Layout = "~/Views/Shared/_LayoutEmpresa.cshtml";
+}
+
+<h1>Detalle_Vehiculo</h1>
+@if(Model != null)
+{
+    <p>@ViewBag.Mensaje</p>
+    <div class="card">
+        <h5 class="card-header">Información:</h5>
+        <div class="card-body">
+            <h5 class="card-title">Vehículo @Model.Placa</h5>
+            <p class="card-text"><strong>Estado Actual: </strong>@(Model.Estado ? "Habilitado" : "No Habilitado")</p>
+            <p class="card-text"><strong>Documento SOAT:</strong>@Model.Soat</p>
+            <p class="card-text"><strong>Documento TecnoMecanica:</strong>@Model.TecnicoMecanica</p>
+            <p class="card-text"><strong>ID Propietario:</strong>@Model.IdPropietario</p>
+            <p class="card-text"><strong>Propietario:</strong>@ViewBag.Propietario</p>
+            <a href="javascript:history.back()" class="btn btn-success">Volver</a>
+            <a href="#" class="btn btn-warning">Editar</a>
+            <a href="#" class="btn btn-danger">Eliminar</a>
+        </div>
+    </div>
+}
+else
+{
+    <p>No se encontró el Dato:</p>
+    <p>@ViewBag.Mensaje</p>
+
+    <a href="javascript:history.back()" class="btn btn-success">Volver</a>
+}
+
+
+

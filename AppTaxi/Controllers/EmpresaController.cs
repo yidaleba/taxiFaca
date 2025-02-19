@@ -95,7 +95,7 @@ namespace AppTaxi.Controllers
             }
 
             ViewBag.Mensaje = $"Bienvenid@ {usuario.Nombre}";
-            
+
             return View(datosIniciales);
         }
 
@@ -185,15 +185,33 @@ namespace AppTaxi.Controllers
             List<Vehiculo> vehiculos_empresas = new List<Vehiculo>();
 
             int IdEmpresa = empresas.Where(item => item.IdUsuario == usuario.IdUsuario).FirstOrDefault().IdEmpresa;
-            foreach(Vehiculo v in vehiculos_totales)
+            foreach (Vehiculo v in vehiculos_totales)
             {
-                if(v.IdEmpresa == IdEmpresa)
+                if (v.IdEmpresa == IdEmpresa)
                 {
                     vehiculos_empresas.Add(v);
                 }
             }
-            
+
             return View(vehiculos_empresas);
+        }
+
+        public async Task<IActionResult> Detalle_Vehiculo(int IdVehiculo)
+        {
+            var usuarioJson = HttpContext.Session.GetString("Usuario");
+            if (string.IsNullOrEmpty(usuarioJson))
+            {
+                ViewBag.Mensaje = "Usuario no autenticado.";
+                return RedirectToAction("Login", "Inicio");
+            }
+            var usuario = JsonConvert.DeserializeObject<Usuario>(usuarioJson);
+            var login = new Models.Login { Correo = usuario.Correo, Contrasena = usuario.Contrasena };
+
+            Vehiculo vehiculo = await _vehiculo.Obtener(IdVehiculo, login);
+            ViewBag.Mensaje = "";
+            Propietario propietario = await _propietario.Obtener(vehiculo.IdPropietario,login);
+            ViewBag.Propietario = propietario.Nombre;
+            return View(vehiculo);
         }
 
     }
