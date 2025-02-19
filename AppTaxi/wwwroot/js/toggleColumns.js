@@ -1,10 +1,10 @@
-﻿$(document).ready(function () {
-    $(".column-toggle").change(function () {
+﻿$(function () { // Forma correcta de document ready
+    $(".column-toggle").on("change", function () { // Reemplazo de .change() por .on("change")
         var columnClass = ".col-" + $(this).val();
         if ($(this).is(":checked")) {
-            $(columnClass).show();  // Muestra la columna
+            $(columnClass).show(); // Muestra la columna
         } else {
-            $(columnClass).hide();  // Oculta la columna
+            $(columnClass).hide(); // Oculta la columna
         }
     });
 
@@ -16,3 +16,4 @@
         }
     });
 });
+

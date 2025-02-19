@@ -45,7 +45,7 @@ namespace AppTaxi.Controllers
             var horariosTotales = await _horario.Lista(login);
 
             // Validar listas
-            if (empresasTotales == null || !empresasTotales.Any())
+            if (empresasTotales == null || empresasTotales.Count() == 0)
             {
                 ViewBag.Mensaje = "La lista de empresas está vacía.";
                 return View();
@@ -61,7 +61,7 @@ namespace AppTaxi.Controllers
 
             // Filtrar vehículos de la empresa
             var vehiculosEmpresa = vehiculosTotales?.Where(v => v.IdEmpresa == empresa.IdEmpresa).ToList();
-            if (vehiculosEmpresa == null || !vehiculosEmpresa.Any())
+            if (vehiculosEmpresa == null || vehiculosEmpresa.Count() == 0)
             {
                 ViewBag.Mensaje = "La lista de vehículos está vacía.";
                 return View();
@@ -95,6 +95,11 @@ namespace AppTaxi.Controllers
             ViewBag.Mensaje = $"Bienvenid@ {usuario.Nombre}";
             return View(datosIniciales);
         } 
+
+        public IActionResult Detalle()
+        {
+            return View();
+        }
 
     }
 }
