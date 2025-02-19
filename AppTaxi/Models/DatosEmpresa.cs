@@ -3,6 +3,7 @@
     public class DatosEmpresa
     {
         public int IdDato { get; set; }
+        public string Foto { get; set; }
         public int IdVehiculo { get; set; }
         public string Placa { get; set; }
         public string NombrePropietario { get; set; }

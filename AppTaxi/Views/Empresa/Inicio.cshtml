@@ -13,6 +13,7 @@
 <table class="table">
     <thead>
         <tr>
+            <th scope="col" >#</th>
             <th scope="col" class="col-Placa">Placa</th>
             <th scope="col" class="col-Propietario">Propietario</th>
             <th scope="col" class="col-Conductor">Conductor</th>
@@ -26,13 +27,14 @@
         @foreach (var item in Model)
         {
             <tr>
+                <td>@item.IdDato</td>
                 <td class="col-Placa">@item.Placa</td>
                 <td class="col-Propietario">@item.NombrePropietario</td>
                 <td class="col-Conductor">@item.Conductor</td>
                 <td class="col-Fecha">@item.Fecha.ToString("yyyy-MM-dd")</td>
                 <td class="col-Desde">@item.HoraInicio</td>
                 <td class="col-Hasta">@item.HoraFin</td>
-                <td><a asp-action="#" asp-controller="#" asp-route-idVehiculo="@item.IdVehiculo" class="btn btn-primary btn-sm">Detalle</a></td>
+                <td><a asp-action="Detalle" asp-controller="Empresa" asp-route-idDato="@item.IdDato" class="btn btn-primary btn-sm">Detalle</a></td>
             </tr>
         }
     </tbody>

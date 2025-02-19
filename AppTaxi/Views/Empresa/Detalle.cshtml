@@ -1,0 +1,31 @@
+﻿@model DatosEmpresa
+@{
+    ViewData["Title"] = "Detalle";
+    Layout = "~/Views/Shared/_LayoutEmpresa.cshtml";
+}
+
+<h1>Detalle</h1>
+<p>@ViewBag.Mensaje</p>
+<div class="card" style="width: 18rem;">
+    <img src="https://icons.veryicon.com/png/o/internet--web/prejudice/user-128.png" class="img-fluid rounded-start" alt="@Model.Foto">
+    <div class="card-body">
+        <h5 class="card-title">Información</h5>
+    </div>
+    <ul class="list-group list-group-flush">
+        <li class="list-group-item"><strong>Id del Vehiculo:</strong>@Model.IdVehiculo</li>
+        <li class="list-group-item"><strong>Placa:</strong>@Model.Placa</li>
+        <li class="list-group-item"><strong>Propietario:</strong>@Model.NombrePropietario</li>
+        <li class="list-group-item"><strong>Conductor:</strong>@Model.Conductor</li>
+        <li class="list-group-item"><strong>Fecha:</strong>@Model.Fecha.Date</li>
+        <li class="list-group-item"><strong>Hora de inicio:</strong>@Model.HoraInicio</li>
+        <li class="list-group-item"><strong>Hora de fin:</strong>@Model.HoraFin</li>
+    </ul>
+    <div class="card-body">
+        <a href="#" class="card-link">Ver Conductor</a>
+        <a href="#" class="card-link">Ver Vehiculo</a>
+    </div>
+</div>
+
+<br />
+
+<a class="btn btn-success btn-sm" href="javascript:history.back()">Volver</a>
