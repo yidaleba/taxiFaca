@@ -169,10 +169,31 @@ namespace AppTaxi.Controllers
 
         }
 
-        public IActionResult Vehiculos()
+        public async Task<IActionResult> Vehiculos()
         {
+            var usuarioJson = HttpContext.Session.GetString("Usuario");
+            if (string.IsNullOrEmpty(usuarioJson))
+            {
+                ViewBag.Mensaje = "Usuario no autenticado.";
+                return RedirectToAction("Login", "Inicio");
+            }
+            var usuario = JsonConvert.DeserializeObject<Usuario>(usuarioJson);
+            var login = new Models.Login { Correo = usuario.Correo, Contrasena = usuario.Contrasena };
 
-            return View();
+            List<Empresa> empresas = await _empresa.Lista(login);
+            List<Vehiculo> vehiculos_totales = await _vehiculo.Lista(login);
+            List<Vehiculo> vehiculos_empresas = new List<Vehiculo>();
+
+            int IdEmpresa = empresas.Where(item => item.IdUsuario == usuario.IdUsuario).FirstOrDefault().IdEmpresa;
+            foreach(Vehiculo v in vehiculos_totales)
+            {
+                if(v.IdEmpresa == IdEmpresa)
+                {
+                    vehiculos_empresas.Add(v);
+                }
+            }
+            
+            return View(vehiculos_empresas);
         }
 
     }

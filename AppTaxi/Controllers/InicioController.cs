@@ -36,9 +36,9 @@ namespace AppTaxi.Controllers
                 return View("Index"); 
             }
 
-            if (!ValidacionDato.ValidarTexto(consulta.Placa))
+            if (consulta.Placa != null && consulta.Placa.Length != 6)
             {
-                ViewBag.Mensaje = "No se admite simbolos o signos";
+                ViewBag.Mensaje = "Placa no Admitida";
                 return View("Index");
             }
 
