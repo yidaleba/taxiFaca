@@ -214,5 +214,52 @@ namespace AppTaxi.Controllers
             return View(vehiculo);
         }
 
+        public async Task<IActionResult> Editar_Vehiculo (int IdVehiculo)
+        {
+            var usuarioJson = HttpContext.Session.GetString("Usuario");
+            if (string.IsNullOrEmpty(usuarioJson))
+            {
+                ViewBag.Mensaje = "Usuario no autenticado.";
+                return RedirectToAction("Login", "Inicio");
+            }
+            var usuario = JsonConvert.DeserializeObject<Usuario>(usuarioJson);
+            var login = new Models.Login { Correo = usuario.Correo, Contrasena = usuario.Contrasena };
+            
+            Vehiculo vehiculo = await _vehiculo.Obtener (IdVehiculo, login);
+
+            return View(vehiculo);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Guardar_Vehiculo(Vehiculo vehiculo)
+        {
+            var usuarioJson = HttpContext.Session.GetString("Usuario");
+            if (string.IsNullOrEmpty(usuarioJson))
+            {
+                ViewBag.Mensaje = "Usuario no autenticado.";
+                return RedirectToAction("Login", "Inicio");
+            }
+            var usuario = JsonConvert.DeserializeObject<Usuario>(usuarioJson);
+            var login = new Models.Login { Correo = usuario.Correo, Contrasena = usuario.Contrasena };
+
+            bool respuesta = await _vehiculo.Editar(vehiculo, login);
+            //string respuesta = await _vehiculo.Editar(vehiculo, login);
+
+            if (respuesta)
+            {
+                return RedirectToAction("Vehiculos");
+            }
+            else
+            {
+                ViewBag.Mensaje = "No se pudo Guardar";
+                //return View("Detalle_Vehiculo",vehiculo.IdVehiculo);
+                return NoContent();
+            }
+            
+                
+            
+            
+        }
+
     }
 }

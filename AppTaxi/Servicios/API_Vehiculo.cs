@@ -60,6 +60,7 @@ namespace AppTaxi.Servicios
         }
 
         public async Task<bool> Editar(Vehiculo vehiculo, Login login)
+        //public async Task<string> Editar(Vehiculo vehiculo, Login login)
         {
             bool Respuesta = false;
             await Autenticar(login);
@@ -74,6 +75,7 @@ namespace AppTaxi.Servicios
 
             }
             return Respuesta;
+            //return response.ToString();
         }
 
         public async Task<bool> Eliminar(int IdVehiculo, Login login)

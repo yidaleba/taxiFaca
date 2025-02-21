@@ -8,10 +8,8 @@
 
 @if(Model != null)
 {
-    <h1>@ViewBag.Mensaje</h1>
-    <br />
     <p>Vehiculos de la empresa:</p>
-    <table class="table">
+    <table class="table" >
         <thead>
             <tr>
                 <th scope="col">ID Vehiculo</th>
@@ -36,6 +34,7 @@
             }
         </tbody>
     </table>
+    <p>@ViewBag.Mensaje</p>
 }
 else
 {

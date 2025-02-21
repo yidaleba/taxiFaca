@@ -8,6 +8,7 @@ namespace AppTaxi.Servicios
         Task<Vehiculo> Obtener(int IdVehiculo, Login login);
         Task<bool> Guardar(Vehiculo vehiculo, Login login);
         Task<bool> Editar(Vehiculo vehiculo, Login login);
+        //Task<string> Editar(Vehiculo vehiculo, Login login);
         Task<bool> Eliminar(int IdVehiculo, Login login);
     }
 }
