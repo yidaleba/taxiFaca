@@ -231,6 +231,7 @@ namespace AppTaxi.Controllers
             var usuario = JsonConvert.DeserializeObject<Usuario>(usuarioJson);
             var login = new Models.Login { Correo = usuario.Correo, Contrasena = usuario.Contrasena };
             
+
             Vehiculo vehiculo = await _vehiculo.Obtener (IdVehiculo, login);
 
             return View(vehiculo);
@@ -263,6 +264,39 @@ namespace AppTaxi.Controllers
             }
             
         }
+
+        [HttpPost]
+        public async Task<IActionResult> Eliminar_Vehiculo(int IdVehiculo)
+        {
+            var usuarioJson = HttpContext.Session.GetString("Usuario");
+            if (string.IsNullOrEmpty(usuarioJson))
+            {
+                ViewBag.Mensaje = "Usuario no autenticado.";
+                return RedirectToAction("Login", "Inicio");
+            }
+            var usuario = JsonConvert.DeserializeObject<Usuario>(usuarioJson);
+            var login = new Models.Login { Correo = usuario.Correo, Contrasena = usuario.Contrasena};
+
+            Vehiculo v = await _vehiculo.Obtener(IdVehiculo,login);
+            v.Estado = false;
+            bool respuesta = await _vehiculo.Editar(v, login);
+            //string respuesta = await _vehiculo.Editar(vehiculo, login);
+
+            if (respuesta)
+            {
+                return RedirectToAction("Vehiculos");
+            }
+            else
+            {
+                ViewBag.Mensaje = "No se pudo Guardar";
+                //return View("Detalle_Vehiculo",vehiculo.IdVehiculo);
+                return NoContent();
+            }
+        }
+
+
+
+
 
     }
 }
