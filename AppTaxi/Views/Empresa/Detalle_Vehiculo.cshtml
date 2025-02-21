@@ -5,53 +5,77 @@
 }
 
 <h1>Detalle del Vehiculo</h1>
-@if(Model != null)
+@if (Model != null)
 {
-    
     <div class="card">
         <h5 class="card-header">Información:</h5>
         <div class="card-body">
-            
             <h5 class="card-title">Vehículo @Model.Placa</h5>
 
             <div class="mb-3 row">
-                <label for="staticEstado" class="col-sm-2 col-form-label"><strong>Estado Actual: </strong></label>
+                <label class="col-sm-2 col-form-label"><strong>Estado Actual: </strong></label>
                 <div class="col-sm-10">
-                    <input type="text" readonly class="form-control-plaintext" id="staticEstado" value="@(Model.Estado ? "Habilitado" : "No Habilitado")">
+                    <input type="text" readonly class="form-control-plaintext" value="@(Model.Estado ? "Habilitado" : "No Habilitado")">
                 </div>
             </div>
 
             <div class="mb-3 row">
-                <label for="staticSOAT" class="col-sm-2 col-form-label"><strong>SOAT: </strong></label>
+                <label class="col-sm-2 col-form-label"><strong>SOAT: </strong></label>
                 <div class="col-sm-10">
-                    <input type="text" readonly class="form-control-plaintext" id="staticSOAT" value="@Model.Soat">
+                    <input type="text" readonly class="form-control-plaintext" value="@Model.Soat">
                 </div>
             </div>
 
             <div class="mb-3 row">
-                <label for="staticTecnicoMecanica" class="col-sm-2 col-form-label"><strong>Tecnico Mecanica: </strong></label>
+                <label class="col-sm-2 col-form-label"><strong>Tecnico Mecanica: </strong></label>
                 <div class="col-sm-10">
-                    <input type="text" readonly class="form-control-plaintext" id="staticTecnicoMecanica" value="@Model.TecnicoMecanica">
+                    <input type="text" readonly class="form-control-plaintext" value="@Model.TecnicoMecanica">
                 </div>
             </div>
 
             <div class="mb-3 row">
-                <label for="staticIdPropietario" class="col-sm-2 col-form-label"><strong>Id Propietario: </strong></label>
+                <label class="col-sm-2 col-form-label"><strong>Id Propietario: </strong></label>
                 <div class="col-sm-10">
-                    <input type="text" readonly class="form-control-plaintext" id="staticIdPropietario" value="@Model.IdPropietario">
+                    <input type="text" readonly class="form-control-plaintext" value="@Model.IdPropietario">
                 </div>
             </div>
 
             <div class="mb-3 row">
-                <label for="staticPropietario" class="col-sm-2 col-form-label"><strong>Propietario: </strong></label>
+                <label class="col-sm-2 col-form-label"><strong>Propietario: </strong></label>
                 <div class="col-sm-10">
-                    <input type="text" readonly class="form-control-plaintext" id="staticPropietario" value="@ViewBag.Propietario">
+                    <input type="text" readonly class="form-control-plaintext" value="@ViewBag.Propietario">
                 </div>
             </div>
+
             <p>@ViewBag.Mensaje</p>
+
             <a href="javascript:history.back()" class="btn btn-success">Volver</a>
             <a asp-action="Editar_Vehiculo" asp-controller="Empresa" asp-route-IdVehiculo="@Model.IdVehiculo" class="btn btn-warning">Editar</a>
-            <a href="#" class="btn btn-danger">Eliminar</a>
+
+            <!-- Botón para abrir el modal de confirmación -->
+            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal">
+                Eliminar
+            </button>
+
+            <!-- Modal de Confirmación -->
+            <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="confirmDeleteLabel">Confirmar Eliminación</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                        </div>
+                        <div class="modal-body">
+                            ¿Estás seguro de que deseas eliminar este vehículo?
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                            <a asp-action="Eliminar" asp-controller="Empresa" asp-route-IdVehiculo="@Model.IdVehiculo" class="btn btn-danger">Eliminar</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
 }
@@ -59,9 +83,5 @@ else
 {
     <p>No se encontró el Dato:</p>
     <p>@ViewBag.Mensaje</p>
-
     <a href="javascript:history.back()" class="btn btn-success">Volver</a>
 }
-
-
-

@@ -79,19 +79,21 @@ namespace AppTaxi.Controllers
 
                 var propietario = await _propietario.Obtener(vehiculo.IdPropietario, login);
                 var conductor = await _conductor.Obtener(horario.IdConductor, login);
-
-                datosIniciales.Add(new DatosEmpresa
+                if(vehiculo.Estado == true)
                 {
-                    IdDato = i++,
-                    Foto = conductor.Foto,
-                    Placa = vehiculo.Placa,
-                    IdVehiculo = vehiculo.IdVehiculo,
-                    NombrePropietario = propietario?.Nombre,
-                    Conductor = conductor?.Nombre,
-                    Fecha = horario.Fecha,
-                    HoraInicio = horario.HoraInicio,
-                    HoraFin = horario.HoraFin
-                });
+                    datosIniciales.Add(new DatosEmpresa
+                    {
+                        IdDato = i++,
+                        Foto = conductor.Foto,
+                        Placa = vehiculo.Placa,
+                        IdVehiculo = vehiculo.IdVehiculo,
+                        NombrePropietario = propietario?.Nombre,
+                        Conductor = conductor?.Nombre,
+                        Fecha = horario.Fecha,
+                        HoraInicio = horario.HoraInicio,
+                        HoraFin = horario.HoraFin
+                    });
+                }
             }
 
             ViewBag.Mensaje = $"Bienvenid@ {usuario.Nombre}";
@@ -150,18 +152,22 @@ namespace AppTaxi.Controllers
                 var propietario = await _propietario.Obtener(vehiculo.IdPropietario, login);
                 var conductor = await _conductor.Obtener(horario.IdConductor, login);
 
-                datosIniciales.Add(new DatosEmpresa
+                if (vehiculo.Estado == true)
                 {
-                    IdDato = i++,
-                    Foto = conductor.Foto,
-                    Placa = vehiculo.Placa,
-                    IdVehiculo = vehiculo.IdVehiculo,
-                    NombrePropietario = propietario?.Nombre,
-                    Conductor = conductor?.Nombre,
-                    Fecha = horario.Fecha,
-                    HoraInicio = horario.HoraInicio,
-                    HoraFin = horario.HoraFin
-                });
+                    datosIniciales.Add(new DatosEmpresa
+                    {
+                        IdDato = i++,
+                        Foto = conductor.Foto,
+                        Placa = vehiculo.Placa,
+                        IdVehiculo = vehiculo.IdVehiculo,
+                        NombrePropietario = propietario?.Nombre,
+                        Conductor = conductor?.Nombre,
+                        Fecha = horario.Fecha,
+                        HoraInicio = horario.HoraInicio,
+                        HoraFin = horario.HoraFin
+                    });
+                }
+
 
             }
             DatosEmpresa Dato = datosIniciales.Where(item => item.IdDato == IdDato).FirstOrDefault();
@@ -187,7 +193,7 @@ namespace AppTaxi.Controllers
             int IdEmpresa = empresas.Where(item => item.IdUsuario == usuario.IdUsuario).FirstOrDefault().IdEmpresa;
             foreach (Vehiculo v in vehiculos_totales)
             {
-                if (v.IdEmpresa == IdEmpresa)
+                if (v.IdEmpresa == IdEmpresa && v.Estado == true)
                 {
                     vehiculos_empresas.Add(v);
                 }
@@ -255,9 +261,6 @@ namespace AppTaxi.Controllers
                 //return View("Detalle_Vehiculo",vehiculo.IdVehiculo);
                 return NoContent();
             }
-            
-                
-            
             
         }
 
