@@ -294,6 +294,66 @@ namespace AppTaxi.Controllers
             }
         }
 
+        
+        public  IActionResult Agregar_Vehiculo()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Crear_Vehiculo(Vehiculo vehiculo)
+        {
+            //Console.WriteLine($"Placa: {vehiculo.Placa}, SOAT: {vehiculo.Soat}, Tecno: {vehiculo.TecnicoMecanica}, Propietario: {vehiculo.IdPropietario}");
+
+            var usuarioJson = HttpContext.Session.GetString("Usuario");
+            if (string.IsNullOrEmpty(usuarioJson))
+            {
+                ViewBag.Mensaje = "Usuario no autenticado.";
+                return RedirectToAction("Login", "Inicio");
+            }
+            var usuario = JsonConvert.DeserializeObject<Usuario>(usuarioJson);
+            var login = new Models.Login { Correo = usuario.Correo, Contrasena = usuario.Contrasena };
+
+            
+            List<Empresa> Empresas = await _empresa.Lista(login);
+            List<Vehiculo> Vehiculos = await _vehiculo.Lista(login);
+            List<Vehiculo> Vehiculos_Empresa = new List<Vehiculo>();
+
+            int IdEmpresa = Empresas.Where(item => item.IdUsuario == usuario.IdUsuario).FirstOrDefault().IdEmpresa;
+
+            foreach (Vehiculo v in Vehiculos)
+            {
+                if (v.IdEmpresa == IdEmpresa && v.Estado == true)
+                {
+                    Vehiculos_Empresa.Add(v);
+                }
+            }
+            
+            vehiculo.Estado = true;
+            vehiculo.IdEmpresa = IdEmpresa;
+            vehiculo.Placa = vehiculo.Placa.ToUpper();
+
+            if (Vehiculos_Empresa.Any(v => v.Placa == vehiculo.Placa))
+            {
+                ViewBag.Mensaje = "La placa ya está registrada en la empresa.";
+                return View("Agregar_Vehiculo");
+            }
+
+            bool respuesta = await _vehiculo.Guardar(vehiculo, login);
+            
+           
+            if (respuesta)
+            {
+                return RedirectToAction("Vehiculos");
+            }
+            else
+            {
+                ViewBag.Mensaje = $"No se pudo Guardar {vehiculo.Placa}";
+                //return View("Detalle_Vehiculo",vehiculo.IdVehiculo);
+                return View("Agregar_Vehiculo");
+            }
+        }
+
 
 
 

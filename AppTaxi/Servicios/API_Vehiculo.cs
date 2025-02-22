@@ -42,6 +42,7 @@ namespace AppTaxi.Servicios
             return vehiculo;
         }
 
+        //public async Task<string> Guardar(Vehiculo vehiculo, Login login)
         public async Task<bool> Guardar(Vehiculo vehiculo, Login login)
         {
             bool Respuesta = false;
@@ -57,6 +58,7 @@ namespace AppTaxi.Servicios
 
             }
             return Respuesta;
+            //return response.ToString();
         }
 
         public async Task<bool> Editar(Vehiculo vehiculo, Login login)
