@@ -2,8 +2,10 @@
 using AppTaxi.Models;
 using AppTaxi.Servicios;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages;
 using Newtonsoft.Json;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace AppTaxi.Controllers
 {
@@ -15,7 +17,6 @@ namespace AppTaxi.Controllers
         private readonly I_Empresa _empresa;
         private readonly I_Conductor _conductor;
 
-
         public EmpresaController(I_Vehiculo vehiculo, I_Horario horario, I_Propietario propietario, I_Empresa empresa, I_Conductor conductor)
         {
             _vehiculo = vehiculo;
@@ -25,34 +26,42 @@ namespace AppTaxi.Controllers
             _conductor = conductor;
         }
 
+        private async Task<Usuario> GetUsuarioFromSessionAsync()
+        {
+            var usuarioJson = HttpContext.Session.GetString("Usuario");
+            if (string.IsNullOrEmpty(usuarioJson))
+            {
+                return null;
+            }
+            return JsonConvert.DeserializeObject<Usuario>(usuarioJson);
+        }
 
+        private Models.Login CreateLogin(Usuario usuario)
+        {
+            return new Models.Login { Correo = usuario.Correo, Contrasena = usuario.Contrasena };
+        }
 
         public async Task<IActionResult> Inicio()
         {
-            // Obtener el usuario de la sesión
-            var usuarioJson = HttpContext.Session.GetString("Usuario");
-            if (string.IsNullOrEmpty(usuarioJson))
+            var usuario = await GetUsuarioFromSessionAsync();
+            if (usuario == null)
             {
                 ViewBag.Mensaje = "Usuario no autenticado.";
                 return View();
             }
 
-            var usuario = JsonConvert.DeserializeObject<Usuario>(usuarioJson);
-            var login = new Models.Login { Correo = usuario.Correo, Contrasena = usuario.Contrasena };
+            var login = CreateLogin(usuario);
 
-            // Obtener listas de datos
             var empresasTotales = await _empresa.Lista(login);
             var vehiculosTotales = await _vehiculo.Lista(login);
             var horariosTotales = await _horario.Lista(login);
 
-            // Validar listas
-            if (empresasTotales == null || empresasTotales.Count() == 0)
+            if (empresasTotales == null || !empresasTotales.Any())
             {
                 ViewBag.Mensaje = "La lista de empresas está vacía.";
                 return View();
             }
 
-            // Obtener la empresa asociada al usuario
             var empresa = empresasTotales.FirstOrDefault(item => item.IdUsuario == usuario.IdUsuario);
             if (empresa == null)
             {
@@ -60,15 +69,13 @@ namespace AppTaxi.Controllers
                 return View();
             }
 
-            // Filtrar vehículos de la empresa
             var vehiculosEmpresa = vehiculosTotales?.Where(v => v.IdEmpresa == empresa.IdEmpresa).ToList();
-            if (vehiculosEmpresa == null || vehiculosEmpresa.Count() == 0)
+            if (vehiculosEmpresa == null || !vehiculosEmpresa.Any())
             {
                 ViewBag.Mensaje = "La lista de vehículos está vacía.";
                 return View();
             }
 
-            // Construir la lista de datos iniciales
             var datosIniciales = new List<DatosEmpresa>();
             int i = 1;
 
@@ -79,7 +86,8 @@ namespace AppTaxi.Controllers
 
                 var propietario = await _propietario.Obtener(vehiculo.IdPropietario, login);
                 var conductor = await _conductor.Obtener(horario.IdConductor, login);
-                if(vehiculo.Estado == true)
+
+                if (vehiculo.Estado)
                 {
                     datosIniciales.Add(new DatosEmpresa
                     {
@@ -97,34 +105,30 @@ namespace AppTaxi.Controllers
             }
 
             ViewBag.Mensaje = $"Bienvenid@ {usuario.Nombre}";
-
             return View(datosIniciales);
         }
 
         public async Task<IActionResult> Detalle(int IdDato)
         {
-            var usuarioJson = HttpContext.Session.GetString("Usuario");
-            if (string.IsNullOrEmpty(usuarioJson))
+            var usuario = await GetUsuarioFromSessionAsync();
+            if (usuario == null)
             {
                 ViewBag.Mensaje = "Usuario no autenticado.";
                 return RedirectToAction("Login", "Inicio");
             }
-            var usuario = JsonConvert.DeserializeObject<Usuario>(usuarioJson);
-            var login = new Models.Login { Correo = usuario.Correo, Contrasena = usuario.Contrasena };
 
-            // Obtener listas de datos
+            var login = CreateLogin(usuario);
+
             var empresasTotales = await _empresa.Lista(login);
             var vehiculosTotales = await _vehiculo.Lista(login);
             var horariosTotales = await _horario.Lista(login);
 
-            // Validar listas
-            if (empresasTotales == null || empresasTotales.Count() == 0)
+            if (empresasTotales == null || !empresasTotales.Any())
             {
                 ViewBag.Mensaje = "La lista de empresas está vacía.";
                 return View();
             }
 
-            // Obtener la empresa asociada al usuario
             var empresa = empresasTotales.FirstOrDefault(item => item.IdUsuario == usuario.IdUsuario);
             if (empresa == null)
             {
@@ -132,15 +136,13 @@ namespace AppTaxi.Controllers
                 return View();
             }
 
-            // Filtrar vehículos de la empresa
             var vehiculosEmpresa = vehiculosTotales?.Where(v => v.IdEmpresa == empresa.IdEmpresa).ToList();
-            if (vehiculosEmpresa == null || vehiculosEmpresa.Count() == 0)
+            if (vehiculosEmpresa == null || !vehiculosEmpresa.Any())
             {
                 ViewBag.Mensaje = "La lista de vehículos está vacía.";
                 return View();
             }
 
-            // Construir la lista de datos iniciales
             var datosIniciales = new List<DatosEmpresa>();
             int i = 1;
 
@@ -152,7 +154,7 @@ namespace AppTaxi.Controllers
                 var propietario = await _propietario.Obtener(vehiculo.IdPropietario, login);
                 var conductor = await _conductor.Obtener(horario.IdConductor, login);
 
-                if (vehiculo.Estado == true)
+                if (vehiculo.Estado)
                 {
                     datosIniciales.Add(new DatosEmpresa
                     {
@@ -167,72 +169,61 @@ namespace AppTaxi.Controllers
                         HoraFin = horario.HoraFin
                     });
                 }
-
-
             }
-            DatosEmpresa Dato = datosIniciales.Where(item => item.IdDato == IdDato).FirstOrDefault();
-            return View(Dato);
 
+            var dato = datosIniciales.FirstOrDefault(item => item.IdDato == IdDato);
+            return View(dato);
         }
 
         public async Task<IActionResult> Vehiculos()
         {
-            var usuarioJson = HttpContext.Session.GetString("Usuario");
-            if (string.IsNullOrEmpty(usuarioJson))
+            var usuario = await GetUsuarioFromSessionAsync();
+            if (usuario == null)
             {
                 ViewBag.Mensaje = "Usuario no autenticado.";
                 return RedirectToAction("Login", "Inicio");
             }
-            var usuario = JsonConvert.DeserializeObject<Usuario>(usuarioJson);
-            var login = new Models.Login { Correo = usuario.Correo, Contrasena = usuario.Contrasena };
 
-            List<Empresa> empresas = await _empresa.Lista(login);
-            List<Vehiculo> vehiculos_totales = await _vehiculo.Lista(login);
-            List<Vehiculo> vehiculos_empresas = new List<Vehiculo>();
+            var login = CreateLogin(usuario);
 
-            int IdEmpresa = empresas.Where(item => item.IdUsuario == usuario.IdUsuario).FirstOrDefault().IdEmpresa;
-            foreach (Vehiculo v in vehiculos_totales)
-            {
-                if (v.IdEmpresa == IdEmpresa && v.Estado == true)
-                {
-                    vehiculos_empresas.Add(v);
-                }
-            }
+            var empresas = await _empresa.Lista(login);
+            var vehiculosTotales = await _vehiculo.Lista(login);
 
-            return View(vehiculos_empresas);
+            var idEmpresa = empresas.FirstOrDefault(item => item.IdUsuario == usuario.IdUsuario)?.IdEmpresa;
+            var vehiculosEmpresa = vehiculosTotales?.Where(v => v.IdEmpresa == idEmpresa && v.Estado).ToList();
+
+            return View(vehiculosEmpresa);
         }
 
         public async Task<IActionResult> Detalle_Vehiculo(int IdVehiculo)
         {
-            var usuarioJson = HttpContext.Session.GetString("Usuario");
-            if (string.IsNullOrEmpty(usuarioJson))
+            var usuario = await GetUsuarioFromSessionAsync();
+            if (usuario == null)
             {
                 ViewBag.Mensaje = "Usuario no autenticado.";
                 return RedirectToAction("Login", "Inicio");
             }
-            var usuario = JsonConvert.DeserializeObject<Usuario>(usuarioJson);
-            var login = new Models.Login { Correo = usuario.Correo, Contrasena = usuario.Contrasena };
 
-            Vehiculo vehiculo = await _vehiculo.Obtener(IdVehiculo, login);
-            ViewBag.Mensaje = "";
-            Propietario propietario = await _propietario.Obtener(vehiculo.IdPropietario,login);
-            ViewBag.Propietario = propietario.Nombre;
+            var login = CreateLogin(usuario);
+
+            var vehiculo = await _vehiculo.Obtener(IdVehiculo, login);
+            var propietario = await _propietario.Obtener(vehiculo.IdPropietario, login);
+
+            ViewBag.Propietario = propietario?.Nombre;
             return View(vehiculo);
         }
 
-        public async Task<IActionResult> Editar_Vehiculo (int IdVehiculo)
+        public async Task<IActionResult> Editar_Vehiculo(int IdVehiculo)
         {
-            var usuarioJson = HttpContext.Session.GetString("Usuario");
-            if (string.IsNullOrEmpty(usuarioJson))
+            var usuario = await GetUsuarioFromSessionAsync();
+            if (usuario == null)
             {
                 ViewBag.Mensaje = "Usuario no autenticado.";
                 return RedirectToAction("Login", "Inicio");
             }
-            var usuario = JsonConvert.DeserializeObject<Usuario>(usuarioJson);
-            var login = new Models.Login { Correo = usuario.Correo, Contrasena = usuario.Contrasena };
-            
 
-            Vehiculo vehiculo = await _vehiculo.Obtener (IdVehiculo, login);
+            var login = CreateLogin(usuario);
+            var vehiculo = await _vehiculo.Obtener(IdVehiculo, login);
 
             return View(vehiculo);
         }
@@ -240,17 +231,15 @@ namespace AppTaxi.Controllers
         [HttpPost]
         public async Task<IActionResult> Guardar_Vehiculo(Vehiculo vehiculo)
         {
-            var usuarioJson = HttpContext.Session.GetString("Usuario");
-            if (string.IsNullOrEmpty(usuarioJson))
+            var usuario = await GetUsuarioFromSessionAsync();
+            if (usuario == null)
             {
                 ViewBag.Mensaje = "Usuario no autenticado.";
                 return RedirectToAction("Login", "Inicio");
             }
-            var usuario = JsonConvert.DeserializeObject<Usuario>(usuarioJson);
-            var login = new Models.Login { Correo = usuario.Correo, Contrasena = usuario.Contrasena };
 
+            var login = CreateLogin(usuario);
             bool respuesta = await _vehiculo.Editar(vehiculo, login);
-            //string respuesta = await _vehiculo.Editar(vehiculo, login);
 
             if (respuesta)
             {
@@ -259,28 +248,25 @@ namespace AppTaxi.Controllers
             else
             {
                 ViewBag.Mensaje = "No se pudo Guardar";
-                //return View("Detalle_Vehiculo",vehiculo.IdVehiculo);
                 return NoContent();
             }
-            
         }
 
         [HttpPost]
         public async Task<IActionResult> Eliminar_Vehiculo(int IdVehiculo)
         {
-            var usuarioJson = HttpContext.Session.GetString("Usuario");
-            if (string.IsNullOrEmpty(usuarioJson))
+            var usuario = await GetUsuarioFromSessionAsync();
+            if (usuario == null)
             {
                 ViewBag.Mensaje = "Usuario no autenticado.";
                 return RedirectToAction("Login", "Inicio");
             }
-            var usuario = JsonConvert.DeserializeObject<Usuario>(usuarioJson);
-            var login = new Models.Login { Correo = usuario.Correo, Contrasena = usuario.Contrasena};
 
-            Vehiculo v = await _vehiculo.Obtener(IdVehiculo,login);
-            v.Estado = false;
-            bool respuesta = await _vehiculo.Editar(v, login);
-            //string respuesta = await _vehiculo.Editar(vehiculo, login);
+            var login = CreateLogin(usuario);
+            var vehiculo = await _vehiculo.Obtener(IdVehiculo, login);
+            vehiculo.Estado = false;
+
+            bool respuesta = await _vehiculo.Editar(vehiculo, login);
 
             if (respuesta)
             {
@@ -289,13 +275,11 @@ namespace AppTaxi.Controllers
             else
             {
                 ViewBag.Mensaje = "No se pudo Guardar";
-                //return View("Detalle_Vehiculo",vehiculo.IdVehiculo);
                 return NoContent();
             }
         }
 
-        
-        public  IActionResult Agregar_Vehiculo()
+        public IActionResult Agregar_Vehiculo()
         {
             return View();
         }
@@ -303,25 +287,22 @@ namespace AppTaxi.Controllers
         [HttpPost]
         public async Task<IActionResult> Crear_Vehiculo(Vehiculo vehiculo)
         {
-            var usuarioJson = HttpContext.Session.GetString("Usuario");
-            if (string.IsNullOrEmpty(usuarioJson))
+            var usuario = await GetUsuarioFromSessionAsync();
+            if (usuario == null)
             {
                 ViewBag.Mensaje = "Usuario no autenticado.";
                 return RedirectToAction("Login", "Inicio");
             }
 
-            var usuario = JsonConvert.DeserializeObject<Usuario>(usuarioJson);
-            var login = new Models.Login { Correo = usuario.Correo, Contrasena = usuario.Contrasena };
-
-            List<Empresa> Empresas = await _empresa.Lista(login);
-            List<Vehiculo> Vehiculos = await _vehiculo.Lista(login);
-            List<Vehiculo> Vehiculos_Empresa = Vehiculos.Where(v => v.IdEmpresa == Empresas.FirstOrDefault(e => e.IdUsuario == usuario.IdUsuario).IdEmpresa && v.Estado).ToList();
+            var login = CreateLogin(usuario);
+            var empresas = await _empresa.Lista(login);
+            var vehiculos = await _vehiculo.Lista(login);
 
             vehiculo.Estado = true;
-            vehiculo.IdEmpresa = Empresas.FirstOrDefault(e => e.IdUsuario == usuario.IdUsuario).IdEmpresa;
+            vehiculo.IdEmpresa = empresas.FirstOrDefault(e => e.IdUsuario == usuario.IdUsuario)?.IdEmpresa ?? 0;
             vehiculo.Placa = vehiculo.Placa.ToUpper();
 
-            if (Vehiculos.Any(v => v.Placa == vehiculo.Placa))
+            if (vehiculos.Any(v => v.Placa == vehiculo.Placa))
             {
                 ViewBag.Mensaje = "La placa ya está en uso";
                 return View("Agregar_Vehiculo");
@@ -331,10 +312,9 @@ namespace AppTaxi.Controllers
 
             if (respuesta)
             {
-                // Aquí deberías obtener la ID del vehículo recién creado
-                List<Vehiculo> vehiculosGuardados = await _vehiculo.Lista(login); // Debes tener un método que obtenga el vehículo por placa
-                Vehiculo vehiculoGuardado = vehiculosGuardados.Where(v => v.Placa == vehiculo.Placa).FirstOrDefault();
-                ViewBag.IdVehiculo = vehiculoGuardado.IdVehiculo;
+                var vehiculosGuardados = await _vehiculo.Lista(login);
+                var vehiculoGuardado = vehiculosGuardados.FirstOrDefault(v => v.Placa == vehiculo.Placa);
+                ViewBag.IdVehiculo = vehiculoGuardado?.IdVehiculo;
                 ViewBag.Exito = true;
                 return View("Agregar_Vehiculo");
             }
@@ -344,11 +324,5 @@ namespace AppTaxi.Controllers
                 return View("Agregar_Vehiculo");
             }
         }
-//------------------------------------------  Propietarios --------------------------------------------------------
-
-
-
-
-
     }
 }
