@@ -303,56 +303,48 @@ namespace AppTaxi.Controllers
         [HttpPost]
         public async Task<IActionResult> Crear_Vehiculo(Vehiculo vehiculo)
         {
-            //Console.WriteLine($"Placa: {vehiculo.Placa}, SOAT: {vehiculo.Soat}, Tecno: {vehiculo.TecnicoMecanica}, Propietario: {vehiculo.IdPropietario}");
-
             var usuarioJson = HttpContext.Session.GetString("Usuario");
             if (string.IsNullOrEmpty(usuarioJson))
             {
                 ViewBag.Mensaje = "Usuario no autenticado.";
                 return RedirectToAction("Login", "Inicio");
             }
+
             var usuario = JsonConvert.DeserializeObject<Usuario>(usuarioJson);
             var login = new Models.Login { Correo = usuario.Correo, Contrasena = usuario.Contrasena };
 
-            
             List<Empresa> Empresas = await _empresa.Lista(login);
             List<Vehiculo> Vehiculos = await _vehiculo.Lista(login);
-            List<Vehiculo> Vehiculos_Empresa = new List<Vehiculo>();
+            List<Vehiculo> Vehiculos_Empresa = Vehiculos.Where(v => v.IdEmpresa == Empresas.FirstOrDefault(e => e.IdUsuario == usuario.IdUsuario).IdEmpresa && v.Estado).ToList();
 
-            int IdEmpresa = Empresas.Where(item => item.IdUsuario == usuario.IdUsuario).FirstOrDefault().IdEmpresa;
-
-            foreach (Vehiculo v in Vehiculos)
-            {
-                if (v.IdEmpresa == IdEmpresa && v.Estado == true)
-                {
-                    Vehiculos_Empresa.Add(v);
-                }
-            }
-            
             vehiculo.Estado = true;
-            vehiculo.IdEmpresa = IdEmpresa;
+            vehiculo.IdEmpresa = Empresas.FirstOrDefault(e => e.IdUsuario == usuario.IdUsuario).IdEmpresa;
             vehiculo.Placa = vehiculo.Placa.ToUpper();
 
-            if (Vehiculos_Empresa.Any(v => v.Placa == vehiculo.Placa))
+            if (Vehiculos.Any(v => v.Placa == vehiculo.Placa))
             {
-                ViewBag.Mensaje = "La placa ya está registrada en la empresa.";
+                ViewBag.Mensaje = "La placa ya está en uso";
                 return View("Agregar_Vehiculo");
             }
 
             bool respuesta = await _vehiculo.Guardar(vehiculo, login);
-            
-           
+
             if (respuesta)
             {
-                return RedirectToAction("Vehiculos");
+                // Aquí deberías obtener la ID del vehículo recién creado
+                List<Vehiculo> vehiculosGuardados = await _vehiculo.Lista(login); // Debes tener un método que obtenga el vehículo por placa
+                Vehiculo vehiculoGuardado = vehiculosGuardados.Where(v => v.Placa == vehiculo.Placa).FirstOrDefault();
+                ViewBag.IdVehiculo = vehiculoGuardado.IdVehiculo;
+                ViewBag.Exito = true;
+                return View("Agregar_Vehiculo");
             }
             else
             {
                 ViewBag.Mensaje = $"No se pudo Guardar {vehiculo.Placa}";
-                //return View("Detalle_Vehiculo",vehiculo.IdVehiculo);
                 return View("Agregar_Vehiculo");
             }
         }
+
 
 
 

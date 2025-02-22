@@ -9,13 +9,11 @@
 <div class="card">
     <h5 class="card-header">Ingrese los Datos:</h5>
     <div class="card-body">
-
         <form asp-action="Crear_Vehiculo" asp-controller="Empresa" method="post">
-
             <div class="mb-3 row">
                 <label for="staticIdVehiculo" class="col-sm-2 col-form-label"><strong>Placa: </strong></label>
                 <div class="col-sm-10">
-                    <input type="text" class="form-control"  id="staticIdVehiculo" asp-for="Placa" >
+                    <input type="text" class="form-control" id="staticIdVehiculo" asp-for="Placa">
                 </div>
             </div>
 
@@ -29,7 +27,7 @@
             <div class="mb-3 row">
                 <label for="staticTecnicoMecanica" class="col-sm-2 col-form-label"><strong>Tecnico Mecanica: </strong></label>
                 <div class="col-sm-10">
-                    <input type="text" class="form-control" id="staticTecnicoMecanica" asp-for="TecnicoMecanica" placeholder="Inserte Tecnico Mecánica">
+                    <input type="text" class="form-control" id="staticTecnicoMecanica" asp-for="TecnicoMecanica" placeholder="Inserte Técnico Mecánica">
                 </div>
             </div>
 
@@ -42,12 +40,38 @@
 
             <p>@ViewBag.Mensaje</p>
             <button type="submit" class="btn btn-success">Crear</button>
-            <br />
         </form>
-        <a href="javascript:history.back()" class="btn btn-primary">Volver</a>
-        
-        
 
+        <a href="javascript:history.back()" class="btn btn-primary">Volver</a>
     </div>
 </div>
 
+<!-- Modal de Confirmación -->
+<div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="successModalLabel">Vehículo Guardado</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+                <p>El vehículo ha sido guardado con éxito.</p>
+                <p><strong>ID del Vehículo:</strong> @ViewBag.IdVehiculo</p>
+            </div>
+            <div class="modal-footer">
+                <a href="@Url.Action("Vehiculos", "Empresa")" class="btn btn-success">Ir a Vehículos</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            var exito = "@ViewBag.Exito";
+            if (exito === "True") {
+                $('#successModal').modal('show'); // Muestra el modal automáticamente si el guardado fue exitoso
+            }
+        });
+    </script>
+}
