@@ -44,6 +44,7 @@ namespace AppTaxi.Servicios
         }
 
         public async Task<bool> Guardar(Conductor conductor, Login login)
+        //public async Task<string> Guardar(Conductor conductor, Login login)
         {
             bool Respuesta = false;
             await Autenticar(login);
@@ -58,6 +59,7 @@ namespace AppTaxi.Servicios
 
             }
             return Respuesta;
+            //return response.ToString();
         }
 
         public async Task<List<Conductor>> Lista(Login login)

@@ -1,0 +1,147 @@
+﻿@model Conductor
+@{
+    ViewData["Title"] = "Agregar Conductor";
+    Layout = "~/Views/Shared/_LayoutEmpresa.cshtml";
+}
+
+<h1>Agregar Conductor</h1>
+
+<div class="card">
+    <h5 class="card-header">Ingrese los Datos:</h5>
+    <div class="card-body">
+        <form asp-action="Crear_Conductor" asp-controller="Empresa" method="post">
+
+            <div class="mb-3 row">
+                <label class="col-sm-2 col-form-label"><strong>Foto: </strong></label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control-plaintext" asp-for="Foto" placeholder="Foto" required>
+                </div>
+            </div>
+
+            <div class="mb-3 row">
+                <label class="col-sm-2 col-form-label"><strong>Nombre: </strong></label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control-plaintext" asp-for="Nombre" placeholder="Nombre Completo" required>
+                </div>
+            </div>
+
+            <div class="mb-3 row">
+                <label class="col-sm-2 col-form-label"><strong>Numero Cedula: </strong></label>
+                <div class="col-sm-10">
+                    <input type="number" class="form-control-plaintext" asp-for="NumeroCedula" placeholder="100000000" required>
+                </div>
+            </div>
+
+            <div class="mb-3 row">
+                <label class="col-sm-2 col-form-label"><strong>Telefono: </strong></label>
+                <div class="col-sm-10">
+                    <input type="number" class="form-control-plaintext" asp-for="Telefono" placeholder="Numero de Telefono" required>
+                </div>
+            </div>
+
+            <div class="mb-3 row">
+                <label class="col-sm-2 col-form-label"><strong>Celular: </strong></label>
+                <div class="col-sm-10">
+                    <input type="number" class="form-control-plaintext" asp-for="Celular" placeholder="Numero Celular" required>
+                </div>
+            </div>
+
+            <div class="mb-3 row">
+                <label class="col-sm-2 col-form-label"><strong>Correo: </strong></label>
+                <div class="col-sm-10">
+                    <input type="email" class="form-control-plaintext" asp-for="Correo" placeholder="Correo Electronico" required>
+                </div>
+            </div>
+            <div class="mb-3 row">
+                <label class="col-sm-2 col-form-label"><strong>Dirección: </strong></label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control-plaintext" asp-for="Direccion" placeholder="Cra/Clle X # xx - xx" required>
+                </div>
+            </div>
+
+            <div class="mb-3 row">
+                <label class="col-sm-2 col-form-label"><strong>Ciudad: </strong></label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control-plaintext" asp-for="Ciudad" placeholder="Ciudad o Departamento" required>
+                </div>
+            </div>
+
+
+            <div class="mb-3 row">
+                <label class="col-sm-2 col-form-label"><strong>RH: </strong></label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control-plaintext" asp-for="GrupoSanguineo" placeholder="Grupo Sanguineo(Ej: AB-)" required>
+                </div>
+            </div>
+
+            <div class="mb-3 row">
+                <label class="col-sm-2 col-form-label"><strong>EPS: </strong></label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control-plaintext" asp-for="Eps" placeholder="EPS afiliado" required>
+                </div>
+            </div>
+
+            <div class="mb-3 row">
+                <label class="col-sm-2 col-form-label"><strong>ARL: </strong></label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control-plaintext" asp-for="Arl" placeholder="ARL Afiliado" required>
+                </div>
+            </div>
+
+            <div class="mb-3 row">
+                <label class="col-sm-2 col-form-label"><strong>Documento Cedula: </strong></label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control-plaintext" asp-for="DocumentoCedula" placeholder="Documento Cedula.pdf" required>
+                </div>
+            </div>
+
+            <div class="mb-3 row">
+                <label class="col-sm-2 col-form-label"><strong>Documento EPS: </strong></label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control-plaintext" asp-for="DocumentoEps" placeholder="Documento EPS.pdf" required>
+                </div>
+            </div>
+
+            <div class="mb-3 row">
+                <label class="col-sm-2 col-form-label"><strong>Documento ARL: </strong></label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control-plaintext" asp-for="DocumentoArl" placeholder="Documento ARL.pdf" required>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-success">Crear</button>
+        </form>
+
+        <a href="javascript:history.back()" class="btn btn-primary">Volver</a>
+    </div>
+</div>
+
+<!-- Modal de Confirmación -->
+<div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="successModalLabel">Conductor Guardado</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+                <p>El vehículo ha sido guardado con éxito.</p>
+                <p><strong>ID del Conductor:</strong> @ViewBag.IdConductor</p>
+            </div>
+            <div class="modal-footer">
+                <a href="@Url.Action("Conductores", "Empresa")" class="btn btn-success">Ir a Conductores</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<p>@ViewBag.Mensaje</p>
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            var exito = "@ViewBag.Exito";
+            if (exito === "True") {
+                $('#successModal').modal('show'); // Muestra el modal automáticamente si el guardado fue exitoso
+            }
+        });
+    </script>
+}

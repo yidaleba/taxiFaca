@@ -349,5 +349,134 @@ namespace AppTaxi.Controllers
             var vehiculosEmpresa = conductoresTotales?.Where(c => c.IdEmpresa == IdEmpresa && c.Estado).ToList();
             return View(vehiculosEmpresa);
         }
+
+        public async Task<IActionResult> Detalle_Conductor(int IdConductor)
+        {
+            var usuario = GetUsuarioFromSession();
+            if (usuario == null)
+            {
+                ViewBag.Mensaje = "Usuario no autenticado.";
+                return RedirectToAction("Login", "Inicio");
+            }
+
+            var login = CreateLogin(usuario);
+
+            var conductor = await _conductor.Obtener(IdConductor, login);
+            
+            return View(conductor);
+        }
+
+        public async Task<IActionResult> Editar_Conductor(int IdConductor)
+        {
+            var usuario = GetUsuarioFromSession();
+            if (usuario == null)
+            {
+                ViewBag.Mensaje = "Usuario no autenticado.";
+                return RedirectToAction("Login", "Inicio");
+            }
+
+            var login = CreateLogin(usuario);
+            var conductor = await _conductor.Obtener(IdConductor, login);
+
+            return View(conductor);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Guardar_Conductor(Conductor conductor)
+        {
+            var usuario = GetUsuarioFromSession();
+            if (usuario == null)
+            {
+                ViewBag.Mensaje = "Usuario no autenticado.";
+                return RedirectToAction("Login", "Inicio");
+            }
+
+            var login = CreateLogin(usuario);
+            bool respuesta = await _conductor.Editar(conductor, login);
+
+            if (respuesta)
+            {
+                return RedirectToAction("Conductores");
+            }
+            else
+            {
+                ViewBag.Mensaje = "No se pudo Guardar";
+                return NoContent();
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Eliminar_Conductor(int IdConductor)
+        {
+            var usuario = GetUsuarioFromSession();
+            if (usuario == null)
+            {
+                ViewBag.Mensaje = "Usuario no autenticado.";
+                return RedirectToAction("Login", "Inicio");
+            }
+
+            var login = CreateLogin(usuario);
+            var conductor = await _conductor.Obtener(IdConductor, login);
+            conductor.Estado = false;
+
+            bool respuesta = await _conductor.Editar(conductor, login);
+
+            if (respuesta)
+            {
+                return RedirectToAction("Conductores");
+            }
+            else
+            {
+                ViewBag.Mensaje = "No se pudo Guardar";
+                return NoContent();
+            }
+        }
+
+        public IActionResult Agregar_Conductor()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Crear_Conductor(Conductor conductor)
+        {
+            var usuario = GetUsuarioFromSession();
+            if (usuario == null)
+            {
+                ViewBag.Mensaje = "Usuario no autenticado.";
+                return RedirectToAction("Login", "Inicio");
+            }
+
+            var login = CreateLogin(usuario);
+            var empresas = await _empresa.Lista(login);
+            var conductores = await _conductor.Lista(login);
+
+            conductor.Estado = true;
+            conductor.IdEmpresa = empresas.FirstOrDefault(e => e.IdUsuario == usuario.IdUsuario)?.IdEmpresa ?? 0;
+
+            if (conductores.Any(c => c.NumeroCedula == conductor.NumeroCedula))
+            {
+                ViewBag.Mensaje = "El conductor ya está registrado";
+                return View("Agregar_Conductor");
+            }
+
+            bool respuesta = await _conductor.Guardar(conductor, login);
+            
+            if (respuesta)
+            {
+                var conductoresGuardados = await _conductor.Lista(login);
+                var conductorGuardado = conductoresGuardados.FirstOrDefault(c => c.NumeroCedula == conductor.NumeroCedula);
+                ViewBag.IdConductor = conductorGuardado?.IdConductor;
+                ViewBag.Exito = true;
+                return View("Conductores");
+            }
+            else
+            {
+                ViewBag.Mensaje = $"No se pudo Guardar {conductor.IdEmpresa}";
+                return View("Agregar_Conductor");
+            }
+            
+
+        }
     }
 }
