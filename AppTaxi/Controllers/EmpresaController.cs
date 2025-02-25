@@ -26,7 +26,8 @@ namespace AppTaxi.Controllers
             _conductor = conductor;
         }
 
-        private async Task<Usuario> GetUsuarioFromSessionAsync()
+        //------------Usuario Loggeado
+        private Usuario GetUsuarioFromSession()
         {
             var usuarioJson = HttpContext.Session.GetString("Usuario");
             if (string.IsNullOrEmpty(usuarioJson))
@@ -36,6 +37,7 @@ namespace AppTaxi.Controllers
             return JsonConvert.DeserializeObject<Usuario>(usuarioJson);
         }
 
+        //---------- Creación del login
         private Models.Login CreateLogin(Usuario usuario)
         {
             return new Models.Login { Correo = usuario.Correo, Contrasena = usuario.Contrasena };
@@ -43,7 +45,7 @@ namespace AppTaxi.Controllers
 
         public async Task<IActionResult> Inicio()
         {
-            var usuario = await GetUsuarioFromSessionAsync();
+            var usuario = GetUsuarioFromSession();
             if (usuario == null)
             {
                 ViewBag.Mensaje = "Usuario no autenticado.";
@@ -110,7 +112,7 @@ namespace AppTaxi.Controllers
 
         public async Task<IActionResult> Detalle(int IdDato)
         {
-            var usuario = await GetUsuarioFromSessionAsync();
+            var usuario = GetUsuarioFromSession();
             if (usuario == null)
             {
                 ViewBag.Mensaje = "Usuario no autenticado.";
@@ -177,7 +179,7 @@ namespace AppTaxi.Controllers
 
         public async Task<IActionResult> Vehiculos()
         {
-            var usuario = await GetUsuarioFromSessionAsync();
+            var usuario = GetUsuarioFromSession();
             if (usuario == null)
             {
                 ViewBag.Mensaje = "Usuario no autenticado.";
@@ -197,7 +199,7 @@ namespace AppTaxi.Controllers
 
         public async Task<IActionResult> Detalle_Vehiculo(int IdVehiculo)
         {
-            var usuario = await GetUsuarioFromSessionAsync();
+            var usuario = GetUsuarioFromSession();
             if (usuario == null)
             {
                 ViewBag.Mensaje = "Usuario no autenticado.";
@@ -215,7 +217,7 @@ namespace AppTaxi.Controllers
 
         public async Task<IActionResult> Editar_Vehiculo(int IdVehiculo)
         {
-            var usuario = await GetUsuarioFromSessionAsync();
+            var usuario = GetUsuarioFromSession();
             if (usuario == null)
             {
                 ViewBag.Mensaje = "Usuario no autenticado.";
@@ -231,7 +233,7 @@ namespace AppTaxi.Controllers
         [HttpPost]
         public async Task<IActionResult> Guardar_Vehiculo(Vehiculo vehiculo)
         {
-            var usuario = await GetUsuarioFromSessionAsync();
+            var usuario = GetUsuarioFromSession();
             if (usuario == null)
             {
                 ViewBag.Mensaje = "Usuario no autenticado.";
@@ -255,7 +257,7 @@ namespace AppTaxi.Controllers
         [HttpPost]
         public async Task<IActionResult> Eliminar_Vehiculo(int IdVehiculo)
         {
-            var usuario = await GetUsuarioFromSessionAsync();
+            var usuario = GetUsuarioFromSession();
             if (usuario == null)
             {
                 ViewBag.Mensaje = "Usuario no autenticado.";
@@ -287,7 +289,7 @@ namespace AppTaxi.Controllers
         [HttpPost]
         public async Task<IActionResult> Crear_Vehiculo(Vehiculo vehiculo)
         {
-            var usuario = await GetUsuarioFromSessionAsync();
+            var usuario = GetUsuarioFromSession();
             if (usuario == null)
             {
                 ViewBag.Mensaje = "Usuario no autenticado.";
@@ -323,6 +325,29 @@ namespace AppTaxi.Controllers
                 ViewBag.Mensaje = $"No se pudo Guardar {vehiculo.Placa}";
                 return View("Agregar_Vehiculo");
             }
+
+
+        }
+
+        public async Task<IActionResult> Conductores()
+        {
+            var usuario = GetUsuarioFromSession();
+            if (usuario == null)
+            {
+                ViewBag.Mensaje = "Usuario no autenticado.";
+                return RedirectToAction("Login", "Inicio");
+            }
+
+            var login = CreateLogin(usuario);
+
+            var empresas = await _empresa.Lista(login);
+
+            var IdEmpresa = empresas.FirstOrDefault(item => item.IdUsuario == usuario.IdUsuario)?.IdEmpresa;
+            //ViewBag.Mensaje = $"Hola {IdEmpresa}";
+
+            var conductoresTotales = await _conductor.Lista(login);
+            var vehiculosEmpresa = conductoresTotales?.Where(c => c.IdEmpresa == IdEmpresa && c.Estado).ToList();
+            return View(vehiculosEmpresa);
         }
     }
 }

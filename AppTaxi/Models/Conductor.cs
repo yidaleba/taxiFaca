@@ -33,5 +33,6 @@
         public string DocumentoEps { get; set; }
 
         public string DocumentoArl { get; set; }
+        public int IdEmpresa { get; set; }
     }
 }

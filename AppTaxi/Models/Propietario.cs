@@ -23,6 +23,7 @@
         public bool Estado { get; set; }
 
         public string DocumentoCedula { get; set; }
-    
+        public int IdEmpresa { get; set; }
+
     }
 }
