@@ -1,0 +1,92 @@
+﻿@model Propietario
+@{
+    ViewData["Title"] = "Editar Propietario";
+    Layout = "~/Views/Shared/_LayoutEmpresa.cshtml";
+}
+
+<h1>Editar Propietario</h1>
+
+
+
+@if (Model != null)
+{
+    <p>Llene los campos que desea editar</p>
+    <p>Los campos que no se deseen editar, pueden quedar vacios</p>
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-header">Señor/a @Model.Nombre</h5>
+            <form asp-action="Guardar_Propietario" asp-controller="Empresa" method="post">
+                <div class="mb-3 row">
+                    <label class="col-sm-2 col-form-label"><strong>Documento: </strong></label>
+                    <div class="col-sm-10">
+                        <input type="text" readonly class="form-control-plaintext" asp-for="NumeroCedula" value="@Model.NumeroCedula">
+                    </div>
+                </div>
+
+                <div class="mb-3 row">
+                    <label class="col-sm-2 col-form-label"><strong>ID: </strong></label>
+                    <div class="col-sm-10">
+                        <input type="number" readonly class="form-control-plaintext" asp-for="IdPropietario" value="@Model.IdPropietario">
+                    </div>
+                </div>
+
+                <div class="mb-3 row">
+                    <label class="col-sm-2 col-form-label"><strong>Telefono: </strong></label>
+                    <div class="col-sm-10">
+                        <input type="number" class="form-control-plaintext" asp-for="Telefono" placeholder="@Model.Telefono">
+                    </div>
+                </div>
+
+                <div class="mb-3 row">
+                    <label class="col-sm-2 col-form-label"><strong>Celular: </strong></label>
+                    <div class="col-sm-10">
+                        <input type="number" class="form-control-plaintext" asp-for="Celular" placeholder="@Model.Celular">
+                    </div>
+                </div>
+
+                <div class="mb-3 row">
+                    <label class="col-sm-2 col-form-label"><strong>Correo: </strong></label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control-plaintext" asp-for="Correo" placeholder="@Model.Correo">
+                    </div>
+                </div>
+                <div class="mb-3 row">
+                    <label class="col-sm-2 col-form-label"><strong>Dirección: </strong></label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control-plaintext" asp-for="Direccion" placeholder="@Model.Direccion">
+                    </div>
+                </div>
+
+                <div class="mb-3 row">
+                    <label class="col-sm-2 col-form-label"><strong>Ciudad: </strong></label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control-plaintext" asp-for="Ciudad" placeholder="@Model.Ciudad">
+                    </div>
+                </div>
+
+                <div class="mb-3 row">
+                    <label class="col-sm-2 col-form-label"><strong>Estado Actual: </strong></label>
+                    <div class="col-sm-10">
+                        <input type="text" readonly class="form-control-plaintext" asp-for="Estado" value="@(Model.Estado ? "Activo" : "Inactivo")">
+                    </div>
+                </div>
+
+
+                <button type="submit" class="btn btn-success">Editar</button>
+            </form>
+            <p>@ViewBag.Mensaje</p>
+            <a href="javascript:history.back()" class="btn btn-danger">Cancelar</a>
+
+        </div>
+    </div>
+}
+else
+{
+    <p>No se encontró el Dato:</p>
+
+
+    <a href="javascript:history.back()" class="btn btn-success">Volver</a>
+}
+
+<p>@ViewBag.Mensaje</p>
+

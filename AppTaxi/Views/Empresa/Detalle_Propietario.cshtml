@@ -1,10 +1,10 @@
-﻿@model Conductor
+﻿@model Propietario
 @{
-    ViewData["Title"] = "Detalle Conductor";
+    ViewData["Title"] = "Detalle Propietario";
     Layout = "~/Views/Shared/_LayoutEmpresa.cshtml";
 }
 
-<h1>Detalles del Conductor</h1>
+<h1>Detalle del Propietario</h1>
 @if (Model != null)
 {
     <div class="card">
@@ -52,52 +52,18 @@
                 </div>
             </div>
 
-            <div class="mb-3 row">
-                <label class="col-sm-2 col-form-label"><strong>RH: </strong></label>
-                <div class="col-sm-10">
-                    <input type="text" readonly class="form-control-plaintext" value="@Model.GrupoSanguineo">
-                </div>
-            </div>
-
-            <div class="mb-3 row">
-                <label class="col-sm-2 col-form-label"><strong>EPS: </strong></label>
-                <div class="col-sm-10">
-                    <input type="text" readonly class="form-control-plaintext" value="@Model.Eps">
-                </div>
-            </div>
-
-            <div class="mb-3 row">
-                <label class="col-sm-2 col-form-label"><strong>ARL: </strong></label>
-                <div class="col-sm-10">
-                    <input type="text" readonly class="form-control-plaintext" value="@Model.Arl">
-                </div>
-            </div>
-
+            
             <div class="mb-3 row">
                 <label class="col-sm-2 col-form-label"><strong>Documento Cedula: </strong></label>
                 <div class="col-sm-10">
                     <input type="text" readonly class="form-control-plaintext" value="@Model.DocumentoCedula">
                 </div>
             </div>
-
-            <div class="mb-3 row">
-                <label class="col-sm-2 col-form-label"><strong>Documento EPS: </strong></label>
-                <div class="col-sm-10">
-                    <input type="text" readonly class="form-control-plaintext" value="@Model.DocumentoEps">
-                </div>
-            </div>
-
-            <div class="mb-3 row">
-                <label class="col-sm-2 col-form-label"><strong>Documento ARL: </strong></label>
-                <div class="col-sm-10">
-                    <input type="text" readonly class="form-control-plaintext" value="@Model.DocumentoArl">
-                </div>
-            </div>
-
+                        
             <p>@ViewBag.Mensaje</p>
 
             <a href="javascript:history.back()" class="btn btn-success">Volver</a>
-            <a asp-action="Editar_Conductor" asp-controller="Empresa" asp-route-IdConductor="@Model.IdConductor" class="btn btn-warning">Editar</a>
+            <a asp-action="Editar_Propietario" asp-controller="Empresa" asp-route-IdPropietario="@Model.IdPropietario" class="btn btn-warning">Editar</a>
 
             <!-- Botón para abrir el modal de confirmación -->
             <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal">
@@ -113,13 +79,13 @@
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
                         </div>
                         <div class="modal-body">
-                            ¿Estás seguro de que deseas eliminar este conductor?
+                            ¿Estás seguro de que deseas eliminar este Propietario?
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
                             <!-- Formulario para eliminar -->
-                            <form asp-action="Eliminar_Conductor" asp-controller="Empresa" method="post">
-                                <input type="hidden" name="IdConductor" value="@Model.IdConductor" />
+                            <form asp-action="Eliminar_Propietario" asp-controller="Empresa" method="post">
+                                <input type="hidden" name="IdPropietario" value="@Model.IdPropietario"/>
                                 <button type="submit" class="btn btn-danger">Eliminar</button>
                             </form>
                         </div>
@@ -136,3 +102,4 @@ else
     <p>@ViewBag.Mensaje</p>
     <a href="javascript:history.back()" class="btn btn-success">Volver</a>
 }
+

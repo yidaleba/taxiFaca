@@ -241,6 +241,7 @@ namespace AppTaxi.Controllers
             }
 
             var login = CreateLogin(usuario);
+            vehiculo.Estado = true;
             bool respuesta = await _vehiculo.Editar(vehiculo, login);
 
             if (respuesta)
@@ -329,6 +330,8 @@ namespace AppTaxi.Controllers
 
         }
 
+        //---------------------------- Conductores ------------------------------------
+
         public async Task<IActionResult> Conductores()
         {
             var usuario = GetUsuarioFromSession();
@@ -346,8 +349,8 @@ namespace AppTaxi.Controllers
             //ViewBag.Mensaje = $"Hola {IdEmpresa}";
 
             var conductoresTotales = await _conductor.Lista(login);
-            var vehiculosEmpresa = conductoresTotales?.Where(c => c.IdEmpresa == IdEmpresa && c.Estado).ToList();
-            return View(vehiculosEmpresa);
+            var conductoresEmpresa = conductoresTotales?.Where(c => c.IdEmpresa == IdEmpresa && c.Estado).ToList();
+            return View(conductoresEmpresa);
         }
 
         public async Task<IActionResult> Detalle_Conductor(int IdConductor)
@@ -392,6 +395,7 @@ namespace AppTaxi.Controllers
             }
 
             var login = CreateLogin(usuario);
+            conductor.Estado = true;
             bool respuesta = await _conductor.Editar(conductor, login);
 
             if (respuesta)
@@ -476,6 +480,160 @@ namespace AppTaxi.Controllers
                 return View("Agregar_Conductor");
             }
             
+
+        }
+
+        //---------------------------- Propietarios ------------------------------------
+
+
+        public async Task<IActionResult> Propietarios()
+        {
+            var usuario = GetUsuarioFromSession();
+            if (usuario == null)
+            {
+                ViewBag.Mensaje = "Usuario no autenticado.";
+                return RedirectToAction("Login", "Inicio");
+            }
+
+            var login = CreateLogin(usuario);
+
+            var empresas = await _empresa.Lista(login);
+
+            var IdEmpresa = empresas.FirstOrDefault(item => item.IdUsuario == usuario.IdUsuario)?.IdEmpresa;
+            //ViewBag.Mensaje = $"Hola {IdEmpresa}";
+
+            var propietariosTotales = await _propietario.Lista(login);
+            var propietariosEmpresa = propietariosTotales?.Where(p => p.IdEmpresa == IdEmpresa && p.Estado).ToList();
+            return View(propietariosEmpresa);
+        }
+
+        public async Task<IActionResult> Detalle_Propietario(int IdPropietario)
+        {
+            var usuario = GetUsuarioFromSession();
+            if (usuario == null)
+            {
+                ViewBag.Mensaje = "Usuario no autenticado.";
+                return RedirectToAction("Login", "Inicio");
+            }
+
+            var login = CreateLogin(usuario);
+
+            var propietario = await _propietario.Obtener(IdPropietario, login);
+
+            return View(propietario);
+        }
+
+        public async Task<IActionResult> Editar_Propietario(int IdPropietario)
+        {
+            var usuario = GetUsuarioFromSession();
+            if (usuario == null)
+            {
+                ViewBag.Mensaje = "Usuario no autenticado.";
+                return RedirectToAction("Login", "Inicio");
+            }
+
+            var login = CreateLogin(usuario);
+            var propietario = await _propietario.Obtener(IdPropietario, login);
+
+            return View(propietario);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Guardar_Propietario(Propietario propietario)
+        {
+            var usuario = GetUsuarioFromSession();
+            if (usuario == null)
+            {
+                ViewBag.Mensaje = "Usuario no autenticado.";
+                return RedirectToAction("Login", "Inicio");
+            }
+
+            var login = CreateLogin(usuario);
+            propietario.Estado = true;
+            bool respuesta = await _propietario.Editar(propietario, login);
+
+            if (respuesta)
+            {
+                return RedirectToAction("Propietarios");
+            }
+            else
+            {
+                ViewBag.Mensaje = "No se pudo Guardar";
+                return NoContent();
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Eliminar_Propietario(int IdPropietario)
+        {
+            var usuario = GetUsuarioFromSession();
+            if (usuario == null)
+            {
+                ViewBag.Mensaje = "Usuario no autenticado.";
+                return RedirectToAction("Login", "Inicio");
+            }
+
+            var login = CreateLogin(usuario);
+            var propietario = await _propietario.Obtener(IdPropietario, login);
+            propietario.Estado = false;
+
+            bool respuesta = await _propietario.Editar(propietario, login);
+
+            if (respuesta)
+            {
+                return RedirectToAction("Propietarios");
+            }
+            else
+            {
+                ViewBag.Mensaje = "No se pudo Guardar";
+                return NoContent();
+            }
+        }
+
+        public IActionResult Agregar_Propietario()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Crear_Propietario(Propietario propietario)
+        {
+            var usuario = GetUsuarioFromSession();
+            if (usuario == null)
+            {
+                ViewBag.Mensaje = "Usuario no autenticado.";
+                return RedirectToAction("Login", "Inicio");
+            }
+
+            var login = CreateLogin(usuario);
+            var empresas = await _empresa.Lista(login);
+            var propietarios = await _propietario.Lista(login);
+
+            propietario.Estado = true;
+            propietario.IdEmpresa = empresas.FirstOrDefault(e => e.IdUsuario == usuario.IdUsuario)?.IdEmpresa ?? 0;
+
+            if (propietarios.Any(c => c.NumeroCedula == propietario.NumeroCedula))
+            {
+                ViewBag.Mensaje = "El propietario ya está registrado";
+                return View("Agregar_Propietario");
+            }
+
+            bool respuesta = await _propietario.Guardar(propietario, login);
+
+            if (respuesta)
+            {
+                var propietariosGuardados = await _propietario.Lista(login);
+                var propietarioGuardado = propietariosGuardados.FirstOrDefault(p => p.NumeroCedula == propietario.NumeroCedula);
+                ViewBag.IdPropietario = propietario?.IdPropietario;
+                ViewBag.Exito = true;
+                return View("Propietarios");
+            }
+            else
+            {
+                ViewBag.Mensaje = $"No se pudo Guardar {propietario.IdEmpresa}";
+                return View("Agregar_Propietario");
+            }
+
 
         }
     }

@@ -1,15 +1,16 @@
-﻿@model Conductor
+﻿@model Propietario
 @{
-    ViewData["Title"] = "Agregar Conductor";
+    ViewData["Title"] = "Agregar Propietario";
     Layout = "~/Views/Shared/_LayoutEmpresa.cshtml";
 }
 
-<h1>Agregar Conductor</h1>
+<h1>Agregar Propietario</h1>
+
 
 <div class="card">
     <h5 class="card-header">Ingrese los Datos:</h5>
     <div class="card-body">
-        <form asp-action="Crear_Conductor" asp-controller="Empresa" method="post">
+        <form asp-action="Crear_Propietario" asp-controller="Empresa" method="post">
 
             <div class="mb-3 row">
                 <label class="col-sm-2 col-form-label"><strong>Foto: </strong></label>
@@ -66,28 +67,6 @@
                 </div>
             </div>
 
-
-            <div class="mb-3 row">
-                <label class="col-sm-2 col-form-label"><strong>RH: </strong></label>
-                <div class="col-sm-10">
-                    <input type="text" class="form-control-plaintext" asp-for="GrupoSanguineo" placeholder="Grupo Sanguineo(Ej: AB-)" required>
-                </div>
-            </div>
-
-            <div class="mb-3 row">
-                <label class="col-sm-2 col-form-label"><strong>EPS: </strong></label>
-                <div class="col-sm-10">
-                    <input type="text" class="form-control-plaintext" asp-for="Eps" placeholder="EPS afiliado" required>
-                </div>
-            </div>
-
-            <div class="mb-3 row">
-                <label class="col-sm-2 col-form-label"><strong>ARL: </strong></label>
-                <div class="col-sm-10">
-                    <input type="text" class="form-control-plaintext" asp-for="Arl" placeholder="ARL Afiliado" required>
-                </div>
-            </div>
-
             <div class="mb-3 row">
                 <label class="col-sm-2 col-form-label"><strong>Documento Cedula: </strong></label>
                 <div class="col-sm-10">
@@ -95,19 +74,7 @@
                 </div>
             </div>
 
-            <div class="mb-3 row">
-                <label class="col-sm-2 col-form-label"><strong>Documento EPS: </strong></label>
-                <div class="col-sm-10">
-                    <input type="text" class="form-control-plaintext" asp-for="DocumentoEps" placeholder="Documento EPS.pdf" required>
-                </div>
-            </div>
-
-            <div class="mb-3 row">
-                <label class="col-sm-2 col-form-label"><strong>Documento ARL: </strong></label>
-                <div class="col-sm-10">
-                    <input type="text" class="form-control-plaintext" asp-for="DocumentoArl" placeholder="Documento ARL.pdf" required>
-                </div>
-            </div>
+            
             <button type="submit" class="btn btn-success">Crear</button>
         </form>
 
@@ -120,15 +87,15 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="successModalLabel">Conductor Guardado</h5>
+                <h5 class="modal-title" id="successModalLabel">Propietario Guardado</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
             </div>
             <div class="modal-body">
-                <p>El conductor ha sido guardado con éxito.</p>
-                <p><strong>ID del Conductor:</strong> @ViewBag.IdConductor</p>
+                <p>El propietario ha sido guardado con éxito.</p>
+                <p><strong>ID del Propietario:</strong> @ViewBag.IdPropietario</p>
             </div>
             <div class="modal-footer">
-                <a href="@Url.Action("Conductores", "Empresa")" class="btn btn-success">Ir a Conductores</a>
+                <a href="@Url.Action("Propietarios", "Empresa")" class="btn btn-success">Ir a Propietarios</a>
             </div>
         </div>
     </div>
