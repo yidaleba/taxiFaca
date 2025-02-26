@@ -547,12 +547,17 @@ namespace AppTaxi.Controllers
                 ViewBag.Mensaje = "Usuario no autenticado.";
                 return RedirectToAction("Login", "Inicio");
             }
-
+            ModeloVista modelo = new ModeloVista();
             var login = CreateLogin(usuario);
 
-            var propietario = await _propietario.Obtener(IdPropietario, login);
+            modelo.Propietario = await _propietario.Obtener(IdPropietario, login);
 
-            return View(propietario);
+            var vehiculosTotales = await _vehiculo.Lista(login);
+            modelo.Vehiculos = vehiculosTotales?.Where(v => v.IdPropietario == IdPropietario && v.Estado).ToList();
+
+            
+            
+            return View(modelo);
         }
 
         public async Task<IActionResult> Editar_Propietario(int IdPropietario)
