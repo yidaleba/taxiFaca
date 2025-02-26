@@ -2,6 +2,7 @@
 using AppTaxi.Models;
 using AppTaxi.Servicios;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Linq;
@@ -282,13 +283,37 @@ namespace AppTaxi.Controllers
             }
         }
 
-        public IActionResult Agregar_Vehiculo()
+        public async Task<IActionResult> Agregar_Vehiculo()
         {
-            return View();
+            // Obtener el usuario de la sesión
+            var usuario = GetUsuarioFromSession();
+            if (usuario == null)
+            {
+                ViewBag.Mensaje = "Usuario no autenticado.";
+                return RedirectToAction("Login", "Inicio");
+            }
+            var login = CreateLogin(usuario);
+
+            var empresas = await _empresa.Lista(login);
+
+            var IdEmpresa = empresas.FirstOrDefault(item => item.IdUsuario == usuario.IdUsuario)?.IdEmpresa;
+            //ViewBag.Mensaje = $"Hola {IdEmpresa}";
+
+            var propietariosTotales = await _propietario.Lista(login);
+            var propietariosEmpresa = propietariosTotales?.Where(p => p.IdEmpresa == IdEmpresa && p.Estado).ToList();
+
+            // Crear el ViewModel
+            var viewModel = new VehiculoViewModel
+            {
+                Vehiculo = new Vehiculo(), // Inicializar el objeto Vehiculo
+                Propietarios = propietariosEmpresa // Obtener la lista de propietarios
+            };
+
+            return View(viewModel);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Crear_Vehiculo(Vehiculo vehiculo)
+        public async Task<IActionResult> Crear_Vehiculo(VehiculoViewModel viewModel)
         {
             var usuario = GetUsuarioFromSession();
             if (usuario == null)
@@ -301,33 +326,40 @@ namespace AppTaxi.Controllers
             var empresas = await _empresa.Lista(login);
             var vehiculos = await _vehiculo.Lista(login);
 
-            vehiculo.Estado = true;
-            vehiculo.IdEmpresa = empresas.FirstOrDefault(e => e.IdUsuario == usuario.IdUsuario)?.IdEmpresa ?? 0;
-            vehiculo.Placa = vehiculo.Placa.ToUpper();
+            // Asignar valores al vehículo
+            viewModel.Vehiculo.Estado = true;
+            viewModel.Vehiculo.IdEmpresa = empresas.FirstOrDefault(e => e.IdUsuario == usuario.IdUsuario)?.IdEmpresa ?? 0;
+            viewModel.Vehiculo.Placa = viewModel.Vehiculo.Placa.ToUpper();
 
-            if (vehiculos.Any(v => v.Placa == vehiculo.Placa))
+            // Validar si la placa ya está en uso
+            if (vehiculos.Any(v => v.Placa == viewModel.Vehiculo.Placa))
             {
                 ViewBag.Mensaje = "La placa ya está en uso";
-                return View("Agregar_Vehiculo");
+                var propietariosTotales = await _propietario.Lista(login);
+                viewModel.Propietarios = propietariosTotales?.Where(p => p.IdEmpresa == viewModel.Vehiculo.IdEmpresa && p.Estado).ToList();
+
+                return View("Agregar_Vehiculo", viewModel);
             }
 
-            bool respuesta = await _vehiculo.Guardar(vehiculo, login);
+            // Guardar el vehículo
+            bool respuesta = await _vehiculo.Guardar(viewModel.Vehiculo, login);
 
             if (respuesta)
             {
                 var vehiculosGuardados = await _vehiculo.Lista(login);
-                var vehiculoGuardado = vehiculosGuardados.FirstOrDefault(v => v.Placa == vehiculo.Placa);
+                var vehiculoGuardado = vehiculosGuardados.FirstOrDefault(v => v.Placa == viewModel.Vehiculo.Placa);
                 ViewBag.IdVehiculo = vehiculoGuardado?.IdVehiculo;
                 ViewBag.Exito = true;
-                return View("Agregar_Vehiculo");
+                return RedirectToAction("Vehiculos");
             }
             else
             {
-                ViewBag.Mensaje = $"No se pudo Guardar {vehiculo.Placa}";
-                return View("Agregar_Vehiculo");
+                ViewBag.Mensaje = $"No se pudo Guardar {viewModel.Vehiculo.Placa}";
+                var propietariosTotales = await _propietario.Lista(login);
+                viewModel.Propietarios = propietariosTotales?.Where(p => p.IdEmpresa == viewModel.Vehiculo.IdEmpresa && p.Estado).ToList();
+                
+                return View("Agregar_Vehiculo", viewModel);
             }
-
-
         }
 
         //---------------------------- Conductores ------------------------------------

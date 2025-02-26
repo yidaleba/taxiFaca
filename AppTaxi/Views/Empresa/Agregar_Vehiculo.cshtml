@@ -1,4 +1,4 @@
-﻿@model Vehiculo
+﻿@model VehiculoViewModel
 @{
     ViewData["Title"] = "Agregar Vehiculo";
     Layout = "~/Views/Shared/_LayoutEmpresa.cshtml";
@@ -13,28 +13,34 @@
             <div class="mb-3 row">
                 <label for="staticIdVehiculo" class="col-sm-2 col-form-label"><strong>Placa: </strong></label>
                 <div class="col-sm-10">
-                    <input type="text" class="form-control" id="staticIdVehiculo" asp-for="Placa">
+                    <input type="text" class="form-control" id="staticIdVehiculo" asp-for="Vehiculo.Placa">
                 </div>
             </div>
 
             <div class="mb-3 row">
                 <label for="staticSOAT" class="col-sm-2 col-form-label"><strong>SOAT: </strong></label>
                 <div class="col-sm-10">
-                    <input type="text" class="form-control" id="staticSOAT" asp-for="Soat" placeholder="Inserte SOAT">
+                    <input type="text" class="form-control" id="staticSOAT" asp-for="Vehiculo.Soat" placeholder="Inserte SOAT">
                 </div>
             </div>
 
             <div class="mb-3 row">
                 <label for="staticTecnicoMecanica" class="col-sm-2 col-form-label"><strong>Tecnico Mecanica: </strong></label>
                 <div class="col-sm-10">
-                    <input type="text" class="form-control" id="staticTecnicoMecanica" asp-for="TecnicoMecanica" placeholder="Inserte Técnico Mecánica">
+                    <input type="text" class="form-control" id="staticTecnicoMecanica" asp-for="Vehiculo.TecnicoMecanica" placeholder="Inserte Técnico Mecánica">
                 </div>
             </div>
 
             <div class="mb-3 row">
-                <label for="staticIdPropietario" class="col-sm-2 col-form-label"><strong>Id Propietario: </strong></label>
+                <label for="staticIdPropietario" class="col-sm-2 col-form-label"><strong>Propietario: </strong></label>
                 <div class="col-sm-10">
-                    <input type="number" class="form-control" id="staticIdPropietario" asp-for="IdPropietario" placeholder="ID del Propietario">
+                    <select class="form-control" id="staticIdPropietario" asp-for="Vehiculo.IdPropietario">
+                        <option value="">Seleccione un propietario</option>
+                        @foreach (var propietario in Model.Propietarios)
+                        {
+                            <option value="@propietario.IdPropietario">@propietario.Nombre</option>
+                        }
+                    </select>
                 </div>
             </div>
 
