@@ -303,7 +303,7 @@ namespace AppTaxi.Controllers
             var propietariosEmpresa = propietariosTotales?.Where(p => p.IdEmpresa == IdEmpresa && p.Estado).ToList();
 
             // Crear el ViewModel
-            var viewModel = new VehiculoViewModel
+            var viewModel = new ModeloVista
             {
                 Vehiculo = new Vehiculo(), // Inicializar el objeto Vehiculo
                 Propietarios = propietariosEmpresa // Obtener la lista de propietarios
@@ -313,7 +313,7 @@ namespace AppTaxi.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Crear_Vehiculo(VehiculoViewModel viewModel)
+        public async Task<IActionResult> Crear_Vehiculo(ModeloVista viewModel)
         {
             var usuario = GetUsuarioFromSession();
             if (usuario == null)
