@@ -709,5 +709,26 @@ namespace AppTaxi.Controllers
                 return View("Agregar_Propietario");
             }
         }
+
+        public async Task<IActionResult> Ver_Horario(int IdConductor)
+        {
+            var usuario = GetUsuarioFromSession();
+            if (usuario == null)
+            {
+                ViewBag.Mensaje = "Usuario no autenticado.";
+                return RedirectToAction("Login", "Inicio");
+            }
+
+            var login = CreateLogin(usuario);
+            ModeloVista modelo = new ModeloVista();
+            modelo.Conductor = await _conductor.Obtener(IdConductor, login);
+            var Horarios = await _horario.Lista(login);
+            modelo.Vehiculos = await _vehiculo.Lista(login);
+                       
+            modelo.Horarios = Horarios?.Where(h => h.IdConductor == IdConductor).ToList();
+            
+
+            return View(modelo);
+        }
     }
 }

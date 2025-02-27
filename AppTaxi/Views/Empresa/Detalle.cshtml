@@ -19,7 +19,7 @@
             <li class="list-group-item"><strong>Placa:</strong>@Model.Placa</li>
             <li class="list-group-item"><strong>Propietario:</strong>@Model.NombrePropietario</li>
             <li class="list-group-item"><strong>Conductor:</strong>@Model.Conductor</li>
-            <li class="list-group-item"><strong>Fecha:</strong>@Model.Fecha.Date</li>
+            <li class="list-group-item"><strong>Fecha:</strong>@Model.Fecha.ToString("yyyy-MM-dd")</li>
             <li class="list-group-item"><strong>Hora de inicio:</strong>@Model.HoraInicio</li>
             <li class="list-group-item"><strong>Hora de fin:</strong>@Model.HoraFin</li>
         </ul>

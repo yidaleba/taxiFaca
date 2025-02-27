@@ -1,0 +1,75 @@
+﻿@model ModeloVista
+@{
+    ViewData["Title"] = "Ver Horario";
+    Layout = "~/Views/Shared/_LayoutEmpresa.cshtml";
+}
+
+<h1>Ver Horario</h1>
+@if (Model.Conductor != null && Model.Horarios != null)
+{
+    <h5>Señor/a @Model.Conductor.Nombre</h5>
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Vehiculo</th>
+                <th scope="col">Fecha</th>
+                <th scope="col">Desde</th>
+                <th scope="col">Hasta</th>
+                <th scope="col">Opciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            
+            @foreach (var item in Model.Horarios)
+            {
+                <tr>
+                    <td>@item.IdHorario</td>
+                    <td>@Model.Vehiculos.Where(v => v.IdVehiculo == item.IdVehiculo).FirstOrDefault().Placa</td>
+                    <td>@item.Fecha.ToString("yyyy-MM-dd")</td>
+                    <td>@item.HoraInicio</td>
+                    <td>@item.HoraFin</td>
+                    <td>
+                        <a asp-action="Editar_Horario" asp-controller="Empresa" asp-route-IdHorario="@item.IdHorario" class="btn btn-warning btn-sm">Editar</a>
+                        <!-- Botón para abrir el modal de confirmación -->
+                        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal">
+                            Eliminar
+                        </button>
+
+                        <!-- Modal de Confirmación -->
+                        <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="confirmDeleteLabel">Confirmar Eliminación</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        ¿Estás seguro de que deseas eliminar este horario?
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                                        <!-- Formulario para eliminar -->
+                                        <form asp-action="Eliminar_Horario" asp-controller="Empresa" method="post">
+                                            <input type="hidden" name="IdHorario" value="@item.IdHorario" />
+                                            <button type="submit" class="btn btn-danger">Eliminar</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+
+                </tr>
+            }
+        </tbody>
+    </table>
+
+}
+else
+{
+    <p>No se encontraron Horarios registrados</p>
+}
+
+<p>@ViewBag.Mensaje</p>
+<a href="javascript:history.back()" class="btn btn-success">Volver</a>
