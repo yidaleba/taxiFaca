@@ -103,8 +103,12 @@
                         </select>
                     </div>
                 </div>
-
-                <button type="submit" class="btn btn-primary">Guardar Rango de Horarios</button>
+                <p>@ViewBag.Mensaje</p>
+                <div class="d-grid gap-2 col-6 mx-auto">
+                    <button type="submit" class="btn btn-primary">Guardar Rango de Horarios</button>
+                    <a href="javascript:history.back()" class="btn btn-success">Volver</a>
+                </div>
+                
             </form>
         </div>
     </div>
@@ -112,7 +116,8 @@
 else
 {
     <p>No se encontró el usuario referenciado</p>
+    <p>@ViewBag.Mensaje</p>
+    <a href="javascript:history.back()" class="btn btn-success">Volver</a>
 }
 
-<p>@ViewBag.Mensaje</p>
-<a href="javascript:history.back()" class="btn btn-success">Volver</a>
+
