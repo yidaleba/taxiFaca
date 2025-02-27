@@ -1,0 +1,77 @@
+﻿@model ModeloVista
+@{
+    ViewData["Title"] = "Editar Horario";
+    Layout = "~/Views/Shared/_LayoutEmpresa.cshtml";
+}
+
+<h1>Editar Horario</h1>
+
+@if(Model != null)
+{
+    <p>Llene los campos que desea editar</p>
+    <p>Los campos que no se deseen editar, pueden quedar vacios</p>
+    <div class="card">
+        <div class="card-body">
+            
+            <form asp-action="Guardar_Horario" asp-controller="Empresa" method="post">
+                <div class="mb-3 row">
+                    <label class="col-sm-2 col-form-label"><strong>ID Conductor: </strong></label>
+                    <div class="col-sm-10">
+                        <input type="number" readonly class="form-control-plaintext" asp-for="Conductor.IdConductor" value="@Model.Conductor.IdConductor" required>
+                    </div>
+                </div>
+                <div class="mb-3 row">
+                    <label class="col-sm-2 col-form-label"><strong>ID Horario: </strong></label>
+                    <div class="col-sm-10">
+                        <input type="number" readonly class="form-control-plaintext" asp-for="Horario.IdHorario" value="@Model.Horario.IdHorario" required>
+                    </div>
+                </div>
+                <div class="mb-3 row">
+                    <label class="col-sm-2 col-form-label"><strong>Fecha: </strong></label>
+                    <div class="col-sm-10">
+                        <input type="date" class="form-control-plaintext" asp-for="Horario.Fecha" value="@Model.Horario.Fecha.ToString("yyyy-MM-dd")" required>
+                    </div>
+                </div>
+
+                <div class="mb-3 row">
+                    <label class="col-sm-2 col-form-label"><strong>Desde: </strong></label>
+                    <div class="col-sm-10">
+                        <input type="time" class="form-control-plaintext" asp-for="Horario.HoraInicio" value="@Model.Horario.HoraInicio" required>
+                    </div>
+                </div>
+
+                <div class="mb-3 row">
+                    <label class="col-sm-2 col-form-label"><strong>Hasta: </strong></label>
+                    <div class="col-sm-10">
+                        <input type="time" class="form-control-plaintext" asp-for="Horario.HoraFin" value="@Model.Horario.HoraFin" required>
+                    </div>
+                </div>
+
+                <div class="mb-3 row">
+                    <label for="staticIdVehiculo" class="col-sm-2 col-form-label"><strong>Vehiculo: </strong></label>
+                    <div class="col-sm-10">
+                        <select class="form-control" id="staticIdVehiculo" asp-for="Horario.IdVehiculo" required>
+                            <option value="">Seleccione Vehiculo</option>
+                            @foreach (var vehiculo in Model.Vehiculos)
+                            {
+                                <option value="@vehiculo.IdVehiculo">@vehiculo.Placa</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-success">Editar</button>
+            </form>
+            <p>@ViewBag.Mensaje</p>
+            <a href="javascript:history.back()" class="btn btn-danger">Cancelar</a>
+
+        </div>
+    </div>
+}
+else
+{
+    <p>No se encontró el Dato:</p>
+
+    <a href="javascript:history.back()" class="btn btn-success">Volver</a>
+}
+

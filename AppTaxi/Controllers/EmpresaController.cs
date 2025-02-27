@@ -4,6 +4,7 @@ using AppTaxi.Servicios;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages;
 using Newtonsoft.Json;
+using NPOI.OpenXmlFormats.Spreadsheet;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -710,6 +711,7 @@ namespace AppTaxi.Controllers
             }
         }
 
+        //------------------------- Horario ----------------------------------------------
         public async Task<IActionResult> Ver_Horario(int IdConductor)
         {
             var usuario = GetUsuarioFromSession();
@@ -730,5 +732,176 @@ namespace AppTaxi.Controllers
 
             return View(modelo);
         }
+
+        public async Task<IActionResult> Editar_Horario(int IdHorario)
+        {
+            var usuario = GetUsuarioFromSession();
+            if (usuario == null)
+            {
+                ViewBag.Mensaje = "Usuario no autenticado.";
+                return RedirectToAction("Login", "Inicio");
+            }
+            var login = CreateLogin(usuario);
+            ModeloVista modelo = new ModeloVista();
+
+            var vehiculos = await _vehiculo.Lista(login);
+            var empresas = await _empresa.Lista(login);
+            int IdEmpresa = empresas.Where(e => e.IdUsuario == usuario.IdUsuario).FirstOrDefault().IdEmpresa;
+            
+            modelo.Vehiculos = vehiculos?.Where(v => v.IdEmpresa == IdEmpresa && v.Estado).ToList();
+            modelo.Horario = await _horario.Obtener(IdHorario, login);
+            modelo.Conductor = await _conductor.Obtener(modelo.Horario.IdConductor,login);
+            return View(modelo);
+
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Guardar_Horario(ModeloVista modelo)
+        {
+            var usuario = GetUsuarioFromSession();
+            if (usuario == null)
+            {
+                ViewBag.Mensaje = "Usuario no autenticado.";
+                return RedirectToAction("Login", "Inicio");
+            }
+            var login = CreateLogin(usuario);
+
+            Horario h = modelo.Horario;
+            bool respuesta = await _horario.Editar(h,login);
+            if (respuesta)
+            {
+                int IdConductor = modelo.Conductor.IdConductor;
+                return RedirectToAction("Ver_Horario", new { IdConductor = IdConductor });
+            }
+            else
+            {
+                ViewBag.Mensaje = "No se pudo Guardar";
+                return NoContent();
+            }
+           
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Eliminar_Horario(int IdHorario)
+        {
+            var usuario = GetUsuarioFromSession();
+            if (usuario == null)
+            {
+                ViewBag.Mensaje = "Usuario no autenticado.";
+                return RedirectToAction("Login", "Inicio");
+            }
+
+            var login = CreateLogin(usuario);
+
+            bool respuesta = await _horario.Eliminar(IdHorario,login);
+            if(respuesta)
+            {
+                return RedirectToAction("Conductores");
+            }
+            else
+            {
+                ViewBag.Mensaje = "No se pudo Eliminar";
+                return NoContent();
+            }
+        }
+
+        public async Task<IActionResult> Asignar_Horario (int IdConductor)
+        {
+            var usuario = GetUsuarioFromSession();
+            if (usuario == null)
+            {
+                ViewBag.Mensaje = "Usuario no autenticado.";
+                return RedirectToAction("Login", "Inicio");
+            }
+
+            var login = CreateLogin(usuario);
+            ModeloVista modelo = new ModeloVista();
+
+            var vehiculos = await _vehiculo.Lista(login);
+            var empresas = await _empresa.Lista(login);
+            int IdEmpresa = empresas.Where(e => e.IdUsuario == usuario.IdUsuario).FirstOrDefault().IdEmpresa;
+
+            modelo.Vehiculos = vehiculos?.Where(v => v.IdEmpresa == IdEmpresa && v.Estado).ToList();
+
+            modelo.Conductor = await _conductor.Obtener(IdConductor,login);
+            return View(modelo);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Crear_Horario(ModeloVista modelo)
+        {
+            var usuario = GetUsuarioFromSession();
+            if (usuario == null)
+            {
+                ViewBag.Mensaje = "Usuario no autenticado.";
+                return RedirectToAction("Login", "Inicio");
+            }
+
+            var login = CreateLogin(usuario);
+
+            // Asignar el IdConductor al horario
+            modelo.Horario.IdConductor = modelo.Conductor.IdConductor;
+
+            // Guardar el horario
+            bool respuesta = await _horario.Guardar(modelo.Horario, login);
+
+            if (respuesta)
+            {
+                ViewBag.Mensaje = "Horario guardado correctamente.";
+                return RedirectToAction("Ver_Horario", new { IdConductor = modelo.Conductor.IdConductor });
+            }
+            else
+            {
+                ViewBag.Mensaje = "No se pudo guardar el horario.";
+                return NoContent();
+            }
+                    }
+
+        [HttpPost]
+        public async Task<IActionResult> Crear_RangoHorarios(ModeloVista modelo, DateTime FechaInicio, DateTime FechaFin, TimeSpan HoraInicio, TimeSpan HoraFin, int IdVehiculo)
+        {
+            var usuario = GetUsuarioFromSession();
+            if (usuario == null)
+            {
+                ViewBag.Mensaje = "Usuario no autenticado.";
+                return RedirectToAction("Login", "Inicio");
+            }
+
+            var login = CreateLogin(usuario);
+
+            // Crear la lista de horarios
+            var horarios = new List<Horario>();
+            for (var fecha = FechaInicio; fecha <= FechaFin; fecha = fecha.AddDays(1))
+            {
+                horarios.Add(new Horario
+                {
+                    Fecha = fecha,
+                    HoraInicio = HoraInicio,
+                    HoraFin = HoraFin,
+                    IdVehiculo = IdVehiculo,
+                    IdConductor = modelo.Conductor.IdConductor
+                });
+            }
+
+            // Guardar los horarios
+            bool respuesta = true;
+            foreach (var horario in horarios)
+            {
+                respuesta &= await _horario.Guardar(horario, login);
+            }
+
+            if (respuesta)
+            {
+                ViewBag.Mensaje = "Horario guardado correctamente.";
+                return RedirectToAction("Ver_Horario", new { IdConductor = modelo.Conductor.IdConductor });
+            }
+            else
+            {
+                ViewBag.Mensaje = "No se pudo guardar el horario.";
+                return NoContent();
+            }
+                        
+        }
+
     }
 }

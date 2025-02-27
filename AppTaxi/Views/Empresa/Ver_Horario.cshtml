@@ -4,7 +4,8 @@
     Layout = "~/Views/Shared/_LayoutEmpresa.cshtml";
 }
 
-<h1>Ver Horario</h1>
+<h1>Ver Horarios</h1>
+<a asp-action="Asignar_Horario" asp-controller="Empresa" asp-route-IdConductor="@Model.Conductor.IdConductor" class="btn btn-outline-success btn-sm"><strong>Asignar Horario</strong></></a>
 @if (Model.Conductor != null && Model.Horarios != null)
 {
     <h5>Señor/a @Model.Conductor.Nombre</h5>
@@ -31,33 +32,8 @@
                     <td>@item.HoraFin</td>
                     <td>
                         <a asp-action="Editar_Horario" asp-controller="Empresa" asp-route-IdHorario="@item.IdHorario" class="btn btn-warning btn-sm">Editar</a>
-                        <!-- Botón para abrir el modal de confirmación -->
-                        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal">
-                            Eliminar
-                        </button>
-
-                        <!-- Modal de Confirmación -->
-                        <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteLabel" aria-hidden="true">
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title" id="confirmDeleteLabel">Confirmar Eliminación</h5>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-                                    </div>
-                                    <div class="modal-body">
-                                        ¿Estás seguro de que deseas eliminar este horario?
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                                        <!-- Formulario para eliminar -->
-                                        <form asp-action="Eliminar_Horario" asp-controller="Empresa" method="post">
-                                            <input type="hidden" name="IdHorario" value="@item.IdHorario" />
-                                            <button type="submit" class="btn btn-danger">Eliminar</button>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        <a asp-action="Eliminar_Horario" asp-controller="Empresa" asp-route-IdHorario="@item.IdHorario" class="btn btn-danger btn-sm">Eliminar</a>
+                        
                     </td>
 
                 </tr>
