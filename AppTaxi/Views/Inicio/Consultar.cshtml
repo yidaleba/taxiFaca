@@ -11,9 +11,11 @@
             <div class="row g-3 align-items-center">
                 <!-- Imagen -->
                 <div class="col-md-4 text-center">
-                    <img src="https://icons.veryicon.com/png/o/internet--web/prejudice/user-128.png"
+                    
+
+                    <img src="data:image/png;base64,@Model.Foto"
                          class="img-fluid rounded-circle border shadow-sm p-2"
-                         alt="@Model.Foto"
+                         alt="https://icons.veryicon.com/png/o/internet--web/prejudice/user-128.png"
                          style="max-width: 150px;">
                 </div>
 
@@ -48,8 +50,8 @@
                                         @(Model.EstadoVehiculo ? "Habilitado" : "No Habilitado")
                                     </span>
                                 </p>
-                                <p class="card-text"><strong>SOAT:</strong> <span class="text-muted">@Model.Soat</span></p>
-                                <p class="card-text"><strong>Tecno Mecánica:</strong> <span class="text-muted">@Model.TecnicoMecanica</span></p>
+                                <p class="card-text"><strong>SOAT:</strong> <span class="text-muted">@(string.IsNullOrEmpty(Model.Soat) ? "No" : "Sí")</span></p>
+                                <p class="card-text"><strong>Tecno Mecánica:</strong> <span class="text-muted">@(string.IsNullOrEmpty(Model.TecnicoMecanica) ? "No" : "Sí")</span></p>
                             </div>
                         </div>
                     </div>

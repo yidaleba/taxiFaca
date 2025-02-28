@@ -125,70 +125,63 @@ namespace AppTaxi.Controllers
             if (usuario == null)
             {
                 ViewBag.Mensaje = "Usuario no autenticado.";
-                return RedirectToAction("Login", "Inicio");
+                return View();
             }
 
             var login = CreateLogin(usuario);
 
-            // Obtiene las listas de empresas, vehículos y horarios.
-            var empresasTotales = await _empresa.Lista(login);
-            var vehiculosTotales = await _vehiculo.Lista(login);
-            var horariosTotales = await _horario.Lista(login);
+            // Ejecutar todas las llamadas API en paralelo para reducir el tiempo de espera
+            var empresasTask = _empresa.Lista(login);
+            var vehiculosTask = _vehiculo.Lista(login);
+            var conductoresTask = _conductor.Lista(login);
+            var propietariosTask = _propietario.Lista(login);
+            var horariosTask = _horario.Lista(login);
 
-            // Valida si hay empresas registradas.
-            if (empresasTotales == null || !empresasTotales.Any())
-            {
-                ViewBag.Mensaje = "La lista de empresas está vacía.";
-                return View();
-            }
+            await Task.WhenAll(empresasTask, vehiculosTask, conductoresTask, propietariosTask, horariosTask);
 
-            // Obtiene la empresa asociada al usuario actual.
-            var empresa = empresasTotales.FirstOrDefault(item => item.IdUsuario == usuario.IdUsuario);
-            if (empresa == null)
-            {
-                ViewBag.Mensaje = "No hay empresa asociada a su usuario.";
-                return View();
-            }
+            var empresasTotales = await empresasTask;
+            var vehiculosTotales = await vehiculosTask;
+            var conductoresTotales = await conductoresTask;
+            var propietariosTotales = await propietariosTask;
+            var horariosTotales = await horariosTask;
 
-            // Filtra los vehículos asociados a la empresa.
-            var vehiculosEmpresa = vehiculosTotales?.Where(v => v.IdEmpresa == empresa.IdEmpresa).ToList();
-            if (vehiculosEmpresa == null || !vehiculosEmpresa.Any())
-            {
-                ViewBag.Mensaje = "La lista de vehículos está vacía.";
-                return View();
-            }
+            int IdEmpresa = empresasTotales
+                .Where(e => e.IdUsuario == usuario.IdUsuario)
+                .Select(e => e.IdEmpresa)
+                .FirstOrDefault();
 
-            // Construye la lista de datos iniciales para mostrar en la vista.
-            var datosIniciales = new List<DatosEmpresa>();
+            // Convertimos las listas en diccionarios para acceso rápido
+            var vehiculosDict = vehiculosTotales.ToDictionary(v => v.IdVehiculo);
+            var conductoresDict = conductoresTotales.ToDictionary(c => c.IdConductor);
+            var propietariosDict = propietariosTotales.ToDictionary(p => p.IdPropietario);
+
+            List<DatosEmpresa> DatosIniciales = new List<DatosEmpresa>();
             int i = 1;
 
-            foreach (var vehiculo in vehiculosEmpresa)
+            foreach (var h in horariosTotales)
             {
-                var horario = horariosTotales.FirstOrDefault(h => h.IdVehiculo == vehiculo.IdVehiculo);
-                if (horario == null) continue;
-
-                var propietario = await _propietario.Obtener(vehiculo.IdPropietario, login);
-                var conductor = await _conductor.Obtener(horario.IdConductor, login);
-
-                if (vehiculo.Estado)
+                if (conductoresDict.TryGetValue(h.IdConductor, out var c) && c.IdEmpresa == IdEmpresa && c.Estado)
                 {
-                    datosIniciales.Add(new DatosEmpresa
+                    if (vehiculosDict.TryGetValue(h.IdVehiculo, out var v) && propietariosDict.TryGetValue(v.IdPropietario, out var p))
                     {
-                        IdDato = i++,
-                        Foto = conductor.Foto,
-                        Placa = vehiculo.Placa,
-                        IdVehiculo = vehiculo.IdVehiculo,
-                        NombrePropietario = propietario?.Nombre,
-                        Conductor = conductor?.Nombre,
-                        Fecha = horario.Fecha,
-                        HoraInicio = horario.HoraInicio,
-                        HoraFin = horario.HoraFin
-                    });
+                        DatosIniciales.Add(new DatosEmpresa
+                        {
+                            IdDato = i++,
+                            Foto = c.Foto,
+                            IdVehiculo = h.IdVehiculo,
+                            Placa = v.Placa,
+                            NombrePropietario = p.Nombre,
+                            Conductor = c.Nombre,
+                            Fecha = h.Fecha,
+                            HoraInicio = h.HoraInicio,
+                            HoraFin = h.HoraFin
+                        });
+                    }
                 }
             }
 
             // Obtiene el registro específico por su IdDato.
-            var dato = datosIniciales.FirstOrDefault(item => item.IdDato == IdDato);
+            var dato = DatosIniciales.FirstOrDefault(item => item.IdDato == IdDato);
             return View(dato);
         }
 
@@ -467,16 +460,16 @@ namespace AppTaxi.Controllers
                 ViewBag.Mensaje = "Usuario no autenticado.";
                 return RedirectToAction("Login", "Inicio");
             }
-
+            ModeloVista modelo = new ModeloVista();
             var login = CreateLogin(usuario);
             var conductor = await _conductor.Obtener(IdConductor, login);
-
-            return View(conductor);
+            modelo.Conductor = conductor;
+            return View(modelo);
         }
 
         // Guarda los cambios realizados en un conductor.
         [HttpPost]
-        public async Task<IActionResult> Guardar_Conductor(Conductor conductor)
+        public async Task<IActionResult> Guardar_Conductor(ModeloVista modelo)
         {
             var usuario = GetUsuarioFromSession();
             if (usuario == null)
@@ -486,8 +479,46 @@ namespace AppTaxi.Controllers
             }
 
             var login = CreateLogin(usuario);
-            conductor.Estado = true;
-            bool respuesta = await _conductor.Editar(conductor, login);
+            modelo.Conductor.Estado = true;
+            
+            // Convertir archivos PDF a Base64
+            if (modelo.Archivo_1 != null)
+            {
+                using (var ms = new MemoryStream())
+                {
+                    await modelo.Archivo_1.CopyToAsync(ms);
+                    modelo.Conductor.DocumentoCedula = Convert.ToBase64String(ms.ToArray());
+                }
+            }
+
+            if (modelo.Archivo_2 != null)
+            {
+                using (var ms = new MemoryStream())
+                {
+                    await modelo.Archivo_2.CopyToAsync(ms);
+                    modelo.Conductor.DocumentoEps = Convert.ToBase64String(ms.ToArray());
+                }
+            }
+
+            if (modelo.Archivo_3 != null)
+            {
+                using (var ms = new MemoryStream())
+                {
+                    await modelo.Archivo_3.CopyToAsync(ms);
+                    modelo.Conductor.DocumentoArl = Convert.ToBase64String(ms.ToArray());
+                }
+            }
+
+            if (modelo.Archivo_4 != null)
+            {
+                using (var ms = new MemoryStream())
+                {
+                    await modelo.Archivo_4.CopyToAsync(ms);
+                    modelo.Conductor.Foto = Convert.ToBase64String(ms.ToArray());
+                }
+            }
+
+            bool respuesta = await _conductor.Editar(modelo.Conductor, login);
 
             if (respuesta)
             {
@@ -536,7 +567,7 @@ namespace AppTaxi.Controllers
 
         // Guarda un nuevo conductor en la base de datos.
         [HttpPost]
-        public async Task<IActionResult> Crear_Conductor(Conductor conductor)
+        public async Task<IActionResult> Crear_Conductor(ModeloVista modelo)
         {
             var usuario = GetUsuarioFromSession();
             if (usuario == null)
@@ -549,30 +580,71 @@ namespace AppTaxi.Controllers
             var empresas = await _empresa.Lista(login);
             var conductores = await _conductor.Lista(login);
 
-            conductor.Estado = true;
-            conductor.IdEmpresa = empresas.FirstOrDefault(e => e.IdUsuario == usuario.IdUsuario)?.IdEmpresa ?? 0;
+            modelo.Conductor.Estado = true;
+            modelo.Conductor.IdEmpresa = empresas.FirstOrDefault(e => e.IdUsuario == usuario.IdUsuario)?.IdEmpresa ?? 0;
 
             // Valida si el conductor ya está registrado.
-            if (conductores.Any(c => c.NumeroCedula == conductor.NumeroCedula))
+            if (conductores.Any(c => c.NumeroCedula == modelo.Conductor.NumeroCedula))
             {
                 ViewBag.Mensaje = "El conductor ya está registrado";
                 return View("Agregar_Conductor");
             }
 
+            // Convertir archivos PDF a Base64
+            if (modelo.Archivo_1 != null)
+            {
+                using (var ms = new MemoryStream())
+                {
+                    await modelo.Archivo_1.CopyToAsync(ms);
+                    modelo.Conductor.DocumentoCedula = Convert.ToBase64String(ms.ToArray());
+                }
+            }
+            
+
+            if (modelo.Archivo_2 != null)
+            {
+                using (var ms = new MemoryStream())
+                {
+                    await modelo.Archivo_2.CopyToAsync(ms);
+                    modelo.Conductor.DocumentoEps = Convert.ToBase64String(ms.ToArray());
+                }
+            }
+            
+
+            if (modelo.Archivo_3 != null)
+            {
+                using (var ms = new MemoryStream())
+                {
+                    await modelo.Archivo_3.CopyToAsync(ms);
+                    modelo.Conductor.DocumentoArl = Convert.ToBase64String(ms.ToArray());
+                }
+            }
+            
+
+            if (modelo.Archivo_4 != null)
+            {
+                using (var ms = new MemoryStream())
+                {
+                    await modelo.Archivo_4.CopyToAsync(ms);
+                    modelo.Conductor.Foto = Convert.ToBase64String(ms.ToArray());
+                }
+            }
+            
+
             // Guarda el conductor.
-            bool respuesta = await _conductor.Guardar(conductor, login);
+            bool respuesta = await _conductor.Guardar(modelo.Conductor, login);
 
             if (respuesta)
             {
                 var conductoresGuardados = await _conductor.Lista(login);
-                var conductorGuardado = conductoresGuardados.FirstOrDefault(c => c.NumeroCedula == conductor.NumeroCedula);
+                var conductorGuardado = conductoresGuardados.FirstOrDefault(c => c.NumeroCedula == modelo.Conductor.NumeroCedula);
                 ViewBag.IdConductor = conductorGuardado?.IdConductor;
                 ViewBag.Exito = true;
-                return View("Conductores");
+                return RedirectToAction("Conductores");
             }
             else
             {
-                ViewBag.Mensaje = $"No se pudo Guardar {conductor.IdEmpresa}";
+                ViewBag.Mensaje = $"No se pudo Guardar {modelo.Conductor.Eps}";
                 return View("Agregar_Conductor");
             }
         }
@@ -731,7 +803,7 @@ namespace AppTaxi.Controllers
                 var propietarioGuardado = propietariosGuardados.FirstOrDefault(p => p.NumeroCedula == propietario.NumeroCedula);
                 ViewBag.IdPropietario = propietario?.IdPropietario;
                 ViewBag.Exito = true;
-                return View("Propietarios");
+                return RedirectToAction("Propietarios");
             }
             else
             {

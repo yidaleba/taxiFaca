@@ -1,4 +1,4 @@
-﻿@model Conductor
+﻿@model ModeloVista 
 @{
     ViewData["Title"] = "Editar Conductor";
     Layout = "~/Views/Shared/_LayoutEmpresa.cshtml";
@@ -13,7 +13,7 @@
 
     <div class="card shadow-lg">
         <div class="card-header bg-primary text-white">
-            <h5 class="mb-0">Información del Conductor: @Model.Nombre</h5>
+            <h5 class="mb-0">Información del Conductor: @Model.Conductor.Nombre</h5>
         </div>
         <div class="card-body">
             <form asp-action="Guardar_Conductor" asp-controller="Empresa" method="post" enctype="multipart/form-data">
@@ -21,18 +21,18 @@
                 <!-- Foto -->
                 <div class="mb-3">
                     <label class="form-label"><strong>Foto:</strong></label>
-                    <input type="file" class="form-control" asp-for="Foto" accept=".png, .jpg, .jpeg">
+                    <input type="file" class="form-control" asp-for="Archivo_4" accept=".png, .jpg, .jpeg">
                 </div>
 
                 <!-- Documento y ID -->
                 <div class="row">
                     <div class="col-md-6">
                         <label class="form-label"><strong>Documento:</strong></label>
-                        <input type="text" readonly class="form-control" asp-for="NumeroCedula">
+                        <input type="text" readonly class="form-control" asp-for="Conductor.NumeroCedula">
                     </div>
                     <div class="col-md-6">
                         <label class="form-label"><strong>ID:</strong></label>
-                        <input type="number" readonly class="form-control" asp-for="IdConductor">
+                        <input type="number" readonly class="form-control" asp-for="Conductor.IdConductor">
                     </div>
                 </div>
 
@@ -40,11 +40,11 @@
                 <div class="row mt-3">
                     <div class="col-md-6">
                         <label class="form-label"><strong>Teléfono:</strong></label>
-                        <input type="number" class="form-control" asp-for="Telefono" placeholder="@Model.Telefono">
+                        <input type="number" class="form-control" asp-for="Conductor.Telefono" placeholder="@Model.Conductor.Telefono">
                     </div>
                     <div class="col-md-6">
                         <label class="form-label"><strong>Celular:</strong></label>
-                        <input type="number" class="form-control" asp-for="Celular" placeholder="@Model.Celular">
+                        <input type="number" class="form-control" asp-for="Conductor.Celular" placeholder="@Model.Conductor.Celular">
                     </div>
                 </div>
 
@@ -52,11 +52,11 @@
                 <div class="row mt-3">
                     <div class="col-md-6">
                         <label class="form-label"><strong>Correo:</strong></label>
-                        <input type="email" class="form-control" asp-for="Correo" placeholder="@Model.Correo">
+                        <input type="email" class="form-control" asp-for="Conductor.Correo" placeholder="@Model.Conductor.Correo">
                     </div>
                     <div class="col-md-6">
                         <label class="form-label"><strong>Dirección:</strong></label>
-                        <input type="text" class="form-control" asp-for="Direccion" placeholder="@Model.Direccion">
+                        <input type="text" class="form-control" asp-for="Conductor.Direccion" placeholder="@Model.Conductor.Direccion">
                     </div>
                 </div>
 
@@ -64,11 +64,11 @@
                 <div class="row mt-3">
                     <div class="col-md-6">
                         <label class="form-label"><strong>Ciudad:</strong></label>
-                        <input type="text" class="form-control" asp-for="Ciudad" placeholder="@Model.Ciudad">
+                        <input type="text" class="form-control" asp-for="Conductor.Ciudad" placeholder="@Model.Conductor.Ciudad">
                     </div>
                     <div class="col-md-6">
                         <label class="form-label"><strong>Estado Actual:</strong></label>
-                        <input type="text" readonly class="form-control" asp-for="Estado" value="@(Model.Estado ? "Activo" : "Inactivo")">
+                        <input type="text" readonly class="form-control" asp-for="Conductor.Estado" value="@(Model.Conductor.Estado ? "Activo" : "Inactivo")">
                     </div>
                 </div>
 
@@ -76,15 +76,15 @@
                 <div class="row mt-3">
                     <div class="col-md-4">
                         <label class="form-label"><strong>RH:</strong></label>
-                        <input type="text" readonly class="form-control" asp-for="GrupoSanguineo">
+                        <input type="text" readonly class="form-control" asp-for="Conductor.GrupoSanguineo">
                     </div>
                     <div class="col-md-4">
                         <label class="form-label"><strong>EPS:</strong></label>
-                        <input type="text" readonly class="form-control" asp-for="Eps">
+                        <input type="text" readonly class="form-control" asp-for="Conductor.Eps">
                     </div>
                     <div class="col-md-4">
                         <label class="form-label"><strong>ARL:</strong></label>
-                        <input type="text" readonly class="form-control" asp-for="Arl">
+                        <input type="text" readonly class="form-control" asp-for="Conductor.Arl">
                     </div>
                 </div>
 
@@ -92,15 +92,18 @@
                 <div class="row mt-3">
                     <div class="col-md-4">
                         <label class="form-label"><strong>Documento Cédula:</strong></label>
-                        <input type="text" readonly class="form-control" asp-for="DocumentoCedula">
+                        <input type="file" readonly class="form-control" asp-for="Conductor.DocumentoCedula">
+                        <small class="text-muted">¿Hay archivo cargado?: @(string.IsNullOrEmpty(Model.Conductor.DocumentoCedula) ? "No" : "Sí")</small>
                     </div>
                     <div class="col-md-4">
                         <label class="form-label"><strong>Documento EPS:</strong></label>
-                        <input type="text" readonly class="form-control" asp-for="DocumentoEps">
+                        <input type="file" readonly class="form-control" asp-for="Conductor.DocumentoEps">
+                        <small class="text-muted">¿Hay archivo cargado?: @(string.IsNullOrEmpty(Model.Conductor.DocumentoEps) ? "No" : "Sí")</small>
                     </div>
                     <div class="col-md-4">
                         <label class="form-label"><strong>Documento ARL:</strong></label>
-                        <input type="text" readonly class="form-control" asp-for="DocumentoArl">
+                        <input type="file" readonly class="form-control" asp-for="Conductor.DocumentoArl">
+                        <small class="text-muted">¿Hay archivo cargado?: @(string.IsNullOrEmpty(Model.Conductor.DocumentoArl) ? "No" : "Sí")</small>
                     </div>
                 </div>
 

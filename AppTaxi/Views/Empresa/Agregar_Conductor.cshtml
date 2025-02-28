@@ -1,4 +1,4 @@
-﻿@model Conductor
+﻿@model ModeloVista
 @{
     ViewData["Title"] = "Agregar Conductor";
     Layout = "~/Views/Shared/_LayoutEmpresa.cshtml";
@@ -8,79 +8,79 @@
 <div class="card shadow">
     <h5 class="card-header bg-primary text-white">Ingrese los Datos:</h5>
     <div class="card-body">
-        <form asp-action="Crear_Conductor" asp-controller="Empresa" method="post">
+        <form asp-action="Crear_Conductor" asp-controller="Empresa" method="post" enctype="multipart/form-data">
             <div class="row">
                 <div class="col-md-6">
                     <div class="mb-3">
                         <label class="form-label"><strong>Foto:</strong></label>
-                        <input type="file" class="form-control" asp-for="Foto" placeholder="Foto" required accept=".png, .jpg, .jpeg">
+                        <input type="file" class="form-control" asp-for="Archivo_4" placeholder="Foto" required accept=".png, .jpg, .jpeg">
                     </div>
 
                     <div class="mb-3">
                         <label class="form-label"><strong>Nombre:</strong></label>
-                        <input type="text" class="form-control" asp-for="Nombre" placeholder="Nombre Completo" required>
+                        <input type="text" class="form-control" asp-for="Conductor.Nombre" placeholder="Nombre Completo" required>
                     </div>
 
                     <div class="mb-3">
                         <label class="form-label"><strong>Número Cédula:</strong></label>
-                        <input type="number" class="form-control" asp-for="NumeroCedula" placeholder="100000000" required>
+                        <input type="number" class="form-control" asp-for="Conductor.NumeroCedula" placeholder="100000000" required>
                     </div>
 
                     <div class="mb-3">
                         <label class="form-label"><strong>Teléfono:</strong></label>
-                        <input type="number" class="form-control" asp-for="Telefono" placeholder="Número de Teléfono" required>
+                        <input type="number" class="form-control" asp-for="Conductor.Telefono" placeholder="Número de Teléfono" required>
                     </div>
 
                     <div class="mb-3">
                         <label class="form-label"><strong>Celular:</strong></label>
-                        <input type="number" class="form-control" asp-for="Celular" placeholder="Número Celular" required>
+                        <input type="number" class="form-control" asp-for="Conductor.Celular" placeholder="Número Celular" required>
                     </div>
 
                     <div class="mb-3">
                         <label class="form-label"><strong>Correo:</strong></label>
-                        <input type="email" class="form-control" asp-for="Correo" placeholder="Correo Electrónico" required>
+                        <input type="email" class="form-control" asp-for="Conductor.Correo" placeholder="Correo Electrónico" required>
                     </div>
 
                     <div class="mb-3">
                         <label class="form-label"><strong>Dirección:</strong></label>
-                        <input type="text" class="form-control" asp-for="Direccion" placeholder="Cra/Clle X # xx - xx" required>
+                        <input type="text" class="form-control" asp-for="Conductor.Direccion" placeholder="Cra/Clle X # xx - xx" required>
                     </div>
 
                     <div class="mb-3">
                         <label class="form-label"><strong>Ciudad:</strong></label>
-                        <input type="text" class="form-control" asp-for="Ciudad" placeholder="Ciudad o Departamento" required>
+                        <input type="text" class="form-control" asp-for="Conductor.Ciudad" placeholder="Ciudad o Departamento" required>
                     </div>
                 </div>
 
                 <div class="col-md-6">
                     <div class="mb-3">
                         <label class="form-label"><strong>RH:</strong></label>
-                        <input type="text" class="form-control" asp-for="GrupoSanguineo" placeholder="Grupo Sanguíneo (Ej: AB-)" required>
+                        <input type="text" class="form-control" asp-for="Conductor.GrupoSanguineo" placeholder="Grupo Sanguíneo (Ej: AB-)" required>
                     </div>
 
                     <div class="mb-3">
                         <label class="form-label"><strong>EPS:</strong></label>
-                        <input type="text" class="form-control" asp-for="Eps" placeholder="EPS afiliado" required>
+                        <input type="text" class="form-control" asp-for="Conductor.Eps" placeholder="EPS afiliado" required>
                     </div>
 
                     <div class="mb-3">
                         <label class="form-label"><strong>ARL:</strong></label>
-                        <input type="text" class="form-control" asp-for="Arl" placeholder="ARL Afiliado" required>
+                        <input type="text" class="form-control" asp-for="Conductor.Arl" placeholder="ARL Afiliado" required>
                     </div>
 
                     <div class="mb-3">
                         <label class="form-label"><strong>Documento Cédula:</strong></label>
-                        <input type="file" class="form-control" asp-for="DocumentoCedula" placeholder="Documento Cédula.pdf" required accept=".pdf">
+                        <input type="file" class="form-control" asp-for="Archivo_1" accept=".pdf" required>
                     </div>
 
                     <div class="mb-3">
                         <label class="form-label"><strong>Documento EPS:</strong></label>
-                        <input type="file" class="form-control" asp-for="DocumentoEps" placeholder="Documento EPS.pdf" required accept=".pdf">
+                        <input type="file" class="form-control" asp-for="Archivo_2" placeholder="Documento EPS.pdf" required accept=".pdf">
                     </div>
 
                     <div class="mb-3">
                         <label class="form-label"><strong>Documento ARL:</strong></label>
-                        <input type="file" class="form-control" asp-for="DocumentoArl" placeholder="Documento ARL.pdf" required accept=".pdf">
+                        <input type="file" class="form-control" asp-for="Archivo_3" placeholder="Documento ARL.pdf" required accept=".pdf">
                     </div>
                 </div>
             </div>
