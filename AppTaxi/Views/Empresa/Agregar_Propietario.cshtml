@@ -1,4 +1,4 @@
-﻿@model Propietario
+﻿@model ModeloVista
 @{
     ViewData["Title"] = "Agregar Propietario";
     Layout = "~/Views/Shared/_LayoutEmpresa.cshtml";
@@ -9,68 +9,68 @@
 <div class="card shadow-lg border-0 rounded-3">
     <h5 class="card-header bg-primary text-white text-center py-3">Ingrese los Datos</h5>
     <div class="card-body">
-        <form asp-action="Crear_Propietario" asp-controller="Empresa" method="post" class="needs-validation" novalidate>
+        <form asp-action="Crear_Propietario" asp-controller="Empresa" method="post" class="needs-validation" novalidate enctype="multipart/form-data">
 
             <div class="row mb-3">
                 <label class="col-sm-3 col-form-label"><strong>Foto:</strong></label>
                 <div class="col-sm-9">
-                    <input type="file" class="form-control" asp-for="Foto" placeholder="Foto" required accept=".png, .jpg, .jpeg">
+                    <input type="file" class="form-control" asp-for="Archivo_4" placeholder="Foto" required accept=".png, .jpg, .jpeg">
                 </div>
             </div>
 
             <div class="row mb-3">
                 <label class="col-sm-3 col-form-label"><strong>Nombre:</strong></label>
                 <div class="col-sm-9">
-                    <input type="text" class="form-control" asp-for="Nombre" placeholder="Nombre Completo" required>
+                    <input type="text" class="form-control" asp-for="Propietario.Nombre" placeholder="Nombre Completo" required>
                 </div>
             </div>
 
             <div class="row mb-3">
                 <label class="col-sm-3 col-form-label"><strong>Número de Cédula:</strong></label>
                 <div class="col-sm-9">
-                    <input type="number" class="form-control" asp-for="NumeroCedula" placeholder="100000000" required>
+                    <input type="number" class="form-control" asp-for="Propietario.NumeroCedula" placeholder="100000000" required>
                 </div>
             </div>
 
             <div class="row mb-3">
                 <label class="col-sm-3 col-form-label"><strong>Teléfono:</strong></label>
                 <div class="col-sm-9">
-                    <input type="number" class="form-control" asp-for="Telefono" placeholder="Número de Teléfono" required>
+                    <input type="number" class="form-control" asp-for="Propietario.Telefono" placeholder="Número de Teléfono" required>
                 </div>
             </div>
 
             <div class="row mb-3">
                 <label class="col-sm-3 col-form-label"><strong>Celular:</strong></label>
                 <div class="col-sm-9">
-                    <input type="number" class="form-control" asp-for="Celular" placeholder="Número Celular" required>
+                    <input type="number" class="form-control" asp-for="Propietario.Celular" placeholder="Número Celular" required>
                 </div>
             </div>
 
             <div class="row mb-3">
                 <label class="col-sm-3 col-form-label"><strong>Correo:</strong></label>
                 <div class="col-sm-9">
-                    <input type="email" class="form-control" asp-for="Correo" placeholder="Correo Electrónico" required>
+                    <input type="email" class="form-control" asp-for="Propietario.Correo" placeholder="Correo Electrónico" required>
                 </div>
             </div>
 
             <div class="row mb-3">
                 <label class="col-sm-3 col-form-label"><strong>Dirección:</strong></label>
                 <div class="col-sm-9">
-                    <input type="text" class="form-control" asp-for="Direccion" placeholder="Cra/Clle X # xx - xx" required>
+                    <input type="text" class="form-control" asp-for="Propietario.Direccion" placeholder="Cra/Clle X # xx - xx" required>
                 </div>
             </div>
 
             <div class="row mb-3">
                 <label class="col-sm-3 col-form-label"><strong>Ciudad:</strong></label>
                 <div class="col-sm-9">
-                    <input type="text" class="form-control" asp-for="Ciudad" placeholder="Ciudad o Departamento" required>
+                    <input type="text" class="form-control" asp-for="Propietario.Ciudad" placeholder="Ciudad o Departamento" required>
                 </div>
             </div>
 
             <div class="row mb-3">
                 <label class="col-sm-3 col-form-label"><strong>Documento Cédula:</strong></label>
                 <div class="col-sm-9">
-                    <input type="file" class="form-control" asp-for="DocumentoCedula" placeholder="Documento Cedula.pdf" required accept=".pdf">
+                    <input type="file" class="form-control" asp-for="Archivo_1" placeholder="Documento Cedula.pdf" required accept=".pdf">
                 </div>
             </div>
 

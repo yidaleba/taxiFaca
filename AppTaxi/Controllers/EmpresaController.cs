@@ -696,6 +696,7 @@ namespace AppTaxi.Controllers
         // Muestra el formulario para editar un propietario.
         public async Task<IActionResult> Editar_Propietario(int IdPropietario)
         {
+            ModeloVista modelo = new ModeloVista();
             var usuario = GetUsuarioFromSession();
             if (usuario == null)
             {
@@ -705,13 +706,13 @@ namespace AppTaxi.Controllers
 
             var login = CreateLogin(usuario);
             var propietario = await _propietario.Obtener(IdPropietario, login);
-
-            return View(propietario);
+            modelo.Propietario = propietario;
+            return View(modelo);
         }
 
         // Guarda los cambios realizados en un propietario.
         [HttpPost]
-        public async Task<IActionResult> Guardar_Propietario(Propietario propietario)
+        public async Task<IActionResult> Guardar_Propietario(ModeloVista modelo)
         {
             var usuario = GetUsuarioFromSession();
             if (usuario == null)
@@ -721,8 +722,16 @@ namespace AppTaxi.Controllers
             }
 
             var login = CreateLogin(usuario);
-            propietario.Estado = true;
-            bool respuesta = await _propietario.Editar(propietario, login);
+            modelo.Propietario.Estado = true;
+            if (modelo.Archivo_4 != null)
+            {
+                using (var ms = new MemoryStream())
+                {
+                    await modelo.Archivo_4.CopyToAsync(ms);
+                    modelo.Propietario.Foto = Convert.ToBase64String(ms.ToArray());
+                }
+            }
+            bool respuesta = await _propietario.Editar(modelo.Propietario, login);
 
             if (respuesta)
             {
@@ -771,7 +780,7 @@ namespace AppTaxi.Controllers
 
         // Guarda un nuevo propietario en la base de datos.
         [HttpPost]
-        public async Task<IActionResult> Crear_Propietario(Propietario propietario)
+        public async Task<IActionResult> Crear_Propietario(ModeloVista modelo)
         {
             var usuario = GetUsuarioFromSession();
             if (usuario == null)
@@ -784,30 +793,46 @@ namespace AppTaxi.Controllers
             var empresas = await _empresa.Lista(login);
             var propietarios = await _propietario.Lista(login);
 
-            propietario.Estado = true;
-            propietario.IdEmpresa = empresas.FirstOrDefault(e => e.IdUsuario == usuario.IdUsuario)?.IdEmpresa ?? 0;
+            modelo.Propietario.Estado = true;
+            modelo.Propietario.IdEmpresa = empresas.FirstOrDefault(e => e.IdUsuario == usuario.IdUsuario)?.IdEmpresa ?? 0;
 
             // Valida si el propietario ya está registrado.
-            if (propietarios.Any(c => c.NumeroCedula == propietario.NumeroCedula))
+            if (propietarios.Any(c => c.NumeroCedula == modelo.Propietario.NumeroCedula))
             {
                 ViewBag.Mensaje = "El propietario ya está registrado";
                 return View("Agregar_Propietario");
             }
+            if (modelo.Archivo_4 != null)
+            {
+                using (var ms = new MemoryStream())
+                {
+                    await modelo.Archivo_4.CopyToAsync(ms);
+                    modelo.Propietario.Foto = Convert.ToBase64String(ms.ToArray());
+                }
+            }
 
+            if (modelo.Archivo_1 != null)
+            {
+                using (var ms = new MemoryStream())
+                {
+                    await modelo.Archivo_1.CopyToAsync(ms);
+                    modelo.Propietario.DocumentoCedula = Convert.ToBase64String(ms.ToArray());
+                }
+            }
             // Guarda el propietario.
-            bool respuesta = await _propietario.Guardar(propietario, login);
+            bool respuesta = await _propietario.Guardar(modelo.Propietario, login);
 
             if (respuesta)
             {
                 var propietariosGuardados = await _propietario.Lista(login);
-                var propietarioGuardado = propietariosGuardados.FirstOrDefault(p => p.NumeroCedula == propietario.NumeroCedula);
-                ViewBag.IdPropietario = propietario?.IdPropietario;
+                var propietarioGuardado = propietariosGuardados.FirstOrDefault(p => p.NumeroCedula == modelo.Propietario.NumeroCedula);
+                ViewBag.IdPropietario = modelo.Propietario?.IdPropietario;
                 ViewBag.Exito = true;
                 return RedirectToAction("Propietarios");
             }
             else
             {
-                ViewBag.Mensaje = $"No se pudo Guardar {propietario.IdEmpresa}";
+                ViewBag.Mensaje = $"No se pudo Guardar {modelo.Propietario.IdEmpresa}";
                 return View("Agregar_Propietario");
             }
         }

@@ -1,4 +1,4 @@
-﻿@model Propietario
+﻿@model ModeloVista
 @{
     ViewData["Title"] = "Editar Propietario";
     Layout = "~/Views/Shared/_LayoutEmpresa.cshtml";
@@ -12,59 +12,59 @@
         <p class="text-muted text-center">Llene los campos que desea editar. <br> Los campos que no se deseen editar pueden quedar vacíos.</p>
         <div class="card shadow-lg">
             <div class="card-header bg-primary text-white">
-                <h5 class="mb-0">Señor/a @Model.Nombre</h5>
+                <h5 class="mb-0">Señor/a @Model.Propietario.Nombre</h5>
             </div>
             <div class="card-body">
-                <form asp-action="Guardar_Propietario" asp-controller="Empresa" method="post">
+                <form asp-action="Guardar_Propietario" asp-controller="Empresa" method="post" enctype="multipart/form-data">
 
                     <div class="row mb-3">
                         <div class="col-md-6">
                             <label class="form-label"><strong>Documento: </strong></label>
-                            <input type="text" readonly class="form-control" asp-for="NumeroCedula">
+                            <input type="text" readonly class="form-control" asp-for="Propietario.NumeroCedula">
                         </div>
                         <div class="col-md-6">
                             <label class="form-label"><strong>Foto: </strong></label>
-                            <input type="file" class="form-control" asp-for="Foto" accept=".png, .jpg, .jpeg">
+                            <input type="file" class="form-control" asp-for="Archivo_4" accept=".png, .jpg, .jpeg">
                         </div>
                     </div>
 
                     <div class="row mb-3">
                         <div class="col-md-6">
                             <label class="form-label"><strong>ID: </strong></label>
-                            <input type="number" readonly class="form-control" asp-for="IdPropietario">
+                            <input type="number" readonly class="form-control" asp-for="Propietario.IdPropietario">
                         </div>
                         <div class="col-md-6">
                             <label class="form-label"><strong>Estado Actual: </strong></label>
-                            <input type="text" readonly class="form-control" asp-for="Estado" value="@(Model.Estado ? "Activo" : "Inactivo")">
+                            <input type="text" readonly class="form-control" asp-for="Propietario.Estado" value="@(Model.Propietario.Estado ? "Activo" : "Inactivo")">
                         </div>
                     </div>
 
                     <div class="row mb-3">
                         <div class="col-md-6">
                             <label class="form-label"><strong>Teléfono: </strong></label>
-                            <input type="number" class="form-control" asp-for="Telefono" placeholder="@Model.Telefono">
+                            <input type="number" class="form-control" asp-for="Propietario.Telefono" placeholder="@Model.Propietario.Telefono">
                         </div>
                         <div class="col-md-6">
                             <label class="form-label"><strong>Celular: </strong></label>
-                            <input type="number" class="form-control" asp-for="Celular" placeholder="@Model.Celular">
+                            <input type="number" class="form-control" asp-for="Propietario.Celular" placeholder="@Model.Propietario.Celular">
                         </div>
                     </div>
 
                     <div class="row mb-3">
                         <div class="col-md-6">
                             <label class="form-label"><strong>Correo: </strong></label>
-                            <input type="email" class="form-control" asp-for="Correo" placeholder="@Model.Correo">
+                            <input type="email" class="form-control" asp-for="Propietario.Correo" placeholder="@Model.Propietario.Correo">
                         </div>
                         <div class="col-md-6">
                             <label class="form-label"><strong>Dirección: </strong></label>
-                            <input type="text" class="form-control" asp-for="Direccion" placeholder="@Model.Direccion">
+                            <input type="text" class="form-control" asp-for="Propietario.Direccion" placeholder="@Model.Propietario.Direccion">
                         </div>
                     </div>
 
                     <div class="row mb-3">
                         <div class="col-md-6">
                             <label class="form-label"><strong>Ciudad: </strong></label>
-                            <input type="text" class="form-control" asp-for="Ciudad" placeholder="@Model.Ciudad">
+                            <input type="text" class="form-control" asp-for="Propietario.Ciudad" placeholder="@Model.Propietario.Ciudad">
                         </div>
                     </div>
 
