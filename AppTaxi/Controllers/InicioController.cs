@@ -112,6 +112,11 @@ namespace AppTaxi.Controllers
             return RedirectToAction("Login");
         }
 
+        public IActionResult Ejemplo()
+        {
+
+            return View();
+        }
 
 
 
