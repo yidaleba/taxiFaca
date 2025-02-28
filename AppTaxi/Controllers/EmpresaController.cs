@@ -63,66 +63,60 @@ namespace AppTaxi.Controllers
 
             var login = CreateLogin(usuario);
 
-            // Obtiene las listas de empresas, vehículos y horarios.
-            var empresasTotales = await _empresa.Lista(login);
-            var vehiculosTotales = await _vehiculo.Lista(login);
-            var horariosTotales = await _horario.Lista(login);
+            // Ejecutar todas las llamadas API en paralelo para reducir el tiempo de espera
+            var empresasTask = _empresa.Lista(login);
+            var vehiculosTask = _vehiculo.Lista(login);
+            var conductoresTask = _conductor.Lista(login);
+            var propietariosTask = _propietario.Lista(login);
+            var horariosTask = _horario.Lista(login);
 
-            // Valida si hay empresas registradas.
-            if (empresasTotales == null || !empresasTotales.Any())
-            {
-                ViewBag.Mensaje = "La lista de empresas está vacía.";
-                return View();
-            }
+            await Task.WhenAll(empresasTask, vehiculosTask, conductoresTask, propietariosTask, horariosTask);
 
-            // Obtiene la empresa asociada al usuario actual.
-            var empresa = empresasTotales.FirstOrDefault(item => item.IdUsuario == usuario.IdUsuario);
-            if (empresa == null)
-            {
-                ViewBag.Mensaje = "No hay empresa asociada a su usuario.";
-                return View();
-            }
+            var empresasTotales = await empresasTask;
+            var vehiculosTotales = await vehiculosTask;
+            var conductoresTotales = await conductoresTask;
+            var propietariosTotales = await propietariosTask;
+            var horariosTotales = await horariosTask;
 
-            // Filtra los vehículos asociados a la empresa.
-            var vehiculosEmpresa = vehiculosTotales?.Where(v => v.IdEmpresa == empresa.IdEmpresa).ToList();
-            if (vehiculosEmpresa == null || !vehiculosEmpresa.Any())
-            {
-                ViewBag.Mensaje = "La lista de vehículos está vacía.";
-                return View();
-            }
+            int IdEmpresa = empresasTotales
+                .Where(e => e.IdUsuario == usuario.IdUsuario)
+                .Select(e => e.IdEmpresa)
+                .FirstOrDefault();
 
-            // Construye la lista de datos iniciales para mostrar en la vista.
-            var datosIniciales = new List<DatosEmpresa>();
+            // Convertimos las listas en diccionarios para acceso rápido
+            var vehiculosDict = vehiculosTotales.ToDictionary(v => v.IdVehiculo);
+            var conductoresDict = conductoresTotales.ToDictionary(c => c.IdConductor);
+            var propietariosDict = propietariosTotales.ToDictionary(p => p.IdPropietario);
+
+            List<DatosEmpresa> DatosIniciales = new List<DatosEmpresa>();
             int i = 1;
 
-            foreach (var vehiculo in vehiculosEmpresa)
+            foreach (var h in horariosTotales)
             {
-                var horario = horariosTotales.FirstOrDefault(h => h.IdVehiculo == vehiculo.IdVehiculo);
-                if (horario == null) continue;
-
-                var propietario = await _propietario.Obtener(vehiculo.IdPropietario, login);
-                var conductor = await _conductor.Obtener(horario.IdConductor, login);
-
-                if (vehiculo.Estado)
+                if (conductoresDict.TryGetValue(h.IdConductor, out var c) && c.IdEmpresa == IdEmpresa && c.Estado)
                 {
-                    datosIniciales.Add(new DatosEmpresa
+                    if (vehiculosDict.TryGetValue(h.IdVehiculo, out var v) && propietariosDict.TryGetValue(v.IdPropietario, out var p))
                     {
-                        IdDato = i++,
-                        Foto = conductor.Foto,
-                        Placa = vehiculo.Placa,
-                        IdVehiculo = vehiculo.IdVehiculo,
-                        NombrePropietario = propietario?.Nombre,
-                        Conductor = conductor?.Nombre,
-                        Fecha = horario.Fecha,
-                        HoraInicio = horario.HoraInicio,
-                        HoraFin = horario.HoraFin
-                    });
+                        DatosIniciales.Add(new DatosEmpresa
+                        {
+                            IdDato = i++,
+                            Foto = c.Foto,
+                            IdVehiculo = h.IdVehiculo,
+                            Placa = v.Placa,
+                            NombrePropietario = p.Nombre,
+                            Conductor = c.Nombre,
+                            Fecha = h.Fecha,
+                            HoraInicio = h.HoraInicio,
+                            HoraFin = h.HoraFin
+                        });
+                    }
                 }
             }
 
             ViewBag.Mensaje = $"Bienvenid@ {usuario.Nombre}";
-            return View(datosIniciales);
+            return View(DatosIniciales);
         }
+
 
         // Muestra los detalles de un registro específico (vehículo, conductor, horario, etc.).
         public async Task<IActionResult> Detalle(int IdDato)
