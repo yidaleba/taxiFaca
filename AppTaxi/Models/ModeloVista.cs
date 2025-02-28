@@ -15,5 +15,11 @@
         public List<Empresa> Empresas { get; set; }
         public List<Propietario> Propietarios { get; set; }
         public List<Horario> Horarios { get; set; }
+
+        public IFormFile Archivo_1 { get; set; }
+        public IFormFile Archivo_2 { get; set; }
+        public IFormFile Archivo_3 { get; set; }
+        public IFormFile Archivo_4 { get; set; }
+
     }
 }
