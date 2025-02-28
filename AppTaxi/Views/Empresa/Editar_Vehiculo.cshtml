@@ -1,4 +1,4 @@
-﻿@model Vehiculo
+﻿@model ModeloVista
 @{
     ViewData["Title"] = "Editar Vehículo";
     Layout = "~/Views/Shared/_LayoutEmpresa.cshtml";
@@ -12,7 +12,7 @@
         <p class="text-muted text-center">Llene los campos que desea editar. <br> Los campos que no se deseen editar pueden quedar vacíos.</p>
         <div class="card shadow-lg">
             <div class="card-header bg-primary text-white">
-                <h5 class="mb-0">Vehículo - Placa: @Model.Placa</h5>
+                <h5 class="mb-0">Vehículo - Placa: @Model.Vehiculo.Placa</h5>
             </div>
             <div class="card-body">
                 <form asp-action="Guardar_Vehiculo" asp-controller="Empresa" method="post" enctype="multipart/form-data">
@@ -20,31 +20,31 @@
                     <div class="row mb-3">
                         <div class="col-md-6">
                             <label class="form-label"><strong>ID Vehículo: </strong></label>
-                            <input type="text" class="form-control" readonly asp-for="IdVehiculo">
+                            <input type="text" class="form-control" readonly asp-for="Vehiculo.IdVehiculo">
                         </div>
                         <div class="col-md-6">
                             <label class="form-label"><strong>Estado Actual: </strong></label>
-                            <input type="text" class="form-control" readonly asp-for="Estado" value="@(Model.Estado ? "Habilitado" : "No Habilitado")">
+                            <input type="text" class="form-control" readonly asp-for="Vehiculo.Estado" value="@(Model.Vehiculo.Estado ? "Habilitado" : "No Habilitado")">
                         </div>
                     </div>
 
                     <div class="row mb-3">
                         <div class="col-md-6">
-                            <label class="form-label"><strong>SOAT (Archivo PDF o Imagen): </strong></label>
-                            <input type="file" class="form-control" asp-for="Soat" accept=".pdf, .jpg, .png">
-                            <small class="text-muted">Archivo actual: @Model.Soat</small>
+                            <label class="form-label"><strong>SOAT (Archivo PDF): </strong></label>
+                            <input type="file" class="form-control" asp-for="Archivo_1" accept=".pdf">
+                            <small class="text-muted">¿Hay archivo cargado?: @(string.IsNullOrEmpty(Model.Vehiculo.Soat) ? "No" : "Sí")</small>
                         </div>
                         <div class="col-md-6">
-                            <label class="form-label"><strong>Técnico Mecánica (Archivo PDF o Imagen): </strong></label>
-                            <input type="file" class="form-control" asp-for="TecnicoMecanica" accept=".pdf, .jpg, .png">
-                            <small class="text-muted">Archivo actual: @Model.TecnicoMecanica</small>
+                            <label class="form-label"><strong>Técnico Mecánica (Archivo PDF): </strong></label>
+                            <input type="file" class="form-control" asp-for="Archivo_2" accept=".pdf">
+                            <small class="text-muted">¿Hay archivo cargado?: @(string.IsNullOrEmpty(Model.Vehiculo.TecnicoMecanica) ? "No" : "Sí")</small>
                         </div>
                     </div>
 
                     <div class="row mb-3">
                         <div class="col-md-6">
                             <label class="form-label"><strong>ID Propietario: </strong></label>
-                            <input type="text" readonly class="form-control" asp-for="IdPropietario" placeholder="@Model.IdPropietario">
+                            <input type="text" readonly class="form-control" asp-for="Vehiculo.IdPropietario" placeholder="@Model.Vehiculo.IdPropietario">
                         </div>
                     </div>
 

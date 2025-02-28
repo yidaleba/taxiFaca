@@ -4,6 +4,10 @@
     Layout = "~/Views/Shared/_LayoutEmpresa.cshtml";
 }
 
+@{
+    var soatFileName = "SOAT_" + Model.Placa + ".pdf";
+    var tecnicoFileName = "TecnicoMecanica_" + Model.Placa + ".pdf";
+}
 <div class="container mt-4">
     <div class="card shadow-lg rounded">
         <div class="card-header bg-primary text-white">
@@ -22,14 +26,18 @@
             <div class="mb-3 row">
                 <label class="col-sm-3 col-form-label fw-bold">SOAT:</label>
                 <div class="col-sm-9">
-                    <input type="text" readonly class="form-control" value="@Model.Soat">
+                    <iframe src="data:application/pdf;base64,@Model.Soat"
+                            width="60%" height="300px">
+                    </iframe>
                 </div>
             </div>
 
             <div class="mb-3 row">
                 <label class="col-sm-3 col-form-label fw-bold">Técnico Mecánica:</label>
                 <div class="col-sm-9">
-                    <input type="text" readonly class="form-control" value="@Model.TecnicoMecanica">
+                    <iframe src="data:application/pdf;base64,@Model.TecnicoMecanica"
+                            width="60%" height="300px">
+                    </iframe>
                 </div>
             </div>
 

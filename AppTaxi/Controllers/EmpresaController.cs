@@ -247,13 +247,14 @@ namespace AppTaxi.Controllers
 
             var login = CreateLogin(usuario);
             var vehiculo = await _vehiculo.Obtener(IdVehiculo, login);
-
-            return View(vehiculo);
+            ModeloVista modelo = new ModeloVista();
+            modelo.Vehiculo = vehiculo;
+            return View(modelo);
         }
 
         // Guarda los cambios realizados en un vehículo.
         [HttpPost]
-        public async Task<IActionResult> Guardar_Vehiculo(Vehiculo vehiculo)
+        public async Task<IActionResult> Guardar_Vehiculo(ModeloVista modelo)
         {
             var usuario = GetUsuarioFromSession();
             if (usuario == null)
@@ -263,8 +264,27 @@ namespace AppTaxi.Controllers
             }
 
             var login = CreateLogin(usuario);
-            vehiculo.Estado = true;
-            bool respuesta = await _vehiculo.Editar(vehiculo, login);
+            modelo.Vehiculo.Estado = true;
+
+            // Convertir archivos PDF a Base64
+            if (modelo.Archivo_1 != null)
+            {
+                using (var ms = new MemoryStream())
+                {
+                    await modelo.Archivo_1.CopyToAsync(ms);
+                    modelo.Vehiculo.Soat = Convert.ToBase64String(ms.ToArray());
+                }
+            }
+
+            if (modelo.Archivo_2 != null)
+            {
+                using (var ms = new MemoryStream())
+                {
+                    await modelo.Archivo_2.CopyToAsync(ms);
+                    modelo.Vehiculo.TecnicoMecanica = Convert.ToBase64String(ms.ToArray());
+                }
+            }
+            bool respuesta = await _vehiculo.Editar(modelo.Vehiculo, login);
 
             if (respuesta)
             {
@@ -348,12 +368,11 @@ namespace AppTaxi.Controllers
             var empresas = await _empresa.Lista(login);
             var vehiculos = await _vehiculo.Lista(login);
 
-            // Asigna valores al vehículo.
             viewModel.Vehiculo.Estado = true;
             viewModel.Vehiculo.IdEmpresa = empresas.FirstOrDefault(e => e.IdUsuario == usuario.IdUsuario)?.IdEmpresa ?? 0;
             viewModel.Vehiculo.Placa = viewModel.Vehiculo.Placa.ToUpper();
 
-            // Valida si la placa ya está en uso.
+            // Validar si la placa ya existe
             if (vehiculos.Any(v => v.Placa == viewModel.Vehiculo.Placa))
             {
                 ViewBag.Mensaje = "La placa ya está en uso";
@@ -363,15 +382,30 @@ namespace AppTaxi.Controllers
                 return View("Agregar_Vehiculo", viewModel);
             }
 
-            // Guarda el vehículo.
+            // Convertir archivos PDF a Base64
+            if (viewModel.Archivo_1 != null)
+            {
+                using (var ms = new MemoryStream())
+                {
+                    await viewModel.Archivo_1.CopyToAsync(ms);
+                    viewModel.Vehiculo.Soat = Convert.ToBase64String(ms.ToArray());
+                }
+            }
+
+            if (viewModel.Archivo_2 != null)
+            {
+                using (var ms = new MemoryStream())
+                {
+                    await viewModel.Archivo_2.CopyToAsync(ms);
+                    viewModel.Vehiculo.TecnicoMecanica = Convert.ToBase64String(ms.ToArray());
+                }
+            }
+
+            // Guardar el vehículo en la BD
             bool respuesta = await _vehiculo.Guardar(viewModel.Vehiculo, login);
 
             if (respuesta)
             {
-                var vehiculosGuardados = await _vehiculo.Lista(login);
-                var vehiculoGuardado = vehiculosGuardados.FirstOrDefault(v => v.Placa == viewModel.Vehiculo.Placa);
-                ViewBag.IdVehiculo = vehiculoGuardado?.IdVehiculo;
-                ViewBag.Exito = true;
                 return RedirectToAction("Vehiculos");
             }
             else
@@ -383,6 +417,7 @@ namespace AppTaxi.Controllers
                 return View("Agregar_Vehiculo", viewModel);
             }
         }
+
 
         //---------------------------- Conductores ------------------------------------
 
