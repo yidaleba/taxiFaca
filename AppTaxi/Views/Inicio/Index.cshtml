@@ -4,32 +4,39 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Datos de los vehiculos autorizados</h1>
+<div class="d-flex justify-content-center align-items-center vh-100">
+    <div class="card shadow-lg rounded-4 p-4 w-50">
+        <div class="card-header text-center fw-bold">
+            Datos de Vehiculos Autorizados
+        </div>
+        <div class="card-body">
+            <form asp-action="Consultar" asp-controller="Inicio" method="post">
+                <h5 class="text-center">Digite alguno de los dos datos:</h5>
 
-<div class="card">
-    <div class="card-header">
-        Ingresa los Datos
-    </div>
-    <div class="card-body">
-        <form asp-action="Consultar" asp-controller="Inicio" method="post">
-           <h3>Digite alguno de los dos datos:</h3> 
-            <div class="mb-2">
-                <label class="form-label">Numero de Documento:</label>
-                <input type="text" placeholder="1234567890" class="form-control form-control-sm" asp-for="Documento" />
-                             
-            </div>
-            <hr />
-            <div class="mb-2">
-                <label class="form-label">Placa del Vehículo:</label>
-                <input type="text" placeholder="AAA123" class="form-control form-control-sm" asp-for="Placa" />
+                <div class="mb-3">
+                    <label class="form-label">Número de Documento:</label>
+                    <input type="text" placeholder="1234567890" class="form-control form-control-sm" asp-for="Documento" />
+                </div>
 
-            </div>
-            <div> @ViewBag.Mensaje</div>
-            <button type="submit" class="btn btn-success btn-sm">Consultar</button>
+                <hr />
 
-        </form>
+                <div class="mb-3">
+                    <label class="form-label">Placa del Vehículo:</label>
+                    <input type="text" placeholder="AAA123" class="form-control form-control-sm" asp-for="Placa" />
+                </div>
+
+                <div class="text-center text-danger">
+                    @ViewBag.Mensaje
+                </div>
+
+                <div class="d-flex justify-content-center">
+                    <button type="submit" class="btn btn-success btn-lg px-4">Consultar</button>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
+
 
 
 

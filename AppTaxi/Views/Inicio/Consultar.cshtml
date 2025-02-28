@@ -4,77 +4,76 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Ficha Técnica</h1>
-
-@if(Model != null)
+@if (Model != null)
 {
-    <div class="card mb-3" style="max-width: 540px;">
-        <div class="row g-0">
-            <div class="col-md-4">
-                <!-- Imagen-->
-                <img src="https://icons.veryicon.com/png/o/internet--web/prejudice/user-128.png" class="img-fluid rounded-start" alt="@Model.Foto">
-            </div>
-            <div class="col-md-8">
-                <div class="card-body">
-                    <h5 class="card-title">Información</h5>
-                    <!-- Los textos-->
-                    <p class="card-text"><strong>Nombre : </strong>@Model.Nombre</p>
-                    <p class="card-text"><strong>Cedula : </strong>@Model.NumeroCedula</p>
-                    <p class="card-text"><strong>RH : </strong>@Model.GrupoSanguineo</p>
-                    <p class="card-text"><strong>EPS : </strong>@Model.Eps</p>
-                    <p class="card-text"><strong>ARL : </strong>@Model.Arl</p>
-                    <p class="card-text"><strong>Estado: </strong>@(Model.EstadoConductor ? "Activo" : "Inactivo")</p>
-                    <hr />
-                    <p class="card-text"><strong>Empresa : </strong>@Model.NombreEmpresa</p>
-                    <p class="card-text"><strong>NIT : </strong>@Model.Nit</p>
-                    <hr />
-                    <p class="card-text"><strong>Placa : </strong>@Model.Placa</p>
-                    <p class="card-text"><strong>Estado Vehículo : </strong>@(Model.EstadoVehiculo ? "Habilitado" : "No Habilitado")</p>
-                    <p class="card-text"><strong>SOAT : </strong>@Model.Soat</p>
-                    <p class="card-text"><strong>Tecno Mecanica : </strong>@Model.TecnicoMecanica</p>
+    <div class="d-flex justify-content-center mt-4">
+        <div class="card shadow-lg rounded-4 p-4 w-75">
+            <div class="row g-3 align-items-center">
+                <!-- Imagen -->
+                <div class="col-md-4 text-center">
+                    <img src="https://icons.veryicon.com/png/o/internet--web/prejudice/user-128.png"
+                         class="img-fluid rounded-circle border shadow-sm p-2"
+                         alt="@Model.Foto"
+                         style="max-width: 150px;">
+                </div>
+
+                <!-- Información -->
+                <div class="col-md-8">
+                    <div class="card-body">
+                        <h4 class="card-title text-center fw-bold">Información del Usuario</h4>
+                        <hr />
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p class="card-text"><strong>Nombre:</strong> <span class="text-muted">@Model.Nombre</span></p>
+                                <p class="card-text"><strong>Cédula:</strong> <span class="text-muted">@Model.NumeroCedula</span></p>
+                                <p class="card-text"><strong>RH:</strong> <span class="text-muted">@Model.GrupoSanguineo</span></p>
+                                <p class="card-text"><strong>EPS:</strong> <span class="text-muted">@Model.Eps</span></p>
+                                <p class="card-text"><strong>ARL:</strong> <span class="text-muted">@Model.Arl</span></p>
+                                <p class="card-text">
+                                    <strong>Estado:</strong>
+                                    <span class="badge @(Model.EstadoConductor ? "bg-success" : "bg-danger")">
+                                        @(Model.EstadoConductor ? "Activo" : "Inactivo")
+                                    </span>
+                                </p>
+                            </div>
+
+                            <div class="col-md-6">
+                                <p class="card-text"><strong>Empresa:</strong> <span class="text-muted">@Model.NombreEmpresa</span></p>
+                                <p class="card-text"><strong>NIT:</strong> <span class="text-muted">@Model.Nit</span></p>
+                                <p class="card-text"><strong>Placa:</strong> <span class="text-muted">@Model.Placa</span></p>
+                                <p class="card-text">
+                                    <strong>Estado Vehículo:</strong>
+                                    <span class="badge @(Model.EstadoVehiculo ? "bg-primary" : "bg-warning")">
+                                        @(Model.EstadoVehiculo ? "Habilitado" : "No Habilitado")
+                                    </span>
+                                </p>
+                                <p class="card-text"><strong>SOAT:</strong> <span class="text-muted">@Model.Soat</span></p>
+                                <p class="card-text"><strong>Tecno Mecánica:</strong> <span class="text-muted">@Model.TecnicoMecanica</span></p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-
-    <!-- Aqui está la nueva version
-
-    <div class="card" style="width: 18rem;">
-        <img src="https://icons.veryicon.com/png/o/internet--web/prejudice/user-128.png" class="img-fluid rounded-start" alt="@Model.Foto">
-        <div class="card-body">
-            <h5 class="card-title">Información</h5>
-        </div>
-        <ul class="list-group list-group-flush">
-            <li class="list-group-item"><strong>Nombre : </strong>@Model.Nombre</li>
-            <li class="list-group-item"><strong>Cedula : </strong>@Model.NumeroCedula</li>
-            <li class="list-group-item"><strong>RH : </strong>@Model.GrupoSanguineo</li>
-            <li class="list-group-item"><strong>EPS : </strong>@Model.Eps</li>
-            <li class="list-group-item"><strong>ARL : </strong>@Model.Arl</li>
-            <li class="list-group-item"><strong>Estado: </strong>@(Model.EstadoConductor ? "Activo" : "Inactivo")</li>
-            <li class="list-group-item"><strong>Empresa : </strong>@Model.NombreEmpresa</li>
-            <li class="list-group-item"><strong>NIT : </strong>@Model.Nit</li>
-            <li class="list-group-item"><strong>Placa : </strong>@Model.Placa</li>
-            <li class="list-group-item"><strong>Estado Vehículo : </strong>@(Model.EstadoVehiculo ? "Habilitado" : "No Habilitado")</li>
-            <li class="list-group-item"><strong>SOAT : </strong>@((Model.Soat != null) ? "Si" : "No")</li>
-            <li class="list-group-item"><strong>Tecnico Mecanica : </strong>@((Model.TecnicoMecanica != null) ? "Si" : "No")</li>
-        </ul>
-        <div class="card-body">
-            <a href="#" class="card-link">Ver Conductor</a>
-            <a href="#" class="card-link">Ver Vehiculo</a>
-        </div>
-    </div>
-    -->
 }
 else
 {
-    <div class="card text-dark bg-warning mb-3" style="max-width: 18rem;">
-        <div class="card-header">Error al Buscar</div>
-        <div class="card-body">
-            <h5 class="card-title">No se encontraron registros</h5>
-            <p class="card-text">Prueba a revisar tus datos ingresados</p>
+    <div class="d-flex justify-content-center mt-4">
+        <div class="card text-dark bg-warning shadow-lg rounded-4 p-4 w-50 text-center">
+            <div class="card-header fw-bold">Error al Buscar</div>
+            <div class="card-body">
+                <h5 class="card-title">No se encontraron registros</h5>
+                <p class="card-text">Prueba a revisar tus datos ingresados</p>
+            </div>
         </div>
     </div>
 }
-<hr />
-<a asp-action="Index" asp-controller="Inicio" class="btn btn-success mt-3"> Volver </a>
+
+<!-- Botón de regreso centrado -->
+<div class="d-flex justify-content-center mt-4">
+    <a asp-action="Index" asp-controller="Inicio" class="btn btn-success px-4 py-2">Volver</a>
+</div>
+
 

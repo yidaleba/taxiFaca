@@ -1,77 +1,87 @@
 ﻿@model List<DatosEmpresa>
+
 @{
     ViewData["Title"] = "Inicio";
     Layout = "~/Views/Shared/_LayoutEmpresa.cshtml";
 }
+
 @section Scripts {
     <script src="~/js/toggleColumns.js"></script>
 }
 
-<h1>@ViewBag.Mensaje</h1>
-<br />
-<p>Datos Encontrados:</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th scope="col" >#</th>
-            <th scope="col" class="col-Placa">Placa</th>
-            <th scope="col" class="col-Propietario">Propietario</th>
-            <th scope="col" class="col-Conductor">Conductor</th>
-            <th scope="col" class="col-Fecha">Fecha</th>
-            <th scope="col" class="col-Desde">Desde</th>
-            <th scope="col" class="col-Hasta">Hasta</th>
-            <th scope="col">Detalles</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>@item.IdDato</td>
-                <td class="col-Placa">@item.Placa</td>
-                <td class="col-Propietario">@item.NombrePropietario</td>
-                <td class="col-Conductor">@item.Conductor</td>
-                <td class="col-Fecha">@item.Fecha.ToString("yyyy-MM-dd")</td>
-                <td class="col-Desde">@item.HoraInicio</td>
-                <td class="col-Hasta">@item.HoraFin</td>
-                <td><a asp-action="Detalle" asp-controller="Empresa" asp-route-IdDato="@item.IdDato" class="btn btn-primary btn-sm">Detalle</a></td>
-            </tr>
-        }
-    </tbody>
-</table>
+<h1 class="mb-4 text-center text-primary">@ViewBag.Mensaje</h1>
+<p class="lead text-secondary text-center">Datos Encontrados:</p>
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <input type="text" id="buscarConductor" class="form-control w-25" placeholder="🔍 Buscar por conductor..." onkeyup="filtrarConductores()">
+</div>
+
+@if (Model != null && Model.Any())
+{
+    <div class="table-responsive">
+        <table class="table table-hover text-center">
+            <thead class="table-dark">
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col" class="col-Placa">Placa</th>
+                    <th scope="col" class="col-Propietario">Propietario</th>
+                    <th scope="col" class="col-Conductor">Conductor</th>
+                    <th scope="col" class="col-Fecha">Fecha</th>
+                    <th scope="col" class="col-Desde">Desde</th>
+                    <th scope="col" class="col-Hasta">Hasta</th>
+                    <th scope="col">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr class="fila-conductor">
+                        <td>@item.IdDato</td>
+                        <td class="col-Placa">@item.Placa</td>
+                        <td class="col-Propietario">@item.NombrePropietario</td>
+                        <td class="col-Conductor">@item.Conductor</td>
+                        <td class="col-Fecha">@item.Fecha.ToString("yyyy-MM-dd")</td>
+                        <td class="col-Desde">@item.HoraInicio</td>
+                        <td class="col-Hasta">@item.HoraFin</td>
+                        <td>
+                            <a asp-action="Detalle" asp-controller="Empresa" asp-route-IdDato="@item.IdDato" class="btn btn-primary btn-sm">
+                                Detalle
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+else
+{
+    <div class="alert alert-warning text-center mt-4">
+        <strong>⚠ No se encontraron datos registrados.</strong>
+    </div>
+}
 
 <hr />
 <p><strong>Mostrar Campos:</strong></p>
-<div class="form-check form-check-inline">
-    <input class="form-check-input column-toggle" type="checkbox" value="Placa" id="chkPlaca" checked>
-    <label class="form-check-label" for="chkPlaca">Placa</label>
-</div>
 
-<div class="form-check form-check-inline">
-    <input class="form-check-input column-toggle" type="checkbox" value="Propietario" id="chkPropietario" checked>
-    <label class="form-check-label" for="chkPropietario">Propietario</label>
-</div>
+@foreach (var campo in new[] { "Placa", "Propietario", "Conductor", "Fecha", "Desde", "Hasta" })
+{
+    <div class="form-check form-check-inline">
+        <input class="form-check-input column-toggle" type="checkbox" value="@campo" id="chk@campo" checked>
+        <label class="form-check-label" for="chk@campo">@campo</label>
+    </div>
+}
 
-<div class="form-check form-check-inline">
-    <input class="form-check-input column-toggle" type="checkbox" value="Conductor" id="chkConductor" checked>
-    <label class="form-check-label" for="chkConductor">Conductor</label>
-</div>
-
-<div class="form-check form-check-inline">
-    <input class="form-check-input column-toggle" type="checkbox" value="Fecha" id="chkFecha" checked>
-    <label class="form-check-label" for="chkFecha">Fecha</label>
-</div>
-
-<div class="form-check form-check-inline">
-    <input class="form-check-input column-toggle" type="checkbox" value="Desde" id="chkDesde" checked>
-    <label class="form-check-label" for="chkDesde">Desde</label>
-</div>
-
-<div class="form-check form-check-inline">
-    <input class="form-check-input column-toggle" type="checkbox" value="Hasta" id="chkHasta" checked>
-    <label class="form-check-label" for="chkHasta">Hasta</label>
-</div>
 <hr />
 
+<script>
+    function filtrarConductores() {
+        let input = document.getElementById("buscarConductor").value.toLowerCase();
+        let filas = document.getElementsByClassName("fila-conductor");
 
-
+        for (let i = 0; i < filas.length; i++) {
+            let conductor = filas[i].getElementsByClassName("col-Conductor")[0].innerText.toLowerCase();
+            filas[i].style.display = conductor.includes(input) ? "" : "none";
+        }
+    }
+</script>

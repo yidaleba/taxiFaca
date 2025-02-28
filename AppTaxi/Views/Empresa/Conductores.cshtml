@@ -3,47 +3,70 @@
     ViewData["Title"] = "Conductores";
     Layout = "~/Views/Shared/_LayoutEmpresa.cshtml";
 }
+<h1 class="mb-4 text-center text-primary">Conductores de la Empresa</h1>
 
-<h1>Conductores</h1>
-<p>Conductores de la empresa:</p>
-<br />
-<a asp-action="Agregar_Conductor" asp-controller="Empresa" class="btn btn-outline-success btn-sm"><strong>Agregar Conductor</strong></a>
-@if (Model != null)
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <a asp-action="Agregar_Conductor" asp-controller="Empresa" class="btn btn-outline-success">
+        <strong>➕ Agregar Conductor</strong>
+    </a>
+
+    <input type="text" id="buscarConductor" class="form-control w-25" placeholder="🔍 Buscar por nombre..." onkeyup="filtrarConductores()">
+</div>
+
+@if (Model != null && Model.Any())
 {
-    
-    <table class="table">
-        <thead>
-            <tr>
-                <th scope="col">ID Vehiculo</th>
-                <th scope="col">Nombre</th>
-                <th scope="col">Cedula</th>
-                <th scope="col">Telefono</th>
-                <th scope="col">Correo</th>
-                <th scope="col">Ciudad</th>
-                <th scope="col">Detalle</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model)
-            {
+    <div class="table-responsive">
+        <table class="table table-hover text-center">
+            <thead class="table-dark">
                 <tr>
-                    <td>@item.IdConductor</td>
-                    <td class="col-Nombre">@item.Nombre</td>
-                    <td class="col-Cedula">@item.NumeroCedula</td>
-                    <td class="col-Telefono">@item.Telefono</td>
-                    <td class="col-Correo">@item.Correo</td>
-                    <td class="col-Correo">@item.Ciudad</td>
-
-                    <td><a asp-action="Detalle_Conductor" asp-controller="Empresa" asp-route-IdConductor="@item.IdConductor" class="btn btn-primary btn-sm">Ver</a></td>
+                    <th scope="col">ID</th>
+                    <th scope="col">Nombre</th>
+                    <th scope="col">Cédula</th>
+                    <th scope="col">Teléfono</th>
+                    <th scope="col">Correo</th>
+                    <th scope="col">Ciudad</th>
+                    <th scope="col">Acciones</th>
                 </tr>
-            }
-        </tbody>
-    </table>
-    
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr class="fila-conductor">
+                        <td>@item.IdConductor</td>
+                        <td class="col-Nombre">@item.Nombre</td>
+                        <td>@item.NumeroCedula</td>
+                        <td>@item.Telefono</td>
+                        <td>@item.Correo</td>
+                        <td>@item.Ciudad</td>
+                        <td>
+                            <a asp-action="Detalle_Conductor" asp-controller="Empresa" asp-route-IdConductor="@item.IdConductor" class="btn btn-primary btn-sm">
+                                Detalle
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
 }
 else
 {
-    <p>No se encontraron Conductores registrados</p>
+    <div class="alert alert-warning text-center mt-4">
+        <strong>⚠ No se encontraron Conductores registrados.</strong>
+    </div>
 }
-<p>@ViewBag.Mensaje</p>
+
+<p class="text-danger text-center">@ViewBag.Mensaje</p>
+
+<script>
+    function filtrarConductores() {
+        let input = document.getElementById("buscarConductor").value.toLowerCase();
+        let filas = document.getElementsByClassName("fila-conductor");
+
+        for (let i = 0; i < filas.length; i++) {
+            let nombre = filas[i].getElementsByClassName("col-Nombre")[0].innerText.toLowerCase();
+            filas[i].style.display = nombre.includes(input) ? "" : "none";
+        }
+    }
+</script>
 

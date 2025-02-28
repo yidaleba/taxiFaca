@@ -4,29 +4,30 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Iniciar Sesión</h1>
+<div class="d-flex justify-content-center align-items-center vh-100">
+    <div class="card p-4 shadow" style="width: 350px;">
+        <h2 class="text-center mb-4">Iniciar Sesión</h2>
+        <form asp-action="Autenticar" asp-controller="Inicio" method="post">
+            <!-- Email input -->
+            <div data-mdb-input-init class="form-outline mb-3">
+                <label class="form-label">Correo Electrónico:</label>
+                <input type="text" placeholder="ejemplo@gmail.com" class="form-control" asp-for="Correo" />
+            </div>
 
-<form asp-action="Autenticar" asp-controller="Inicio" method="post">
-    <!-- Email input -->
-    <div data-mdb-input-init class="form-outline mb-4">
+            <!-- Password input -->
+            <div data-mdb-input-init class="form-outline mb-3">
+                <label class="form-label">Contraseña:</label>
+                <input type="password" placeholder="contraseña123" class="form-control" asp-for="Contrasena" />
+            </div>
 
-        <label class="form-label">Correo Electronico:</label>
-        <input type="text" placeholder="ejemplo@gmail.com" class="form-control form-control-sm" asp-for="Correo" />
-        
+            <!-- Submit button -->
+            <button type="submit" class="btn btn-primary w-100">Iniciar Sesión</button>
+        </form>
+
+        <p class="text-center text-danger mt-3">@ViewBag.Mensaje</p>
     </div>
+</div>
 
-    <!-- Password input -->
-    <div data-mdb-input-init class="form-outline mb-4">
-        
-        <label class="form-label">Contraseña:</label>
-        <input type="password" placeholder="contraseña123" class="form-control form-control-sm" asp-for="Contrasena" />
-        
-    </div>
-
-    <!-- Submit button -->
-    <button type="submit" data-mdb-button-init data-mdb-ripple-init class="btn btn-primary btn-block mb-4">Iniciar Sesion</button>
-
-</form>
 
 <p>@ViewBag.Mensaje</p>
 

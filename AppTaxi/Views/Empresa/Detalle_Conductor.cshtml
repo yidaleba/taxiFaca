@@ -4,136 +4,95 @@
     Layout = "~/Views/Shared/_LayoutEmpresa.cshtml";
 }
 
-<h1>Detalles del Conductor</h1>
 @if (Model != null)
 {
-    <div class="card">
-        <h5 class="card-header">Señor/a @Model.Nombre</h5>
-        <div class="card-body">
-
-            <div class="mb-3 row">
-                <label class="col-sm-2 col-form-label"><strong>Documento: </strong></label>
-                <div class="col-sm-10">
-                    <input type="text" readonly class="form-control-plaintext" value="@Model.NumeroCedula">
+    <div class="d-flex justify-content-center mt-4">
+        <div class="card shadow-lg rounded-4 p-4 w-75">
+            <div class="row g-3 align-items-center">
+                <!-- Imagen -->
+                <div class="col-md-4 text-center">
+                    <img src="https://icons.veryicon.com/png/o/internet--web/prejudice/user-128.png"
+                         class="img-fluid rounded-circle border shadow-sm p-2"
+                         alt="@Model.Nombre"
+                         style="max-width: 150px;">
                 </div>
-            </div>
 
-            <div class="mb-3 row">
-                <label class="col-sm-2 col-form-label"><strong>Telefono: </strong></label>
-                <div class="col-sm-10">
-                    <input type="number" readonly class="form-control-plaintext" value="@Model.Telefono">
-                </div>
-            </div>
+                <!-- Información -->
+                <div class="col-md-8">
+                    <div class="card-body">
+                        <h4 class="card-title text-center fw-bold">Detalles del Conductor</h4>
+                        <hr />
 
-            <div class="mb-3 row">
-                <label class="col-sm-2 col-form-label"><strong>Correo: </strong></label>
-                <div class="col-sm-10">
-                    <input type="text" readonly class="form-control-plaintext" value="@Model.Correo">
-                </div>
-            </div>
-            <div class="mb-3 row">
-                <label class="col-sm-2 col-form-label"><strong>Dirección: </strong></label>
-                <div class="col-sm-10">
-                    <input type="text" readonly class="form-control-plaintext" value="@Model.Direccion">
-                </div>
-            </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p class="card-text"><strong>Nombre:</strong> <span class="text-muted">@Model.Nombre</span></p>
+                                <p class="card-text"><strong>Cédula:</strong> <span class="text-muted">@Model.NumeroCedula</span></p>
+                                <p class="card-text"><strong>Teléfono:</strong> <span class="text-muted">@Model.Telefono</span></p>
+                                <p class="card-text"><strong>Correo:</strong> <span class="text-muted">@Model.Correo</span></p>
+                                <p class="card-text"><strong>Dirección:</strong> <span class="text-muted">@Model.Direccion</span></p>
+                                <p class="card-text"><strong>Ciudad:</strong> <span class="text-muted">@Model.Ciudad</span></p>
+                                <p class="card-text">
+                                    <strong>Estado:</strong>
+                                    <span class="badge @(Model.Estado ? "bg-success" : "bg-danger")">
+                                        @(Model.Estado ? "Activo" : "Inactivo")
+                                    </span>
+                                </p>
+                            </div>
 
-            <div class="mb-3 row">
-                <label class="col-sm-2 col-form-label"><strong>Ciudad: </strong></label>
-                <div class="col-sm-10">
-                    <input type="text" readonly class="form-control-plaintext" value="@Model.Ciudad">
-                </div>
-            </div>
-
-            <div class="mb-3 row">
-                <label class="col-sm-2 col-form-label"><strong>Estado Actual: </strong></label>
-                <div class="col-sm-10">
-                    <input type="text" readonly class="form-control-plaintext" value="@(Model.Estado ? "Activo" : "Inactivo")">
-                </div>
-            </div>
-
-            <div class="mb-3 row">
-                <label class="col-sm-2 col-form-label"><strong>RH: </strong></label>
-                <div class="col-sm-10">
-                    <input type="text" readonly class="form-control-plaintext" value="@Model.GrupoSanguineo">
-                </div>
-            </div>
-
-            <div class="mb-3 row">
-                <label class="col-sm-2 col-form-label"><strong>EPS: </strong></label>
-                <div class="col-sm-10">
-                    <input type="text" readonly class="form-control-plaintext" value="@Model.Eps">
-                </div>
-            </div>
-
-            <div class="mb-3 row">
-                <label class="col-sm-2 col-form-label"><strong>ARL: </strong></label>
-                <div class="col-sm-10">
-                    <input type="text" readonly class="form-control-plaintext" value="@Model.Arl">
-                </div>
-            </div>
-
-            <div class="mb-3 row">
-                <label class="col-sm-2 col-form-label"><strong>Documento Cedula: </strong></label>
-                <div class="col-sm-10">
-                    <input type="text" readonly class="form-control-plaintext" value="@Model.DocumentoCedula">
-                </div>
-            </div>
-
-            <div class="mb-3 row">
-                <label class="col-sm-2 col-form-label"><strong>Documento EPS: </strong></label>
-                <div class="col-sm-10">
-                    <input type="text" readonly class="form-control-plaintext" value="@Model.DocumentoEps">
-                </div>
-            </div>
-
-            <div class="mb-3 row">
-                <label class="col-sm-2 col-form-label"><strong>Documento ARL: </strong></label>
-                <div class="col-sm-10">
-                    <input type="text" readonly class="form-control-plaintext" value="@Model.DocumentoArl">
-                </div>
-            </div>
-
-            <a asp-action="Ver_Horario" asp-controller="Empresa" asp-route-IdConductor="@Model.IdConductor" class="btn btn-secondary">Consultar Horarios</a>
-            <p>@ViewBag.Mensaje</p>
-
-            <a href="javascript:history.back()" class="btn btn-success">Volver</a>
-            <a asp-action="Editar_Conductor" asp-controller="Empresa" asp-route-IdConductor="@Model.IdConductor" class="btn btn-warning">Editar</a>
-
-            <!-- Botón para abrir el modal de confirmación -->
-            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal">
-                Eliminar
-            </button>
-
-            <!-- Modal de Confirmación -->
-            <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="confirmDeleteLabel">Confirmar Eliminación</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-                        </div>
-                        <div class="modal-body">
-                            ¿Estás seguro de que deseas eliminar este Horario?
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                            <!-- Formulario para eliminar -->
-                            <form asp-action="Eliminar_Conductor" asp-controller="Empresa" method="post">
-                                <input type="hidden" name="IdConductor" value="@Model.IdConductor" />
-                                <button type="submit" class="btn btn-danger">Eliminar</button>
-                            </form>
+                            <div class="col-md-6">
+                                <p class="card-text"><strong>RH:</strong> <span class="text-muted">@Model.GrupoSanguineo</span></p>
+                                <p class="card-text"><strong>EPS:</strong> <span class="text-muted">@Model.Eps</span></p>
+                                <p class="card-text"><strong>ARL:</strong> <span class="text-muted">@Model.Arl</span></p>
+                                <p class="card-text"><strong>Documento Cédula:</strong> <span class="text-muted">@Model.DocumentoCedula</span></p>
+                                <p class="card-text"><strong>Documento EPS:</strong> <span class="text-muted">@Model.DocumentoEps</span></p>
+                                <p class="card-text"><strong>Documento ARL:</strong> <span class="text-muted">@Model.DocumentoArl</span></p>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
 
+            <!-- Botones de acción -->
+            <div class="d-flex justify-content-center mt-4 gap-2">
+                <a asp-action="Ver_Horario" asp-controller="Empresa" asp-route-IdConductor="@Model.IdConductor" class="btn btn-secondary">Consultar Horarios</a>
+                <a asp-action="Editar_Conductor" asp-controller="Empresa" asp-route-IdConductor="@Model.IdConductor" class="btn btn-warning">Editar</a>
+                <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal">Eliminar</button>
+                <a href="javascript:history.back()" class="btn btn-success">Volver</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Confirmación -->
+    <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="confirmDeleteLabel">Confirmar Eliminación</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body">
+                    ¿Estás seguro de que deseas eliminar este conductor?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    <form asp-action="Eliminar_Conductor" asp-controller="Empresa" method="post">
+                        <input type="hidden" name="IdConductor" value="@Model.IdConductor" />
+                        <button type="submit" class="btn btn-danger">Eliminar</button>
+                    </form>
+                </div>
+            </div>
         </div>
     </div>
 }
 else
 {
-    <p>No se encontró el Dato:</p>
-    <p>@ViewBag.Mensaje</p>
-    <a href="javascript:history.back()" class="btn btn-success">Volver</a>
+    <div class="d-flex justify-content-center mt-4">
+        <div class="card text-dark bg-warning shadow-lg rounded-4 p-4 w-50 text-center">
+            <div class="card-header fw-bold">Error al Buscar</div>
+            <div class="card-body">
+                <h5 class="card-title">No se encontraron registros</h5>
+                <p class="card-text">Prueba a revisar tus datos ingresados</p>
+            </div>
+        </div>
+    </div>
 }

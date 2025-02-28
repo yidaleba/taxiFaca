@@ -1,40 +1,42 @@
 ﻿@model ModeloVista
 @{
-    ViewData["Title"] = "Agregar Vehiculo";
+    ViewData["Title"] = "Agregar Vehículo";
     Layout = "~/Views/Shared/_LayoutEmpresa.cshtml";
 }
 
-<h1>Agregar un Vehiculo</h1>
-
-<div class="card">
-    <h5 class="card-header">Ingrese los Datos:</h5>
+<h1>Agregar un Vehículo</h1>
+<div class="card shadow-lg border-0 rounded-3">
+    <h5 class="card-header bg-primary text-white text-center py-3">Ingrese los Datos del Vehículo</h5>
     <div class="card-body">
-        <form asp-action="Crear_Vehiculo" asp-controller="Empresa" method="post">
-            <div class="mb-3 row">
-                <label for="staticIdVehiculo" class="col-sm-2 col-form-label"><strong>Placa: </strong></label>
-                <div class="col-sm-10">
-                    <input type="text" class="form-control" id="staticIdVehiculo" asp-for="Vehiculo.Placa" required>
+        <form asp-action="Crear_Vehiculo" asp-controller="Empresa" method="post" enctype="multipart/form-data" class="needs-validation" novalidate>
+
+            <div class="row mb-3">
+                <label class="col-sm-3 col-form-label"><strong>Placa:</strong></label>
+                <div class="col-sm-9">
+                    <input type="text" class="form-control" asp-for="Vehiculo.Placa" placeholder="Ingrese la placa" required>
                 </div>
             </div>
 
-            <div class="mb-3 row">
-                <label for="staticSOAT" class="col-sm-2 col-form-label"><strong>SOAT: </strong></label>
-                <div class="col-sm-10">
-                    <input type="text" class="form-control" id="staticSOAT" asp-for="Vehiculo.Soat" placeholder="Inserte SOAT" required>
+            <!-- SOAT -->
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label class="form-label"><strong>SOAT (Archivo PDF o Imagen): </strong></label>
+                    <input type="file" class="form-control" asp-for="Vehiculo.Soat" accept=".pdf" required>
+                    <small class="text-muted">Suba el archivo del SOAT</small>
+                </div>
+
+                <!-- Técnico Mecánica -->
+                <div class="col-md-6">
+                    <label class="form-label"><strong>Técnico Mecánica (Archivo PDF o Imagen): </strong></label>
+                    <input type="file" class="form-control" asp-for="Vehiculo.TecnicoMecanica" accept=".pdf" required>
+                    <small class="text-muted">Suba el archivo de la revisión técnico mecánica</small>
                 </div>
             </div>
 
-            <div class="mb-3 row">
-                <label for="staticTecnicoMecanica" class="col-sm-2 col-form-label"><strong>Tecnico Mecanica: </strong></label>
-                <div class="col-sm-10">
-                    <input type="text" class="form-control" id="staticTecnicoMecanica" asp-for="Vehiculo.TecnicoMecanica" placeholder="Inserte Técnico Mecánica" required>
-                </div>
-            </div>
-
-            <div class="mb-3 row">
-                <label for="staticIdPropietario" class="col-sm-2 col-form-label"><strong>Propietario: </strong></label>
-                <div class="col-sm-10">
-                    <select class="form-control" id="staticIdPropietario" asp-for="Vehiculo.IdPropietario" required>
+            <div class="row mb-3">
+                <label class="col-sm-3 col-form-label"><strong>Propietario:</strong></label>
+                <div class="col-sm-9">
+                    <select class="form-select" asp-for="Vehiculo.IdPropietario" required>
                         <option value="">Seleccione un propietario</option>
                         @foreach (var propietario in Model.Propietarios)
                         {
@@ -44,15 +46,19 @@
                 </div>
             </div>
 
-            <p>@ViewBag.Mensaje</p>
-            <div class="d-grid gap-2 col-6 mx-auto">
-                <button type="submit" class="btn btn-success">Crear</button>
-                <a href="javascript:history.back()" class="btn btn-primary">Volver</a>
-            </div>
-            
-        </form>
+            @if (!string.IsNullOrEmpty(ViewBag.Mensaje))
+            {
+                <div class="alert alert-info text-center" role="alert">
+                    @ViewBag.Mensaje
+                </div>
+            }
 
-        
+            <div class="d-flex justify-content-center mt-4">
+                <button type="submit" class="btn btn-success px-4 me-2"><i class="bi bi-check-circle"></i> Crear</button>
+                <a href="javascript:history.back()" class="btn btn-secondary px-4"><i class="bi bi-arrow-left"></i> Volver</a>
+            </div>
+
+        </form>
     </div>
 </div>
 
@@ -61,8 +67,8 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="successModalLabel">Vehículo Guardado</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                <h5 class="modal-title">🚀 Vehículo Guardado</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
                 <p>El vehículo ha sido guardado con éxito.</p>

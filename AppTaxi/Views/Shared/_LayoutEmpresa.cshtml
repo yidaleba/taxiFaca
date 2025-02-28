@@ -11,50 +11,53 @@
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Empresa" asp-action="Inicio">Inicio</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm p-3">
+            <div class="container">
+                <a class="navbar-brand fw-bold" asp-area="" asp-controller="Empresa" asp-action="Inicio">Página Principal</a>
+
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Empresa" asp-action="Vehiculos">Vehiculos</a>
+
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item mx-2">
+                            <a class="nav-link fw-semibold text-dark" asp-area="" asp-controller="Empresa" asp-action="Vehiculos">🚗 Vehículos</a>
+                        </li>
+                        <li class="nav-item mx-2">
+                            <a class="nav-link fw-semibold text-dark" asp-area="" asp-controller="Empresa" asp-action="Conductores">👨‍✈️ Conductores</a>
+                        </li>
+                        <li class="nav-item mx-2">
+                            <a class="nav-link fw-semibold text-dark" asp-area="" asp-controller="Empresa" asp-action="Propietarios">👥 Propietarios</a>
+                        </li>
+                        <li class="nav-item mx-2">
+                            <a class="nav-link fw-semibold text-dark" asp-area="" asp-controller="Empresa" asp-action="Papelera">🗑️ Papelera</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Empresa" asp-action="Conductores">Conductores</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Empresa" asp-action="Propietarios">Propietarios</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Empresa" asp-action="Papelera">Papelera</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Inicio" asp-action="CerrarSesion">Cerrar Sesión</a>
+                            <a class="btn btn-outline-danger fw-semibold px-3" asp-area="" asp-controller="Inicio" asp-action="CerrarSesion">❌ Cerrar Sesión</a>
                         </li>
                     </ul>
                 </div>
             </div>
         </nav>
     </header>
+
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
     </div>
-
-    <footer class="border-top footer text-muted">
+    <!--
+    <footer class="border-top footer text-muted text-center py-3">
         <div class="container">
-            &copy; 2025 - AppTaxi - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            &copy; 2025 - AppTaxi | <a asp-area="" asp-controller="Home" asp-action="Privacy">Política de privacidad</a>
         </div>
-    </footer>
+    </footer>-->
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
-
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

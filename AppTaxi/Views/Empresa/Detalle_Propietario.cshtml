@@ -4,137 +4,138 @@
     Layout = "~/Views/Shared/_LayoutEmpresa.cshtml";
 }
 
-<h1>Detalle del Propietario</h1>
+<h1 class="text-center text-primary fw-bold mb-4">Detalle del Propietario</h1>
+
 @if (Model.Propietario != null)
 {
-    <div class="card">
-        <h5 class="card-header">Señor/a @Model.Propietario.Nombre</h5>
+    <div class="card shadow-lg p-4 rounded">
+        <h5 class="card-header bg-primary text-white text-center">Señor/a @Model.Propietario.Nombre</h5>
         <div class="card-body">
+            <div class="text-center mb-4">
+                <img src="@Model.Propietario.Foto" class="img-thumbnail shadow-sm" width="150" height="150" />
+            </div>
 
-            <div class="mb-3 row">
-                <label class="col-sm-2 col-form-label"><strong>Documento: </strong></label>
-                <div class="col-sm-10">
-                    <input type="text" readonly class="form-control-plaintext" value="@Model.Propietario.NumeroCedula">
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label class="fw-bold">Documento:</label>
+                    <p class="form-control-plaintext">@Model.Propietario.NumeroCedula</p>
+                </div>
+                <div class="col-md-6">
+                    <label class="fw-bold">Teléfono:</label>
+                    <p class="form-control-plaintext">@Model.Propietario.Telefono</p>
                 </div>
             </div>
 
-            <div class="mb-3 row">
-                <label class="col-sm-2 col-form-label"><strong>Telefono: </strong></label>
-                <div class="col-sm-10">
-                    <input type="number" readonly class="form-control-plaintext" value="@Model.Propietario.Telefono">
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label class="fw-bold">Correo:</label>
+                    <p class="form-control-plaintext">@Model.Propietario.Correo</p>
+                </div>
+                <div class="col-md-6">
+                    <label class="fw-bold">Dirección:</label>
+                    <p class="form-control-plaintext">@Model.Propietario.Direccion</p>
                 </div>
             </div>
 
-            <div class="mb-3 row">
-                <label class="col-sm-2 col-form-label"><strong>Correo: </strong></label>
-                <div class="col-sm-10">
-                    <input type="text" readonly class="form-control-plaintext" value="@Model.Propietario.Correo">
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label class="fw-bold">Ciudad:</label>
+                    <p class="form-control-plaintext">@Model.Propietario.Ciudad</p>
                 </div>
-            </div>
-            <div class="mb-3 row">
-                <label class="col-sm-2 col-form-label"><strong>Dirección: </strong></label>
-                <div class="col-sm-10">
-                    <input type="text" readonly class="form-control-plaintext" value="@Model.Propietario.Direccion">
-                </div>
-            </div>
-
-            <div class="mb-3 row">
-                <label class="col-sm-2 col-form-label"><strong>Ciudad: </strong></label>
-                <div class="col-sm-10">
-                    <input type="text" readonly class="form-control-plaintext" value="@Model.Propietario.Ciudad">
+                <div class="col-md-6">
+                    <label class="fw-bold">Estado Actual:</label>
+                    <p class="form-control-plaintext @(Model.Propietario.Estado ? "text-success" : "text-danger")">
+                        @(Model.Propietario.Estado ? "Activo" : "Inactivo")
+                    </p>
                 </div>
             </div>
 
-            <div class="mb-3 row">
-                <label class="col-sm-2 col-form-label"><strong>Estado Actual: </strong></label>
-                <div class="col-sm-10">
-                    <input type="text" readonly class="form-control-plaintext" value="@(Model.Propietario.Estado ? "Activo" : "Inactivo")">
+            <div class="row mb-3">
+                <div class="col-md-12">
+                    <label class="fw-bold">Documento Cédula:</label>
+                    <p class="form-control-plaintext">@Model.Propietario.DocumentoCedula</p>
                 </div>
             </div>
+        </div>
+    </div>
 
-            
-            <div class="mb-3 row">
-                <label class="col-sm-2 col-form-label"><strong>Documento Cedula: </strong></label>
-                <div class="col-sm-10">
-                    <input type="text" readonly class="form-control-plaintext" value="@Model.Propietario.DocumentoCedula">
-                </div>
-            </div>
+    <h5 class="mt-5 text-center text-secondary">Vehículos Asociados</h5>
 
-
-            <h5>Vehiculos Asociados:</h5>
-            @if(Model.Vehiculos != null)
-            {
-                <table class="table">
-                    <thead>
+    @if (Model.Vehiculos != null && Model.Vehiculos.Any())
+    {
+        <div class="table-responsive">
+            <table class="table table-hover table-bordered text-center shadow-sm">
+                <thead class="table-dark">
+                    <tr>
+                        <th>ID Vehículo</th>
+                        <th>Placa</th>
+                        <th>Estado</th>
+                        <th>SOAT</th>
+                        <th>Técnico Mecánica</th>
+                        <th>Detalles</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Vehiculos)
+                    {
                         <tr>
-                            <th scope="col">ID Vehiculo</th>
-                            <th scope="col">Placa</th>
-                            <th scope="col">Estado</th>
-                            <th scope="col">SOAT</th>
-                            <th scope="col">Tecnico Mecanica</th>
-                            <th scope="col">Detalles</th>
+                            <td>@item.IdVehiculo</td>
+                            <td class="fw-bold">@item.Placa</td>
+                            <td class="@(item.Estado ? "text-success" : "text-danger")">@(item.Estado ? "Habilitado" : "No Habilitado")</td>
+                            <td class="@(item.Soat != null ? "text-success" : "text-danger")">@(item.Soat != null ? "Sí" : "No")</td>
+                            <td class="@(item.TecnicoMecanica != null ? "text-success" : "text-danger")">@(item.TecnicoMecanica != null ? "Sí" : "No")</td>
+                            <td>
+                                <a asp-action="Detalle_Vehiculo" asp-controller="Empresa" asp-route-IdVehiculo="@item.IdVehiculo" class="btn btn-primary btn-sm">Ver</a>
+                            </td>
                         </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var item in Model.Vehiculos)
-                        {
-                            <tr>
-                                <td>@item.IdVehiculo</td>
-                                <td class="col-Placa">@item.Placa</td>
-                                <td class="col-Propietario">@(item.Estado ? "Habilitado" : "No Habilitado")</td>
-                                <td class="col-Fecha">@((item.Soat != null) ? "Si" : "No")</td>
-                                <td class="col-Fecha">@((item.TecnicoMecanica != null) ? "Si" : "No")</td>
-                                <td><a asp-action="Detalle_Vehiculo" asp-controller="Empresa" asp-route-IdVehiculo="@item.IdVehiculo" class="btn btn-primary btn-sm">Ver</a></td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-            }
-            else
-            {
-                <p>No hay vehiculos Registrados a nombre de este propietario</p>
-            }
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+    else
+    {
+        <p class="text-center text-danger">No hay vehículos registrados a nombre de este propietario.</p>
+    }
 
-            <p>@ViewBag.Mensaje</p>
+    <div class="d-flex justify-content-center gap-3 mt-4">
+        <a href="javascript:history.back()" class="btn btn-success">Volver</a>
+        <a asp-action="Editar_Propietario" asp-controller="Empresa" asp-route-IdPropietario="@Model.Propietario.IdPropietario" class="btn btn-warning">Editar</a>
 
-            <a href="javascript:history.back()" class="btn btn-success">Volver</a>
-            <a asp-action="Editar_Propietario" asp-controller="Empresa" asp-route-IdPropietario="@Model.Propietario.IdPropietario" class="btn btn-warning">Editar</a>
+        <!-- Botón para abrir el modal de confirmación -->
+        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal">
+            Eliminar
+        </button>
+    </div>
 
-            <!-- Botón para abrir el modal de confirmación -->
-            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal">
-                Eliminar
-            </button>
-
-            <!-- Modal de Confirmación -->
-            <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="confirmDeleteLabel">Confirmar Eliminación</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-                        </div>
-                        <div class="modal-body">
-                            ¿Estás seguro de que deseas eliminar este Propietario?
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                            <!-- Formulario para eliminar -->
-                            <form asp-action="Eliminar_Propietario" asp-controller="Empresa" method="post">
-                                <input type="hidden" name="IdPropietario" value="@Model.Propietario.IdPropietario"/>
-                                <button type="submit" class="btn btn-danger">Eliminar</button>
-                            </form>
-                        </div>
-                    </div>
+    <!-- Modal de Confirmación -->
+    <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-danger text-white">
+                    <h5 class="modal-title" id="confirmDeleteLabel">Confirmar Eliminación</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body">
+                    ¿Estás seguro de que deseas eliminar este Propietario?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    <!-- Formulario para eliminar -->
+                    <form asp-action="Eliminar_Propietario" asp-controller="Empresa" method="post">
+                        <input type="hidden" name="IdPropietario" value="@Model.Propietario.IdPropietario" />
+                        <button type="submit" class="btn btn-danger">Eliminar</button>
+                    </form>
                 </div>
             </div>
-
         </div>
     </div>
 }
 else
 {
-    <p>No se encontró el Dato:</p>
-    <p>@ViewBag.Mensaje</p>
-    <a href="javascript:history.back()" class="btn btn-success">Volver</a>
+    <p class="text-center text-danger">No se encontró el propietario.</p>
+    <p class="text-center">@ViewBag.Mensaje</p>
+    <div class="text-center">
+        <a href="javascript:history.back()" class="btn btn-success">Volver</a>
+    </div>
 }
-

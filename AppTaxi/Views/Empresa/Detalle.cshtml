@@ -1,39 +1,53 @@
 ﻿@model DatosEmpresa
+
 @{
     ViewData["Title"] = "Detalle";
     Layout = "~/Views/Shared/_LayoutEmpresa.cshtml";
 }
 
-<h1>Detalle</h1>
+<div class="container">
+    <h1 class="mb-4 text-center text-primary">Detalle del Registro</h1>
 
-@if(Model != null)
-{
-    <p>@ViewBag.Mensaje</p>
-    <div class="card" style="width: 18rem;">
-        <img src="https://icons.veryicon.com/png/o/internet--web/prejudice/user-128.png" class="img-fluid rounded-start" alt="@Model.Foto">
-        <div class="card-body">
-            <h5 class="card-title">Información</h5>
+    @if (Model != null)
+    {
+        <p class="text-center text-secondary">@ViewBag.Mensaje</p>
+
+        <div class="card mx-auto shadow-lg" style="max-width: 450px;">
+            <div class="text-center mt-3">
+                <img src="@(!string.IsNullOrEmpty(Model.Foto) ? Model.Foto : Url.Content("~/images/default-user.png"))"
+                     class="img-fluid rounded-circle shadow"
+                     alt="Foto del conductor"
+                     style="width: 120px; height: 120px; object-fit: cover; border: 3px solid #ddd;">
+            </div>
+
+            <div class="card-body">
+                <h4 class="card-title text-center mb-3">Información del Vehículo</h4>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item"><strong>🚗 Id del Vehículo:</strong> @Model.IdVehiculo</li>
+                    <li class="list-group-item"><strong>🔖 Placa:</strong> @Model.Placa</li>
+                    <li class="list-group-item"><strong>👤 Propietario:</strong> @Model.NombrePropietario</li>
+                    <li class="list-group-item"><strong>👨‍✈️ Conductor:</strong> @Model.Conductor</li>
+                    <li class="list-group-item"><strong>📅 Fecha:</strong> @Model.Fecha.ToString("yyyy-MM-dd")</li>
+                    <li class="list-group-item"><strong>🕒 Hora de inicio:</strong> @Model.HoraInicio</li>
+                    <li class="list-group-item"><strong>🕕 Hora de fin:</strong> @Model.HoraFin</li>
+                </ul>
+            </div>
+
+            <div class="card-footer text-center">
+                <a class="btn btn-primary btn-lg" asp-action="Detalle_Vehiculo" asp-controller="Empresa" asp-route-IdVehiculo="@Model.IdVehiculo">
+                    Ver Vehículo
+                </a>
+            </div>
         </div>
-        <ul class="list-group list-group-flush">
-            <li class="list-group-item"><strong>Id del Vehiculo:</strong>@Model.IdVehiculo</li>
-            <li class="list-group-item"><strong>Placa:</strong>@Model.Placa</li>
-            <li class="list-group-item"><strong>Propietario:</strong>@Model.NombrePropietario</li>
-            <li class="list-group-item"><strong>Conductor:</strong>@Model.Conductor</li>
-            <li class="list-group-item"><strong>Fecha:</strong>@Model.Fecha.ToString("yyyy-MM-dd")</li>
-            <li class="list-group-item"><strong>Hora de inicio:</strong>@Model.HoraInicio</li>
-            <li class="list-group-item"><strong>Hora de fin:</strong>@Model.HoraFin</li>
-        </ul>
-        <div class="card-body">
-            <a class="btn btn-primary" asp-action="Detalle_Vehiculo" asp-controller="Empresa" asp-route-IdVehiculo="@Model.IdVehiculo">Ver Vehiculo</a>
+    }
+    else
+    {
+        <div class="alert alert-warning text-center mt-4">
+            <strong>⚠ No se encontró el objeto.</strong>
         </div>
+    }
+
+    <div class="text-center mt-4 pb-5">
+        <a class="btn btn-success btn-lg" href="javascript:history.back()">Volver</a>
     </div>
-
-    <br />
-}
-else
-{
-    <p>No se encontró el objeto</p>
-}
-
-
-<a class="btn btn-success btn-sm" href="javascript:history.back()">Volver</a>
+</div>

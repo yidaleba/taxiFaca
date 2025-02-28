@@ -6,84 +6,83 @@
 
 <h1>Agregar Propietario</h1>
 
-
-<div class="card">
-    <h5 class="card-header">Ingrese los Datos:</h5>
+<div class="card shadow-lg border-0 rounded-3">
+    <h5 class="card-header bg-primary text-white text-center py-3">Ingrese los Datos</h5>
     <div class="card-body">
-        <form asp-action="Crear_Propietario" asp-controller="Empresa" method="post">
+        <form asp-action="Crear_Propietario" asp-controller="Empresa" method="post" class="needs-validation" novalidate>
 
-            <div class="mb-3 row">
-                <label class="col-sm-2 col-form-label"><strong>Foto: </strong></label>
-                <div class="col-sm-10">
-                    <input type="text" class="form-control-plaintext" asp-for="Foto" placeholder="Foto" required>
+            <div class="row mb-3">
+                <label class="col-sm-3 col-form-label"><strong>Foto:</strong></label>
+                <div class="col-sm-9">
+                    <input type="file" class="form-control" asp-for="Foto" placeholder="Foto" required accept=".png, .jpg, .jpeg">
                 </div>
             </div>
 
-            <div class="mb-3 row">
-                <label class="col-sm-2 col-form-label"><strong>Nombre: </strong></label>
-                <div class="col-sm-10">
-                    <input type="text" class="form-control-plaintext" asp-for="Nombre" placeholder="Nombre Completo" required>
+            <div class="row mb-3">
+                <label class="col-sm-3 col-form-label"><strong>Nombre:</strong></label>
+                <div class="col-sm-9">
+                    <input type="text" class="form-control" asp-for="Nombre" placeholder="Nombre Completo" required>
                 </div>
             </div>
 
-            <div class="mb-3 row">
-                <label class="col-sm-2 col-form-label"><strong>Numero Cedula: </strong></label>
-                <div class="col-sm-10">
-                    <input type="number" class="form-control-plaintext" asp-for="NumeroCedula" placeholder="100000000" required>
+            <div class="row mb-3">
+                <label class="col-sm-3 col-form-label"><strong>Número de Cédula:</strong></label>
+                <div class="col-sm-9">
+                    <input type="number" class="form-control" asp-for="NumeroCedula" placeholder="100000000" required>
                 </div>
             </div>
 
-            <div class="mb-3 row">
-                <label class="col-sm-2 col-form-label"><strong>Telefono: </strong></label>
-                <div class="col-sm-10">
-                    <input type="number" class="form-control-plaintext" asp-for="Telefono" placeholder="Numero de Telefono" required>
+            <div class="row mb-3">
+                <label class="col-sm-3 col-form-label"><strong>Teléfono:</strong></label>
+                <div class="col-sm-9">
+                    <input type="number" class="form-control" asp-for="Telefono" placeholder="Número de Teléfono" required>
                 </div>
             </div>
 
-            <div class="mb-3 row">
-                <label class="col-sm-2 col-form-label"><strong>Celular: </strong></label>
-                <div class="col-sm-10">
-                    <input type="number" class="form-control-plaintext" asp-for="Celular" placeholder="Numero Celular" required>
+            <div class="row mb-3">
+                <label class="col-sm-3 col-form-label"><strong>Celular:</strong></label>
+                <div class="col-sm-9">
+                    <input type="number" class="form-control" asp-for="Celular" placeholder="Número Celular" required>
                 </div>
             </div>
 
-            <div class="mb-3 row">
-                <label class="col-sm-2 col-form-label"><strong>Correo: </strong></label>
-                <div class="col-sm-10">
-                    <input type="email" class="form-control-plaintext" asp-for="Correo" placeholder="Correo Electronico" required>
-                </div>
-            </div>
-            <div class="mb-3 row">
-                <label class="col-sm-2 col-form-label"><strong>Dirección: </strong></label>
-                <div class="col-sm-10">
-                    <input type="text" class="form-control-plaintext" asp-for="Direccion" placeholder="Cra/Clle X # xx - xx" required>
+            <div class="row mb-3">
+                <label class="col-sm-3 col-form-label"><strong>Correo:</strong></label>
+                <div class="col-sm-9">
+                    <input type="email" class="form-control" asp-for="Correo" placeholder="Correo Electrónico" required>
                 </div>
             </div>
 
-            <div class="mb-3 row">
-                <label class="col-sm-2 col-form-label"><strong>Ciudad: </strong></label>
-                <div class="col-sm-10">
-                    <input type="text" class="form-control-plaintext" asp-for="Ciudad" placeholder="Ciudad o Departamento" required>
+            <div class="row mb-3">
+                <label class="col-sm-3 col-form-label"><strong>Dirección:</strong></label>
+                <div class="col-sm-9">
+                    <input type="text" class="form-control" asp-for="Direccion" placeholder="Cra/Clle X # xx - xx" required>
                 </div>
             </div>
 
-            <div class="mb-3 row">
-                <label class="col-sm-2 col-form-label"><strong>Documento Cedula: </strong></label>
-                <div class="col-sm-10">
-                    <input type="text" class="form-control-plaintext" asp-for="DocumentoCedula" placeholder="Documento Cedula.pdf" required>
+            <div class="row mb-3">
+                <label class="col-sm-3 col-form-label"><strong>Ciudad:</strong></label>
+                <div class="col-sm-9">
+                    <input type="text" class="form-control" asp-for="Ciudad" placeholder="Ciudad o Departamento" required>
                 </div>
             </div>
 
-            <div class="d-grid gap-2 col-6 mx-auto">
-                <button type="submit" class="btn btn-success">Crear</button>
-                <a href="javascript:history.back()" class="btn btn-primary">Volver</a>
+            <div class="row mb-3">
+                <label class="col-sm-3 col-form-label"><strong>Documento Cédula:</strong></label>
+                <div class="col-sm-9">
+                    <input type="file" class="form-control" asp-for="DocumentoCedula" placeholder="Documento Cedula.pdf" required accept=".pdf">
+                </div>
             </div>
-            
+
+            <div class="d-flex justify-content-center mt-4">
+                <button type="submit" class="btn btn-success px-4 me-2"><i class="bi bi-check-circle"></i> Crear</button>
+                <a href="javascript:history.back()" class="btn btn-secondary px-4"><i class="bi bi-arrow-left"></i> Volver</a>
+            </div>
+
         </form>
-
-        
     </div>
 </div>
+
 
 <!-- Modal de Confirmación -->
 <div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">

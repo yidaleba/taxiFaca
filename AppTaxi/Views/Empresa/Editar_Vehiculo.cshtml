@@ -1,73 +1,67 @@
 ﻿@model Vehiculo
 @{
-    ViewData["Title"] = "Editar Vehiculo";
+    ViewData["Title"] = "Editar Vehículo";
     Layout = "~/Views/Shared/_LayoutEmpresa.cshtml";
 }
 
-<h1>Editar Vehiculo</h1>
+<div class="container mt-4">
+    <h1 class="text-center">Editar Vehículo</h1>
 
+    @if (Model != null)
+    {
+        <p class="text-muted text-center">Llene los campos que desea editar. <br> Los campos que no se deseen editar pueden quedar vacíos.</p>
+        <div class="card shadow-lg">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">Vehículo - Placa: @Model.Placa</h5>
+            </div>
+            <div class="card-body">
+                <form asp-action="Guardar_Vehiculo" asp-controller="Empresa" method="post" enctype="multipart/form-data">
 
-@if (Model != null)
-{
-    <p>Llene los campos que desea editar</p>
-    <p>Los campos que no se deseen editar, pueden quedar vacios</p>
-    <div class="card">
-        <h5 class="card-header">Información:</h5>
-        <div class="card-body">
-
-            <h5 class="card-title">Vehículo @Model.Placa</h5>
-            <form asp-action="Guardar_Vehiculo" asp-controller="Empresa" method="post">
-
-                <div class="mb-3 row">
-                    <label for="staticIdVehiculo" class="col-sm-2 col-form-label"><strong>ID Vehiculo: </strong></label>
-                    <div class="col-sm-10">
-                        <input type="text" class="form-control" readonly id="staticIdVehiculo" asp-for="IdVehiculo" value="@Model.IdVehiculo">
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label"><strong>ID Vehículo: </strong></label>
+                            <input type="text" class="form-control" readonly asp-for="IdVehiculo">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label"><strong>Estado Actual: </strong></label>
+                            <input type="text" class="form-control" readonly asp-for="Estado" value="@(Model.Estado ? "Habilitado" : "No Habilitado")">
+                        </div>
                     </div>
-                </div>
 
-                <div class="mb-3 row">
-                    <label for="staticEstado" class="col-sm-2 col-form-label"><strong>Estado Actual: </strong></label>
-                    <div class="col-sm-10">
-                        <input type="text" class="form-control" readonly id="staticEstado" asp-for="Estado" placeholder="@(Model.Estado ? "Habilitado" : "No Habilitado")">
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label"><strong>SOAT (Archivo PDF o Imagen): </strong></label>
+                            <input type="file" class="form-control" asp-for="Soat" accept=".pdf, .jpg, .png">
+                            <small class="text-muted">Archivo actual: @Model.Soat</small>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label"><strong>Técnico Mecánica (Archivo PDF o Imagen): </strong></label>
+                            <input type="file" class="form-control" asp-for="TecnicoMecanica" accept=".pdf, .jpg, .png">
+                            <small class="text-muted">Archivo actual: @Model.TecnicoMecanica</small>
+                        </div>
                     </div>
-                </div>
 
-                <div class="mb-3 row">
-                    <label for="staticSOAT" class="col-sm-2 col-form-label"><strong>SOAT: </strong></label>
-                    <div class="col-sm-10">
-                        <input type="text" class="form-control" id="staticSOAT" asp-for="Soat" placeholder="@Model.Soat">
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label"><strong>ID Propietario: </strong></label>
+                            <input type="text" readonly class="form-control" asp-for="IdPropietario" placeholder="@Model.IdPropietario">
+                        </div>
                     </div>
-                </div>
 
-                <div class="mb-3 row">
-                    <label for="staticTecnicoMecanica" class="col-sm-2 col-form-label"><strong>Tecnico Mecanica: </strong></label>
-                    <div class="col-sm-10">
-                        <input type="text" class="form-control" id="staticTecnicoMecanica" asp-for="TecnicoMecanica" placeholder="@Model.TecnicoMecanica">
+                    <div class="d-flex justify-content-between mt-4">
+                        <button type="submit" class="btn btn-success px-4">Guardar Cambios</button>
+                        <a href="javascript:history.back()" class="btn btn-danger px-4">Cancelar</a>
                     </div>
-                </div>
-
-                <div class="mb-3 row">
-                    <label for="staticIdPropietario" class="col-sm-2 col-form-label"><strong>Id Propietario: </strong></label>
-                    <div class="col-sm-10">
-                        <input type="text" class="form-control" id="staticIdPropietario" asp-for="IdPropietario" placeholder="@Model.IdPropietario">
-                    </div>
-                </div>
-                <button type="submit" class="btn btn-success">Editar</button>
-            </form>
-            <p>@ViewBag.Mensaje</p>
-            <a href="javascript:history.back()" class="btn btn-danger">Cancelar</a>
-            
+                </form>
+                <p class="text-center text-success mt-3">@ViewBag.Mensaje</p>
+            </div>
         </div>
-    </div>
-}
-else
-{
-    <p>No se encontró el Dato:</p>
-    
-
-    <a href="javascript:history.back()" class="btn btn-success">Volver</a>
-}
-
-<p>@ViewBag.Mensaje</p>
-
-
+    }
+    else
+    {
+        <div class="alert alert-warning text-center mt-4">
+            <p>No se encontró el vehículo.</p>
+            <a href="javascript:history.back()" class="btn btn-primary">Volver</a>
+        </div>
+    }
+</div>
