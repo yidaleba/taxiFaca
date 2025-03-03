@@ -34,5 +34,6 @@
 
         public string DocumentoArl { get; set; }
         public int IdEmpresa { get; set; }
+        public string Contrasena { get; set; }
     }
 }

@@ -1029,5 +1029,11 @@ namespace AppTaxi.Controllers
                         
         }
 
+        public async Task<IActionResult> Papelera()
+        {
+            
+            return View();
+        }
+
     }
 }

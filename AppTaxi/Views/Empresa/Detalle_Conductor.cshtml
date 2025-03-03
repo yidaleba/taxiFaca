@@ -29,6 +29,15 @@
                                 <p class="card-text"><strong>Cédula:</strong> <span class="text-muted">@Model.NumeroCedula</span></p>
                                 <p class="card-text"><strong>Teléfono:</strong> <span class="text-muted">@Model.Telefono</span></p>
                                 <p class="card-text"><strong>Correo:</strong> <span class="text-muted">@Model.Correo</span></p>
+                                <p class="card-text">
+                                    <strong>Contraseña:</strong>
+                                    <div class="input-group w-65">
+                                        <input type="password" id="passwordField" class="form-control text-muted" value="@Model.Contrasena" readonly>
+                                        <button type="button" class="btn btn-outline-secondary" onclick="togglePassword()">
+                                            <strong>Ver</strong>
+                                        </button>
+                                    </div>
+                                </p>
                                 <p class="card-text"><strong>Dirección:</strong> <span class="text-muted">@Model.Direccion</span></p>
                                 <p class="card-text"><strong>Ciudad:</strong> <span class="text-muted">@Model.Ciudad</span></p>
                                 <p class="card-text">
@@ -121,6 +130,14 @@ else
             nuevaVentana.document.write('<iframe width="100%" height="100%" src="data:application/pdf;base64,' + base64 + '"></iframe>');
         } else {
             alert("No hay documento disponible.");
+        }
+    }
+    function togglePassword() {
+        var passwordField = document.getElementById("passwordField");
+        if (passwordField.type === "password") {
+            passwordField.type = "text";
+        } else {
+            passwordField.type = "password";
         }
     }
 </script>

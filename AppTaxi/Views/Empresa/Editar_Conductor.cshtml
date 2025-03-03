@@ -48,11 +48,15 @@
                     </div>
                 </div>
 
-                <!-- Correo y Dirección -->
+                <!-- Correo, Dirección y Contraseña-->
                 <div class="row mt-3">
                     <div class="col-md-6">
                         <label class="form-label"><strong>Correo:</strong></label>
                         <input type="email" class="form-control" asp-for="Conductor.Correo" placeholder="@Model.Conductor.Correo">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label"><strong>Contraseña:</strong></label>
+                        <input type="password" class="form-control" asp-for="Conductor.Contrasena" placeholder="@Model.Conductor.Contrasena">
                     </div>
                     <div class="col-md-6">
                         <label class="form-label"><strong>Dirección:</strong></label>
