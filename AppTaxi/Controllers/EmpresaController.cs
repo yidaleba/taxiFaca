@@ -1031,8 +1031,112 @@ namespace AppTaxi.Controllers
 
         public async Task<IActionResult> Papelera()
         {
-            
-            return View();
+            var usuario = GetUsuarioFromSession();
+            if (usuario == null)
+            {
+                ViewBag.Mensaje = "Usuario no autenticado.";
+                return RedirectToAction("Login", "Inicio");
+            }
+
+            var login = CreateLogin(usuario);
+
+            ModeloVista modeloTotal = new ModeloVista();
+            modeloTotal.Conductores = await _conductor.Lista(login);
+            modeloTotal.Propietarios = await _propietario.Lista(login);
+            modeloTotal.Vehiculos = await _vehiculo.Lista(login);
+            modeloTotal.Empresas = await _empresa.Lista(login);
+
+            int IdEmpresa = modeloTotal.Empresas.Where(e => e.IdUsuario == usuario.IdUsuario).FirstOrDefault().IdEmpresa;
+
+
+            ModeloVista modelo = new ModeloVista();
+            modelo.Conductores = modeloTotal.Conductores.Where(item => item.Estado == false && item.IdEmpresa == IdEmpresa).ToList();
+            modelo.Propietarios = modeloTotal.Propietarios.Where(item => item.Estado == false && item.IdEmpresa == IdEmpresa).ToList();
+            modelo.Vehiculos = modeloTotal.Vehiculos.Where(item => item.Estado == false && item.IdEmpresa == IdEmpresa).ToList();
+
+
+            return View(modelo);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Recuperar_Conductor(int IdConductor)
+        {
+            var usuario = GetUsuarioFromSession();
+            if (usuario == null)
+            {
+                ViewBag.Mensaje = "Usuario no autenticado.";
+                return RedirectToAction("Login", "Inicio");
+            }
+
+            var login = CreateLogin(usuario);
+            var conductor = await _conductor.Obtener(IdConductor, login);
+            conductor.Estado = true;
+
+            bool respuesta = await _conductor.Editar(conductor, login);
+
+            if (respuesta)
+            {
+                return RedirectToAction("Papelera");
+            }
+            else
+            {
+                ViewBag.Mensaje = "No se pudo Recuperar";
+                return NoContent();
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Recuperar_Vehiculo(int IdVehiculo)
+        {
+            var usuario = GetUsuarioFromSession();
+            if (usuario == null)
+            {
+                ViewBag.Mensaje = "Usuario no autenticado.";
+                return RedirectToAction("Login", "Inicio");
+            }
+
+            var login = CreateLogin(usuario);
+            var vehiculo = await _vehiculo.Obtener(IdVehiculo, login);
+            vehiculo.Estado = true;
+
+            bool respuesta = await _vehiculo.Editar(vehiculo, login);
+
+            if (respuesta)
+            {
+                return RedirectToAction("Papelera");
+            }
+            else
+            {
+                ViewBag.Mensaje = "No se pudo Recuperar";
+                return NoContent();
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Recuperar_Propietario(int IdPropietario)
+        {
+            var usuario = GetUsuarioFromSession();
+            if (usuario == null)
+            {
+                ViewBag.Mensaje = "Usuario no autenticado.";
+                return RedirectToAction("Login", "Inicio");
+            }
+
+            var login = CreateLogin(usuario);
+            var propietario = await _propietario.Obtener(IdPropietario, login);
+            propietario.Estado = true;
+
+            bool respuesta = await _propietario.Editar(propietario, login);
+
+            if (respuesta)
+            {
+                return RedirectToAction("Papelera");
+            }
+            else
+            {
+                ViewBag.Mensaje = "No se pudo Recuperar";
+                return NoContent();
+            }
         }
 
     }
