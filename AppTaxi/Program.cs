@@ -33,7 +33,7 @@ if (!app.Environment.IsDevelopment())
 app.UseSession();
 app.UseHttpsRedirection();
 app.UseStaticFiles();
-
+//app.UseExceptionHandler("/Home/Error");         // Errores Con Estilos
 app.UseRouting();
 
 app.UseAuthorization();
