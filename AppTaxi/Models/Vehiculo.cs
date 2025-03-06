@@ -2,6 +2,7 @@
 {
     public class Vehiculo
     {
+        public int Contador { get; set; }
         public int IdVehiculo { get; set; }
 
         public string Placa { get; set; }

@@ -2,6 +2,7 @@
 {
     public class Conductor
     {
+        public int Contador{ get; set; }
         public int IdConductor { get; set; }
 
         public string Foto { get; set; }

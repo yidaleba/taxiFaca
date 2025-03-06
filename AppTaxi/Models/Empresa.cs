@@ -2,6 +2,7 @@
 {
     public class Empresa
     {
+        public int Contador { get; set; }
         public int IdEmpresa { get; set; }
 
         public string Nombre { get; set; }

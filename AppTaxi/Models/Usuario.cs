@@ -2,6 +2,7 @@
 {
     public class Usuario
     {
+        public int Contador { get; set; }
         public int IdUsuario { get; set; }
         public string Correo { get; set; }
 

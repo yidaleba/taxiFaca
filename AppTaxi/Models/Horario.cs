@@ -2,6 +2,7 @@
 {
     public class Horario
     {
+        public int Contador { get; set; }
         public int IdHorario { get; set; } 
         public DateTime Fecha { get; set; } 
         public TimeSpan HoraInicio { get; set; } 

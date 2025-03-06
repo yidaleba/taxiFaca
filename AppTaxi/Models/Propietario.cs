@@ -2,6 +2,7 @@
 {
     public class Propietario
     {
+        public int Contador { get; set; }
         public int IdPropietario { get; set; }
 
         public string Foto { get; set; }

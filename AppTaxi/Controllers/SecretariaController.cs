@@ -90,9 +90,32 @@ namespace AppTaxi.Controllers
             return View(modelo);
         }
 
+        public async Task<IActionResult> Detalle_Empresa(int IdEmpresa)
+        {
+            var usuario = GetUsuarioFromSession();
+            if (usuario == null)
+            {
+                ViewBag.Mensaje = "Usuario no autenticado.";
+                return View();
+            }
 
+            var login = CreateLogin(usuario);
 
+            ModeloVista modelo = new ModeloVista();
+            modelo.Empresa = await _empresa.Obtener(IdEmpresa, login);
 
+            modelo.Usuario = await _usuario.Obtener(modelo.Empresa.IdUsuario, login);
+            int i = 1;
+            foreach(var emp in modelo.Empresas)
+            {
+                emp.Contador = i;
+                i++;
+            }
+
+            return View(modelo);
+        }
+
+        
 
 
     }
