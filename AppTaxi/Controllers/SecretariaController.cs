@@ -60,5 +60,40 @@ namespace AppTaxi.Controllers
             
             return View(usuario);
         }
+        public async Task<IActionResult> Empresas()
+        {
+            var usuario = GetUsuarioFromSession();
+            if (usuario == null)
+            {
+                ViewBag.Mensaje = "Usuario no autenticado.";
+                return View();
+            }
+
+            var login = CreateLogin(usuario);
+
+            // Obtener la lista de empresas
+            var empresasTotales = await _empresa.Lista(login);
+
+            // Crear lista de tareas para obtener los usuarios en paralelo
+            var tareasUsuarios = empresasTotales.Select(emp => _usuario.Obtener(emp.IdUsuario, login));
+
+            // Ejecutar todas las llamadas en paralelo
+            var usuarios = await Task.WhenAll(tareasUsuarios);
+
+            // Construir el modelo con los resultados
+            ModeloVista modelo = new ModeloVista
+            {
+                Empresas = empresasTotales,
+                Usuarios = usuarios.ToList()
+            };
+
+            return View(modelo);
+        }
+
+
+
+
+
+
     }
 }

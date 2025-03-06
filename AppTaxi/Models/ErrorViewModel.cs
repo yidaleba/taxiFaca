@@ -6,5 +6,8 @@ namespace AppTaxi.Models
     
 
         public bool ShowRequestId => !string.IsNullOrEmpty(RequestId);
+
+        public string ErrorMessage { get; set; }
+        public string StackTrace { get; set; }
     }
 }

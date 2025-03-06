@@ -1,0 +1,78 @@
+﻿@model ModeloVista
+@{
+    ViewData["Title"] = "Empresas";
+    Layout = "~/Views/Shared/_LayoutSecretaria.cshtml";
+}
+
+<h1 class="mb-4 text-center text-primary">Empresas Actuales:</h1>
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <a asp-action="Agregar_Empresa" asp-controller="Secretaria" class="btn btn-outline-success">
+        <strong>➕ Agregar Empresa</strong>
+    </a>
+
+    <input type="text" id="buscarEmpresa" class="form-control w-25" placeholder="🔍 Buscar por Nombre..." onkeyup="filtrarEmpresas()">
+</div>
+
+@if (Model != null && Model.Empresas.Any())
+{
+    <div class="table-responsive">
+        <table class="table table-hover text-center">
+            <thead class="table-dark">
+                <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">Nombre</th>
+                    <th scope="col">NIT</th>
+                    <th scope="col">Representante</th>
+                    <th scope="col">Cupos</th>
+                    <th scope="col">Usuario</th>
+                    <th scope="col">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Empresas)
+                {
+                    <tr class="fila-empresa">
+                        <td>@item.IdEmpresa</td>
+                        <td class="col-Empresa">@item.Nombre</td>
+                        <td>@item.Nit</td>
+                        <td>@item.Representante</td>
+                        <td>@item.Cupos</td>
+                        <td>@Model.Usuarios.Where(u => u.IdUsuario == item.IdUsuario).FirstOrDefault().Nombre</td>
+                        <td>
+                            <a asp-action="Detalle_Empresa" asp-controller="Secretaria" asp-route-IdEmpresa="@item.IdEmpresa" class="btn btn-primary btn-sm">
+                                Detalle
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+else
+{
+    <div class="alert alert-warning text-center mt-4">
+        <strong>⚠ No se encontraron empresas registradas.</strong>
+    </div>
+}
+
+<p class="text-danger text-center">@ViewBag.Mensaje</p>
+
+<script>
+    function filtrarEmpresas() {
+        let input = document.getElementById("buscarEmpresa").value.toLowerCase();
+        let filas = document.getElementsByClassName("fila-empresa");
+
+        for (let i = 0; i < filas.length; i++) {
+            let empresa = filas[i].getElementsByClassName("col-Empresa")[0].innerText.toLowerCase();
+            filas[i].style.display = empresa.includes(input) ? "" : "none";
+        }
+    }
+</script>
+
+
+
+
+
+

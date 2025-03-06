@@ -8,6 +8,7 @@
         public Empresa Empresa { get; set; }
         public Propietario Propietario { get; set; }
         public Horario Horario { get; set; }
+        public Usuario Usuario { get; set; }
 
         //Lista de Objetos
         public List<Vehiculo> Vehiculos { get; set; }
@@ -15,6 +16,7 @@
         public List<Empresa> Empresas { get; set; }
         public List<Propietario> Propietarios { get; set; }
         public List<Horario> Horarios { get; set; }
+        public List<Usuario> Usuarios { get; set; }
 
         public IFormFile Archivo_1 { get; set; }
         public IFormFile Archivo_2 { get; set; }
