@@ -237,8 +237,6 @@ namespace AppTaxi.Controllers
         }
 
 
-        //Detalles de los objetos:
-
         public async Task<IActionResult> Detalle_Conductor(int IdConductor)
         {
             var usuario = GetUsuarioFromSession();
@@ -312,6 +310,57 @@ namespace AppTaxi.Controllers
 
 
             return View(modelo);
+        }
+
+
+        public async Task<IActionResult> Vista_Agregar_Empresa()
+        {
+            var usuario = GetUsuarioFromSession();
+            if (usuario == null)
+            {
+                ViewBag.Mensaje = "Usuario no autenticado.";
+                return RedirectToAction("Login", "Inicio");
+            }
+
+            var login = CreateLogin(usuario);
+            ModeloVista modelo = new ModeloVista();
+
+            var usuariosTotales = await _usuario.Lista(login);
+            var empresasRegistradas = await _empresa.Lista(login);
+
+            // Filtrar usuarios que no están en empresasRegistradas y que tengan IdRol = 1
+            modelo.Usuarios = usuariosTotales
+                .Where(u => u.IdRol == 1 && !empresasRegistradas.Any(e => e.IdUsuario == u.IdUsuario))
+                .ToList();
+
+            return View(modelo);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Agregar_Empresa(ModeloVista modelo)
+        {
+            var usuario = GetUsuarioFromSession();
+            if (usuario == null)
+            {
+                ViewBag.Mensaje = "Usuario no autenticado.";
+                return RedirectToAction("Login", "Inicio");
+            }
+
+            var login = CreateLogin(usuario);
+
+            Empresa empresa = modelo.Empresa;
+
+            bool respuesta = await _empresa.Guardar(empresa, login);
+
+            if(respuesta)
+            {
+                return RedirectToAction("Empresas","Secretaria");
+            }
+            else
+            {
+                ViewBag.Mensaje = "No se Pudo Guardar";
+                return View("Empresas");
+            }
         }
 
 

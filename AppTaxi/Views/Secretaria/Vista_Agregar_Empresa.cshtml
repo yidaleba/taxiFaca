@@ -1,0 +1,78 @@
+﻿@model ModeloVista
+@{
+    ViewData["Title"] = "Agregar Empresa";
+    Layout = "~/Views/Shared/_LayoutSecretaria.cshtml";
+}
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0"><strong>Agregar Nueva Empresa</strong></h4>
+                </div>
+                <div class="card-body">
+                    <form asp-action="Agregar_Empresa" asp-controller="Secretaria" method="post">
+                        <div class="mb-3">
+                            <label class="form-label"><strong>Nombre de la Empresa:</strong></label>
+                            <input type="text" class="form-control" placeholder="Digite el nombre" asp-for="Empresa.Nombre" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label"><strong>NIT:</strong></label>
+                            <input type="text" class="form-control" placeholder="Digite el NIT" asp-for="Empresa.Nit" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label"><strong>Encargado o Representante:</strong></label>
+                            <input type="text" class="form-control" placeholder="Digite el nombre del representante" asp-for="Empresa.Representante">
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label"><strong>Información de Contacto 1:</strong></label>
+                            <input type="text" class="form-control" placeholder="Digite el correo o teléfono" asp-for="Empresa.RedPrincipal" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label"><strong>Información de Contacto 2:</strong></label>
+                            <input type="text" class="form-control" placeholder="Digite un contacto alternativo" asp-for="Empresa.RedSecundaria">
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label"><strong>Usuario Encargado:</strong></label>
+                            @if(Model.Usuarios.Count() > 0)
+                            {
+                                <select class="form-select" asp-for="Empresa.IdUsuario" required>
+                                    <option value="">Seleccione un Usuario</option>
+                                    @foreach (var u in Model.Usuarios)
+                                    {
+                                        <option value="@u.IdUsuario">@u.Nombre</option>
+                                    }
+                                </select>
+                            }
+                            else
+                            {
+                                <select class="form-select" asp-for="Empresa.IdUsuario">
+                                    <option value="">No existe Usuarios a Asignar</option>
+                                </select>
+                            }
+
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary">Agregar Empresa</button>
+                            <a href="javascript:history.back()" class="btn btn-outline-secondary">Volver</a>
+                        </div>
+                    </form>
+
+                    @if (!string.IsNullOrEmpty(ViewBag.Mensaje))
+                    {
+                        <div class="alert alert-info mt-3" role="alert">
+                            @ViewBag.Mensaje
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
