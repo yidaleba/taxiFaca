@@ -1,0 +1,139 @@
+﻿@model ModeloVista
+@{
+    ViewData["Title"] = "Detalle_Propietario";
+    Layout = "~/Views/Shared/_LayoutSecretaria.cshtml";
+}
+
+<h1 class="text-center text-primary fw-bold mb-4">Detalle del Propietario</h1>
+
+@if (Model.Propietario != null)
+{
+    <div class="card shadow-lg p-4 rounded">
+        <h5 class="card-header bg-primary text-white text-center">Señor/a @Model.Propietario.Nombre</h5>
+        <div class="card-body">
+            <div class="text-center mb-4">
+                <img src="@(string.IsNullOrEmpty(Model.Propietario.Foto) ? "/imagenes/noimage.png" : "data:image/png;base64," + Model.Propietario.Foto)"
+                     class="img-fluid rounded-circle border shadow-sm p-2"
+                     alt="Usuario"
+                     style="max-width: 150px;"
+                     onerror="this.onerror=null; this.src='/imagenes/noimage.png';">
+            </div>
+
+
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label class="fw-bold">Documento:</label>
+                    <p class="form-control-plaintext">@Model.Propietario.NumeroCedula</p>
+                </div>
+                <div class="col-md-6">
+                    <label class="fw-bold">Teléfono:</label>
+                    <p class="form-control-plaintext">@Model.Propietario.Telefono</p>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label class="fw-bold">Correo:</label>
+                    <p class="form-control-plaintext">@Model.Propietario.Correo</p>
+                </div>
+                <div class="col-md-6">
+                    <label class="fw-bold">Dirección:</label>
+                    <p class="form-control-plaintext">@Model.Propietario.Direccion</p>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label class="fw-bold">Ciudad:</label>
+                    <p class="form-control-plaintext">@Model.Propietario.Ciudad</p>
+                </div>
+                <div class="col-md-6">
+                    <label class="fw-bold">Estado Actual:</label>
+                    <p class="form-control-plaintext @(Model.Propietario.Estado ? "text-success" : "text-danger")">
+                        @(Model.Propietario.Estado ? "Activo" : "Inactivo")
+                    </p>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-md-12">
+                    <label class="fw-bold">Documento Cédula:</label>
+                    <p class="card-text">
+                        <button class="btn btn-outline-primary btn-sm" onclick="abrirDocumento('@Model.Propietario.DocumentoCedula')">
+                            <i class="fas fa-file-pdf"></i> <strong>Ver Documento</strong>
+                        </button>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <h5 class="mt-5 text-center text-secondary">Vehículos Asociados</h5>
+
+    @if (Model.Vehiculos != null && Model.Vehiculos.Any())
+    {
+        <div class="table-responsive">
+            <table class="table table-hover table-bordered text-center shadow-sm">
+                <thead class="table-dark">
+                    <tr>
+                        <th>ID Vehículo</th>
+                        <th>Placa</th>
+                        <th>Estado</th>
+                        <th>SOAT</th>
+                        <th>Técnico Mecánica</th>
+                        <th>Detalles</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Vehiculos)
+                    {
+                        <tr>
+                            <td>@item.IdVehiculo</td>
+                            <td class="fw-bold">@item.Placa</td>
+                            <td class="@(item.Estado ? "text-success" : "text-danger")">@(item.Estado ? "Habilitado" : "No Habilitado")</td>
+                            <td class="@(item.Soat != null ? "text-success" : "text-danger")">@(item.Soat != null ? "Sí" : "No")</td>
+                            <td class="@(item.TecnicoMecanica != null ? "text-success" : "text-danger")">@(item.TecnicoMecanica != null ? "Sí" : "No")</td>
+                            <td>
+                                <a asp-action="Detalle_Vehiculo" asp-controller="Secretaria" asp-route-IdVehiculo="@item.IdVehiculo" class="btn btn-primary btn-sm">Ver</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+    else
+    {
+        <p class="text-center text-danger">No hay vehículos registrados a nombre de este propietario.</p>
+    }
+
+    <div class="d-flex justify-content-center gap-3 mt-4">
+        <a href="javascript:history.back()" class="btn btn-success">Volver</a>
+        
+    </div>
+
+   
+}
+else
+{
+    <p class="text-center text-danger">No se encontró el propietario.</p>
+    <p class="text-center">@ViewBag.Mensaje</p>
+    <div class="text-center">
+        <a href="javascript:history.back()" class="btn btn-success">Volver</a>
+    </div>
+}
+
+
+<script>
+    function abrirDocumento(base64) {
+        if (base64 && base64.trim() !== "") {
+            var nuevaVentana = window.open();
+            nuevaVentana.document.write('<iframe width="100%" height="100%" src="data:application/pdf;base64,' + base64 + '"></iframe>');
+        } else {
+            alert("No hay documento disponible.");
+        }
+    }
+</script>
+
+
+

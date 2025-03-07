@@ -1,6 +1,7 @@
 ﻿using AppTaxi.Models;
 using AppTaxi.Servicios;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ActionConstraints;
 using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages;
 using Newtonsoft.Json;
 
@@ -237,6 +238,81 @@ namespace AppTaxi.Controllers
 
 
         //Detalles de los objetos:
+
+        public async Task<IActionResult> Detalle_Conductor(int IdConductor)
+        {
+            var usuario = GetUsuarioFromSession();
+            if (usuario == null)
+            {
+                ViewBag.Mensaje = "Usuario no autenticado.";
+                return View();
+            }
+
+            var login = CreateLogin(usuario);
+            var conductor = await _conductor.Obtener(IdConductor, login);
+
+            return View(conductor);
+        }
+
+        public async Task<IActionResult> Detalle_Propietario(int IdPropietario)
+        {
+            var usuario = GetUsuarioFromSession();
+            if (usuario == null)
+            {
+                ViewBag.Mensaje = "Usuario no autenticado.";
+                return RedirectToAction("Login", "Inicio");
+            }
+            ModeloVista modelo = new ModeloVista();
+            var login = CreateLogin(usuario);
+
+            // Obtiene el propietario y los vehículos asociados.
+            modelo.Propietario = await _propietario.Obtener(IdPropietario, login);
+
+            var vehiculosTotales = await _vehiculo.Lista(login);
+            modelo.Vehiculos = vehiculosTotales?.Where(v => v.IdPropietario == IdPropietario && v.Estado).ToList();
+
+            return View(modelo);
+        }
+
+        public async Task<IActionResult> Detalle_Vehiculo(int IdVehiculo)
+        {
+            var usuario = GetUsuarioFromSession();
+            if (usuario == null)
+            {
+                ViewBag.Mensaje = "Usuario no autenticado.";
+                return RedirectToAction("Login", "Inicio");
+            }
+
+            var login = CreateLogin(usuario);
+
+            // Obtiene el vehículo y el propietario asociado.
+            var vehiculo = await _vehiculo.Obtener(IdVehiculo, login);
+            var propietario = await _propietario.Obtener(vehiculo.IdPropietario, login);
+
+            ViewBag.Propietario = propietario?.Nombre;
+            return View(vehiculo);
+        }
+
+        public async Task<IActionResult> Ver_Horario(int IdConductor)
+        {
+            var usuario = GetUsuarioFromSession();
+            if (usuario == null)
+            {
+                ViewBag.Mensaje = "Usuario no autenticado.";
+                return RedirectToAction("Login", "Inicio");
+            }
+
+            var login = CreateLogin(usuario);
+            ModeloVista modelo = new ModeloVista();
+            modelo.Conductor = await _conductor.Obtener(IdConductor, login);
+            var Horarios = await _horario.Lista(login);
+            modelo.Vehiculos = await _vehiculo.Lista(login);
+
+            modelo.Horarios = Horarios?.Where(h => h.IdConductor == IdConductor).ToList();
+
+
+            return View(modelo);
+        }
 
 
     }
