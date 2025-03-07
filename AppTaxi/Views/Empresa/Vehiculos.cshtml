@@ -19,9 +19,10 @@
         <table class="table table-hover text-center">
             <thead class="table-dark">
                 <tr>
-                    <th scope="col">ID</th>
+                    <th scope="col">#</th>
                     <th scope="col">Placa</th>
                     <th scope="col">Estado</th>
+                    <th scope="col">ID</th>
                     <th scope="col">SOAT</th>
                     <th scope="col">Técnico Mecánica</th>
                     <th scope="col">Acciones</th>
@@ -31,13 +32,14 @@
                 @foreach (var item in Model)
                 {
                     <tr class="fila-vehiculo">
-                        <td>@item.IdVehiculo</td>
+                        <td>@item.Contador</td>
                         <td class="col-Placa">@item.Placa</td>
                         <td>
                             <span class="badge @(item.Estado ? "bg-success" : "bg-danger")">
                                 @(item.Estado ? "Habilitado" : "No Habilitado")
                             </span>
                         </td>
+                        <td>@item.IdVehiculo</td>
                         <td>
                             <span class="badge @(item.Soat != null ? "bg-success" : "bg-danger")">
                                 @(item.Soat != null ? "Sí" : "No")

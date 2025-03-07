@@ -87,6 +87,21 @@ namespace AppTaxi.Controllers
                 Usuarios = usuarios.ToList()
             };
 
+            int i = 0;
+            while (true)
+            {
+                modelo.Empresas[i].Contador = i + 1 ;
+                if (i == modelo.Empresas.Count() - 1)
+                {
+                    break; 
+                }
+                else
+                {
+                    i++;
+                }
+            }
+
+
             return View(modelo);
         }
 
@@ -105,13 +120,7 @@ namespace AppTaxi.Controllers
             modelo.Empresa = await _empresa.Obtener(IdEmpresa, login);
 
             modelo.Usuario = await _usuario.Obtener(modelo.Empresa.IdUsuario, login);
-            int i = 1;
-            foreach(var emp in modelo.Empresas)
-            {
-                emp.Contador = i;
-                i++;
-            }
-
+            
             return View(modelo);
         }
 

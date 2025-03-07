@@ -14,10 +14,12 @@
 
         <div class="card mx-auto shadow-lg" style="max-width: 450px;">
             <div class="text-center mt-3">
-                <img src="data:image/png;base64,@Model.Foto"
+                <img src="@(string.IsNullOrEmpty(Model.Foto) ? "/imagenes/noimage.png" : "data:image/png;base64," + Model.Foto)"
                      class="img-fluid rounded-circle border shadow-sm p-2"
-                     alt="https://icons.veryicon.com/png/o/internet--web/prejudice/user-128.png"
-                     style="max-width: 150px;">
+                     alt="Usuario"
+                     style="max-width: 150px;"
+                     onerror="this.onerror=null; this.src='/imagenes/noimage.png';">
+
             </div>
 
             <div class="card-body">

@@ -12,11 +12,13 @@
         <h5 class="card-header bg-primary text-white text-center">Señor/a @Model.Propietario.Nombre</h5>
         <div class="card-body">
             <div class="text-center mb-4">
-                <img src="data:image/png;base64,@Model.Propietario.Foto"
+                <img src="@(string.IsNullOrEmpty(Model.Propietario.Foto) ? "/imagenes/noimage.png" : "data:image/png;base64," + Model.Propietario.Foto)"
                      class="img-fluid rounded-circle border shadow-sm p-2"
-                     alt="https://icons.veryicon.com/png/o/internet--web/prejudice/user-128.png"
-                     style="max-width: 150px;">
+                     alt="Usuario"
+                     style="max-width: 150px;"
+                     onerror="this.onerror=null; this.src='/imagenes/noimage.png';">
             </div>
+
 
             <div class="row mb-3">
                 <div class="col-md-6">

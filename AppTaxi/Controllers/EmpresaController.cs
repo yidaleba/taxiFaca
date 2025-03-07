@@ -205,6 +205,19 @@ namespace AppTaxi.Controllers
             var idEmpresa = empresas.FirstOrDefault(item => item.IdUsuario == usuario.IdUsuario)?.IdEmpresa;
             var vehiculosEmpresa = vehiculosTotales?.Where(v => v.IdEmpresa == idEmpresa && v.Estado).ToList();
 
+            int i = 0;
+            while (true)
+            {
+                vehiculosEmpresa[i].Contador = i + 1;
+                if (i == vehiculosEmpresa.Count() - 1)
+                {
+                    break;
+                }
+                else
+                {
+                    i++;
+                }
+            }
             return View(vehiculosEmpresa);
         }
 
@@ -432,6 +445,19 @@ namespace AppTaxi.Controllers
 
             var conductoresTotales = await _conductor.Lista(login);
             var conductoresEmpresa = conductoresTotales?.Where(c => c.IdEmpresa == IdEmpresa && c.Estado).ToList();
+            int i = 0;
+            while (true)
+            {
+                conductoresEmpresa[i].Contador = i + 1;
+                if (i == conductoresEmpresa.Count() - 1)
+                {
+                    break;
+                }
+                else
+                {
+                    i++;
+                }
+            }
             return View(conductoresEmpresa);
         }
 
@@ -669,6 +695,20 @@ namespace AppTaxi.Controllers
 
             var propietariosTotales = await _propietario.Lista(login);
             var propietariosEmpresa = propietariosTotales?.Where(p => p.IdEmpresa == IdEmpresa && p.Estado).ToList();
+
+            int i = 0;
+            while (true)
+            {
+                propietariosEmpresa[i].Contador = i + 1;
+                if (i == propietariosEmpresa.Count() - 1)
+                {
+                    break;
+                }
+                else
+                {
+                    i++;
+                }
+            }
             return View(propietariosEmpresa);
         }
 

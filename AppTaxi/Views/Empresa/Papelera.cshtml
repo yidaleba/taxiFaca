@@ -23,7 +23,9 @@
                 <thead class="table-dark">
                     <tr>
                         <th>ID</th>
+                        <th>Estado</th>
                         <th>Nombre</th>
+                        
                         <th>Cédula</th>
                         <th>Teléfono</th>
                         <th>Correo</th>
@@ -36,7 +38,9 @@
                     {
                         <tr data-search="@item.Nombre">
                             <td>@item.IdConductor</td>
+                            <td><span class="badge @(item.Estado ? "bg-success" : "bg-danger")">@(item.Estado ? "Activo" : "Inactivo")</span></td>
                             <td>@item.Nombre</td>
+                            
                             <td>@item.NumeroCedula</td>
                             <td>@item.Telefono</td>
                             <td>@item.Correo</td>
@@ -79,8 +83,8 @@
                 <thead class="table-dark">
                     <tr>
                         <th>ID</th>
-                        <th>Placa</th>
                         <th>Estado</th>
+                        <th>Placa</th>
                         <th>SOAT</th>
                         <th>Técnico Mecánica</th>
                         <th>Acciones</th>
@@ -91,8 +95,8 @@
                     {
                         <tr data-search="@item.Placa">
                             <td>@item.IdVehiculo</td>
-                            <td>@item.Placa</td>
                             <td><span class="badge @(item.Estado ? "bg-success" : "bg-danger")">@(item.Estado ? "Habilitado" : "No Habilitado")</span></td>
+                            <td>@item.Placa</td>
                             <td><span class="badge @(item.Soat != null ? "bg-success" : "bg-danger")">@(item.Soat != null ? "Sí" : "No")</span></td>
                             <td><span class="badge @(item.TecnicoMecanica != null ? "bg-success" : "bg-danger")">@(item.TecnicoMecanica != null ? "Sí" : "No")</span></td>
                             <td>
@@ -133,6 +137,7 @@
                 <thead class="table-dark">
                     <tr>
                         <th>ID</th>
+                        <th>Estado</th>
                         <th>Nombre</th>
                         <th>Cédula</th>
                         <th>Teléfono</th>
@@ -146,6 +151,7 @@
                     {
                         <tr data-search="@item.Nombre">
                             <td>@item.IdPropietario</td>
+                            <td><span class="badge @(item.Estado ? "bg-success" : "bg-danger")">@(item.Estado ? "Activo" : "Inactivo")</span></td>
                             <td>@item.Nombre</td>
                             <td>@item.NumeroCedula</td>
                             <td>@item.Telefono</td>

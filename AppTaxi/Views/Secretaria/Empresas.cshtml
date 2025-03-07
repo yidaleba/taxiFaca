@@ -21,9 +21,9 @@
             <thead class="table-dark">
                 <tr>
                     <th scope="col">#</th>
-                    <th scope="col">ID</th>
                     <th scope="col">Nombre</th>
                     <th scope="col">NIT</th>
+                    <th scope="col">ID</th>
                     <th scope="col">Representante</th>
                     <th scope="col">Cupos</th>
                     <th scope="col">Usuario</th>
@@ -36,12 +36,12 @@
                     <tr class="fila-empresa">
                         
                         <td>@item.Contador</td>
-                        
-                        <td>@item.IdEmpresa</td>
-                        
+
                         <td class="col-Empresa">@item.Nombre</td>
                         
                         <td>@item.Nit</td>
+
+                        <td>@item.IdEmpresa</td>
                         
                         <td>@item.Representante</td>
                         
@@ -50,7 +50,7 @@
                         <td>@Model.Usuarios.Where(u => u.IdUsuario == item.IdUsuario).FirstOrDefault().Nombre</td>
                         
                         <td>
-                            <a asp-action="Detalle_Empresa" asp-controller="Secretaria" asp-route-IdEmpresa="@item.IdEmpresa" class="btn btn-primary btn-sm">
+                                    <a asp-action="Detalle_Empresa" asp-controller="Secretaria" asp-route-IdEmpresa="@item.IdEmpresa" class="btn btn-primary btn-sm">
                                 
                                 Detalle
                                 

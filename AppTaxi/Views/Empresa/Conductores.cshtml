@@ -19,10 +19,11 @@
         <table class="table table-hover text-center">
             <thead class="table-dark">
                 <tr>
-                    <th scope="col">ID</th>
+                    <th scope="col">#</th>
                     <th scope="col">Nombre</th>
                     <th scope="col">Cédula</th>
                     <th scope="col">Teléfono</th>
+                    <th scope="col">ID</th>
                     <th scope="col">Correo</th>
                     <th scope="col">Ciudad</th>
                     <th scope="col">Acciones</th>
@@ -32,10 +33,11 @@
                 @foreach (var item in Model)
                 {
                     <tr class="fila-conductor">
-                        <td>@item.IdConductor</td>
+                        <td>@item.Contador</td>
                         <td class="col-Nombre">@item.Nombre</td>
                         <td>@item.NumeroCedula</td>
                         <td>@item.Telefono</td>
+                        <td>@item.IdConductor</td>
                         <td>@item.Correo</td>
                         <td>@item.Ciudad</td>
                         <td>

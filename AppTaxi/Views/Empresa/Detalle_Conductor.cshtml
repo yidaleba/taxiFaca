@@ -11,11 +11,13 @@
             <div class="row g-3 align-items-center">
                 <!-- Imagen -->
                 <div class="col-md-4 text-center">
-                    <img src="data:image/png;base64,@Model.Foto"
-                         class="img-fluid rounded-circle border shadow-sm p-2"
-                         alt="https://icons.veryicon.com/png/o/internet--web/prejudice/user-128.png"
-                         style="max-width: 150px;">
+                    <img src="@(string.IsNullOrEmpty(Model.Foto) ? "/imagenes/noimage.png" : "data:image/png;base64," + Model.Foto)"
+                        class="img-fluid rounded-circle border shadow-sm p-2"
+                        alt="Usuario"
+                        style="max-width: 150px;"
+                        onerror="this.onerror=null; this.src='/imagenes/noimage.png';">
                 </div>
+
 
                 <!-- Información -->
                 <div class="col-md-8">
