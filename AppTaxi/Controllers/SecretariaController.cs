@@ -236,6 +236,8 @@ namespace AppTaxi.Controllers
         }
 
 
+        //Detalles de los objetos:
+
 
     }
 }
