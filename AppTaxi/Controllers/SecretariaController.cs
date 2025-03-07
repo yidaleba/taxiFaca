@@ -1,6 +1,7 @@
 ﻿using AppTaxi.Models;
 using AppTaxi.Servicios;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages;
 using Newtonsoft.Json;
 
 namespace AppTaxi.Controllers
@@ -124,7 +125,116 @@ namespace AppTaxi.Controllers
             return View(modelo);
         }
 
-        
+        //----------------------------- Vista de Objetos registrados por Empresa
+        public async Task<IActionResult> Conductores(int IdEmpresa)
+        {
+            var usuario = GetUsuarioFromSession();
+            if (usuario == null)
+            {
+                ViewBag.Mensaje = "Usuario no autenticado.";
+                return View();
+            }
+
+            var login = CreateLogin(usuario);
+            ModeloVista modelo = new ModeloVista();
+
+            var conductoresTotales = await _conductor.Lista(login);
+            var conductoresEmpresa = conductoresTotales?.Where(c => c.IdEmpresa == IdEmpresa).ToList();
+            if(conductoresEmpresa.Count > 0)
+            {
+                int i = 0;
+                while (true)
+                {
+                    conductoresEmpresa[i].Contador = i + 1;
+                    if (i == conductoresEmpresa.Count() - 1)
+                    {
+                        break;
+                    }
+                    else
+                    {
+                        i++;
+                    }
+                }
+
+            }
+            modelo.Conductores = conductoresEmpresa;
+            modelo.Empresa = await _empresa.Obtener(IdEmpresa, login);
+            return View(modelo);
+        }
+
+        public async Task<IActionResult> Propietarios (int IdEmpresa)
+        {
+            var usuario = GetUsuarioFromSession();
+            if (usuario == null)
+            {
+                ViewBag.Mensaje = "Usuario no autenticado.";
+                return View();
+            }
+
+            var login = CreateLogin(usuario);
+
+            var propietariosTotales = await _propietario.Lista(login);
+            var propietariosEmpresa = propietariosTotales?.Where(p => p.IdEmpresa == IdEmpresa).ToList();
+            ModeloVista modelo = new ModeloVista();
+            if(propietariosEmpresa.Count() > 0)
+            {
+                int i = 0;
+                while (true)
+                {
+                    propietariosEmpresa[i].Contador = i + 1;
+                    if (i == propietariosEmpresa.Count() - 1)
+                    {
+                        break;
+                    }
+                    else
+                    {
+                        i++;
+                    }
+                }
+            }
+                       
+            modelo.Propietarios = propietariosEmpresa;
+            modelo.Empresa = await _empresa.Obtener(IdEmpresa, login);
+            return View(modelo);
+        }
+
+        public async Task<IActionResult> Vehiculos(int IdEmpresa)
+        {
+            var usuario = GetUsuarioFromSession();
+            if (usuario == null)
+            {
+                ViewBag.Mensaje = "Usuario no autenticado.";
+                return View();
+            }
+
+            var login = CreateLogin(usuario);
+
+            var vehiculosTotales = await _vehiculo.Lista(login);
+            var vehiculosEmpresa = vehiculosTotales?.Where(p => p.IdEmpresa == IdEmpresa).ToList();
+            ModeloVista modelo = new ModeloVista();
+            if(vehiculosEmpresa.Count() > 0)
+            {
+
+                int i = 0;
+                while (true)
+                {
+                    vehiculosEmpresa[i].Contador = i + 1;
+                    if (i == vehiculosEmpresa.Count() - 1)
+                    {
+                        break;
+                    }
+                    else
+                    {
+                        i++;
+                    }
+                }
+            }
+            
+            modelo.Vehiculos = vehiculosEmpresa;
+            modelo.Empresa = await _empresa.Obtener(IdEmpresa, login);
+            return View(modelo);
+        }
+
 
 
     }

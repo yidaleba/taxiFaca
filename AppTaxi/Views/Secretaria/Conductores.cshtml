@@ -1,0 +1,74 @@
+﻿@model ModeloVista
+@{
+    ViewData["Title"] = "Conductores";
+    Layout = "~/Views/Shared/_LayoutSecretaria.cshtml";
+}
+
+<h1 class="mb-4 text-center text-success">Conductores de @Model.Empresa.Nombre </h1>
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <a href="javascript:history.back()" class="btn btn-danger btn-sm">Volver</a>
+    <input type="text" id="buscarConductor" class="form-control w-25" placeholder="🔍 Buscar por nombre..." onkeyup="filtrarConductores()">
+</div>
+
+@if (Model != null && Model.Conductores.Any())
+{
+    <div class="table-responsive">
+        <table class="table table-hover text-center">
+            <thead class="table-dark">
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Estado</th>
+                    <th scope="col">Nombre</th>
+                    <th scope="col">Cédula</th>
+                    <th scope="col">Teléfono</th>
+                    <th scope="col">ID</th>
+                    <th scope="col">Correo</th>
+                    <th scope="col">Ciudad</th>
+                    <th scope="col">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Conductores)
+                {
+                    <tr class="fila-conductor">
+                        <td>@item.Contador</td>
+                        <td><span class="badge @(item.Estado ? "bg-success" : "bg-danger")">@(item.Estado ? "Activo" : "Inactivo")</span></td>
+                        <td class="col-Nombre">@item.Nombre</td>
+                        <td>@item.NumeroCedula</td>
+                        <td>@item.Telefono</td>
+                        <td>@item.IdConductor</td>
+                        <td>@item.Correo</td>
+                        <td>@item.Ciudad</td>
+                        <td>
+                            <a asp-action="Detalle_Conductor" asp-controller="Secretaria" asp-route-IdConductor="@item.IdConductor" class="btn btn-primary btn-sm">
+                                Detalle
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+else
+{
+    <div class="alert alert-warning text-center mt-4">
+        <strong>⚠ No se encontraron Conductores registrados.</strong>
+    </div>
+}
+
+<p class="text-danger text-center">@ViewBag.Mensaje</p>
+
+<script>
+    function filtrarConductores() {
+        let input = document.getElementById("buscarConductor").value.toLowerCase();
+        let filas = document.getElementsByClassName("fila-conductor");
+
+        for (let i = 0; i < filas.length; i++) {
+            let nombre = filas[i].getElementsByClassName("col-Nombre")[0].innerText.toLowerCase();
+            filas[i].style.display = nombre.includes(input) ? "" : "none";
+        }
+    }
+</script>
+

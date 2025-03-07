@@ -1,0 +1,83 @@
+﻿@model ModeloVista
+@{
+    ViewData["Title"] = "Vehiculos";
+    Layout = "~/Views/Shared/_LayoutSecretaria.cshtml";
+}
+
+<h1 class="mb-4 text-center text-primary">Vehículos de la empresa</h1>
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <a href="javascript:history.back()" class="btn btn-danger btn-sm">Volver</a>
+    <input type="text" id="buscarVehiculo" class="form-control w-25" placeholder="🔍 Buscar por placa..." onkeyup="filtrarVehiculos()">
+</div>
+
+@if (Model != null && Model.Vehiculos.Any())
+{
+    <div class="table-responsive">
+        <table class="table table-hover text-center">
+            <thead class="table-dark">
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Placa</th>
+                    <th scope="col">Estado</th>
+                    <th scope="col">ID</th>
+                    <th scope="col">SOAT</th>
+                    <th scope="col">Técnico Mecánica</th>
+                    <th scope="col">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Vehiculos)
+                {
+                    <tr class="fila-vehiculo">
+                        <td>@item.Contador</td>
+                        <td class="col-Placa">@item.Placa</td>
+                        <td>
+                            <span class="badge @(item.Estado ? "bg-success" : "bg-danger")">
+                                @(item.Estado ? "Habilitado" : "No Habilitado")
+                            </span>
+                        </td>
+                        <td>@item.IdVehiculo</td>
+                        <td>
+                            <span class="badge @(item.Soat != null ? "bg-success" : "bg-danger")">
+                                @(item.Soat != null ? "Sí" : "No")
+                            </span>
+                        </td>
+                        <td>
+                            <span class="badge @(item.TecnicoMecanica != null ? "bg-success" : "bg-danger")">
+                                @(item.TecnicoMecanica != null ? "Sí" : "No")
+                            </span>
+                        </td>
+                        <td>
+                            <a asp-action="Detalle_Vehiculo" asp-controller="Secretaria" asp-route-IdVehiculo="@item.IdVehiculo" class="btn btn-primary btn-sm">
+                                Detalle
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+else
+{
+    <div class="alert alert-warning text-center mt-4">
+        <strong>⚠ No se encontraron vehículos registrados.</strong>
+    </div>
+}
+
+<p class="text-danger text-center">@ViewBag.Mensaje</p>
+
+<script>
+    function filtrarVehiculos() {
+        let input = document.getElementById("buscarVehiculo").value.toLowerCase();
+        let filas = document.getElementsByClassName("fila-vehiculo");
+
+        for (let i = 0; i < filas.length; i++) {
+            let placa = filas[i].getElementsByClassName("col-Placa")[0].innerText.toLowerCase();
+            filas[i].style.display = placa.includes(input) ? "" : "none";
+        }
+    }
+</script>
+
+

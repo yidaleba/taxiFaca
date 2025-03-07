@@ -8,7 +8,7 @@
     <div class="row">
         <!-- Card de Empresa -->
         <div class="col-md-6">
-            <div class="card shadow-sm">
+            <div class="card shadow-sm h-100">
                 <div class="card-header bg-primary text-white">
                     <h4 class="mb-0"><strong>Detalle de la Empresa</strong></h4>
                 </div>
@@ -59,10 +59,10 @@
                 </div>
             </div>
         </div>
-        
-        <!-- Card de Usuario Encargado -->
-        <div class="col-md-6">
-            <div class="card shadow-sm">
+
+        <!-- Card de Usuario Encargado + Botones -->
+        <div class="col-md-6 d-flex flex-column">
+            <div class="card shadow-sm flex-grow-1">
                 <div class="card-header bg-secondary text-white">
                     <h4 class="mb-0"><strong>Usuario Encargado</strong></h4>
                 </div>
@@ -82,6 +82,13 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Botones que llenan el espacio sobrante -->
+            <div class="d-flex flex-column mt-2">
+                <a class="btn btn-outline-primary flex-fill mb-2" asp-action="Conductores" asp-route-IdEmpresa="@Model.Empresa.IdEmpresa" asp-controller="Secretaria">Conductores</a>
+                <a class="btn btn-outline-secondary flex-fill mb-2" asp-action="Vehiculos" asp-route-IdEmpresa="@Model.Empresa.IdEmpresa" asp-controller="Secretaria">Vehiculos</a>
+                <a class="btn btn-outline-success flex-fill" asp-action="Propietarios" asp-route-IdEmpresa="@Model.Empresa.IdEmpresa" asp-controller="Secretaria">Propietarios</a>
+            </div>
         </div>
     </div>
 
@@ -93,8 +100,7 @@
                     <h5 class="modal-title" id="mensajeModalLabel">Información</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
                 </div>
-                <div class="modal-body text-center">
-                    @ViewBag.Mensaje
+                <div class="modal-body text-center" id="modalMensajeTexto">
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
@@ -102,26 +108,18 @@
             </div>
         </div>
     </div>
-
+    <br />
     <div class="text-center mt-4">
-        <a href="javascript:history.back()" class="btn btn-success btn-lg">Volver</a>
+        <a href="javascript:history.back()" class="btn btn-danger btn-lg">Volver</a>
     </div>
 </div>
 
 <script>
-    // Función para copiar al portapapeles
     function copyToClipboard(text) {
         navigator.clipboard.writeText(text).then(() => {
-            alert("Copiado al portapapeles: " + text);
+            document.getElementById('modalMensajeTexto').innerText = "Copiado al portapapeles: " + text;
+            var mensajeModal = new bootstrap.Modal(document.getElementById('mensajeModal'));
+            mensajeModal.show();
         });
-    }
-
-    // Mostrar modal si hay un mensaje
-    window.onload = function () {
-        var mensaje = "@ViewBag.Mensaje";
-        if (mensaje && mensaje.trim() !== "") {
-            var modal = new bootstrap.Modal(document.getElementById('mensajeModal'));
-            modal.show();
         }
-    };
 </script>
