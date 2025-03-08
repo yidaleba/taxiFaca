@@ -11,6 +11,7 @@
         public Propietario Propietario { get; set; }
         public Horario Horario { get; set; }
         public Usuario Usuario { get; set; }
+        public Transaccion Transaccion { get; set; }
 
         //Lista de Objetos:
         public List<int> Contador { get; set; }
@@ -20,6 +21,7 @@
         public List<Propietario> Propietarios { get; set; }
         public List<Horario> Horarios { get; set; }
         public List<Usuario> Usuarios { get; set; }
+        public List<Transaccion> Transacciones { get; set; }
 
         //Archivos: 
         public IFormFile Archivo_1 { get; set; }

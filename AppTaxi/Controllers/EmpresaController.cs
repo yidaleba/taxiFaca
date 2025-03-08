@@ -19,15 +19,17 @@ namespace AppTaxi.Controllers
         private readonly I_Propietario _propietario;
         private readonly I_Empresa _empresa;
         private readonly I_Conductor _conductor;
+        private readonly I_Transaccion _transaccion;
 
         // Constructor que recibe las dependencias inyectadas.
-        public EmpresaController(I_Vehiculo vehiculo, I_Horario horario, I_Propietario propietario, I_Empresa empresa, I_Conductor conductor)
+        public EmpresaController(I_Vehiculo vehiculo, I_Horario horario, I_Propietario propietario, I_Empresa empresa, I_Conductor conductor, I_Transaccion transaccion)
         {
             _vehiculo = vehiculo;
             _horario = horario;
             _propietario = propietario;
             _empresa = empresa;
             _conductor = conductor;
+            _transaccion = transaccion;
         }
 
         //------------ Métodos auxiliares ------------
@@ -49,6 +51,27 @@ namespace AppTaxi.Controllers
             return new Models.Login { Correo = usuario.Correo, Contrasena = usuario.Contrasena };
         }
 
+
+        private Transaccion Crear_Transaccion(string accion,string modelo)
+        {
+            var usuario = GetUsuarioFromSession();
+            if (usuario == null)
+            {
+                Console.WriteLine("No Hay Usuario Registrado");
+            }
+
+            var login = CreateLogin(usuario);
+
+            Transaccion transaccion = new Transaccion();
+
+            transaccion.IdUsuario = usuario.IdUsuario;
+            transaccion.Modelo = modelo;
+            transaccion.Accion = accion;
+            transaccion.Fecha = DateTime.Now.Date;
+            transaccion.Hora = DateTime.Now.TimeOfDay;
+            return transaccion;
+
+        }
         //------------ Acciones principales ------------
 
         // Muestra la página de inicio con los datos de la empresa, vehículos, horarios y conductores asociados.
@@ -298,6 +321,8 @@ namespace AppTaxi.Controllers
 
             if (respuesta)
             {
+                Transaccion t = Crear_Transaccion("Editar","Vehiculo");
+                bool guardar = await _transaccion.Guardar(t, login);
                 return RedirectToAction("Vehiculos");
             }
             else
@@ -326,6 +351,8 @@ namespace AppTaxi.Controllers
 
             if (respuesta)
             {
+                Transaccion t = Crear_Transaccion("Editar", "Vehiculo");
+                bool guardar = await _transaccion.Guardar(t, login);
                 return RedirectToAction("Vehiculos");
             }
             else
@@ -416,6 +443,8 @@ namespace AppTaxi.Controllers
 
             if (respuesta)
             {
+                Transaccion t = Crear_Transaccion("Guardar", "Vehiculo");
+                bool guardar = await _transaccion.Guardar(t, login);
                 return RedirectToAction("Vehiculos");
             }
             else
@@ -568,6 +597,8 @@ namespace AppTaxi.Controllers
 
             if (respuesta)
             {
+                Transaccion t = Crear_Transaccion("Editar", "Conductor");
+                bool guardar = await _transaccion.Guardar(t, login);
                 return RedirectToAction("Conductores");
             }
             else
@@ -596,6 +627,8 @@ namespace AppTaxi.Controllers
 
             if (respuesta)
             {
+                Transaccion t = Crear_Transaccion("Editar", "Conductor");
+                bool guardar = await _transaccion.Guardar(t, login);
                 return RedirectToAction("Conductores");
             }
             else
@@ -699,6 +732,8 @@ namespace AppTaxi.Controllers
                 var conductorGuardado = conductoresGuardados.FirstOrDefault(c => c.NumeroCedula == modelo.Conductor.NumeroCedula);
                 ViewBag.IdConductor = conductorGuardado?.IdConductor;
                 ViewBag.Exito = true;
+                Transaccion t = Crear_Transaccion("Guardar", "Conductor");
+                bool guardar = await _transaccion.Guardar(t, login);
                 return RedirectToAction("Conductores");
             }
             else
@@ -811,6 +846,8 @@ namespace AppTaxi.Controllers
 
             if (respuesta)
             {
+                Transaccion t = Crear_Transaccion("Editar", "Propietario");
+                bool guardar = await _transaccion.Guardar(t, login);
                 return RedirectToAction("Propietarios");
             }
             else
@@ -839,6 +876,8 @@ namespace AppTaxi.Controllers
 
             if (respuesta)
             {
+                Transaccion t = Crear_Transaccion("Editar", "Propietario");
+                bool guardar = await _transaccion.Guardar(t, login);
                 return RedirectToAction("Propietarios");
             }
             else
@@ -904,6 +943,8 @@ namespace AppTaxi.Controllers
                 var propietarioGuardado = propietariosGuardados.FirstOrDefault(p => p.NumeroCedula == modelo.Propietario.NumeroCedula);
                 ViewBag.IdPropietario = modelo.Propietario?.IdPropietario;
                 ViewBag.Exito = true;
+                Transaccion t = Crear_Transaccion("Guardar", "Propietario");
+                bool guardar = await _transaccion.Guardar(t, login);
                 return RedirectToAction("Propietarios");
             }
             else
@@ -973,6 +1014,8 @@ namespace AppTaxi.Controllers
             if (respuesta)
             {
                 int IdConductor = modelo.Conductor.IdConductor;
+                Transaccion t = Crear_Transaccion("Editar", "Horario");
+                bool guardar = await _transaccion.Guardar(t, login);
                 return RedirectToAction("Ver_Horario", new { IdConductor = IdConductor });
             }
             else
@@ -998,6 +1041,8 @@ namespace AppTaxi.Controllers
             bool respuesta = await _horario.Eliminar(IdHorario,login);
             if(respuesta)
             {
+                Transaccion t = Crear_Transaccion("Eliminar", "Horario");
+                bool guardar = await _transaccion.Guardar(t, login);
                 return RedirectToAction("Conductores");
             }
             else
@@ -1049,7 +1094,10 @@ namespace AppTaxi.Controllers
 
             if (respuesta)
             {
+
                 ViewBag.Mensaje = "Horario guardado correctamente.";
+                Transaccion t = Crear_Transaccion("Guardar", "Horario");
+                bool guardar = await _transaccion.Guardar(t, login);
                 return RedirectToAction("Ver_Horario", new { IdConductor = modelo.Conductor.IdConductor });
             }
             else
@@ -1094,6 +1142,8 @@ namespace AppTaxi.Controllers
 
             if (respuesta)
             {
+                Transaccion t = Crear_Transaccion("Guardar", "Horarios");
+                bool guardar = await _transaccion.Guardar(t, login);
                 ViewBag.Mensaje = "Horario guardado correctamente.";
                 return RedirectToAction("Ver_Horario", new { IdConductor = modelo.Conductor.IdConductor });
             }
@@ -1152,6 +1202,8 @@ namespace AppTaxi.Controllers
 
             if (respuesta)
             {
+                Transaccion t = Crear_Transaccion("Recuperar", "Conductor");
+                bool guardar = await _transaccion.Guardar(t, login);
                 return RedirectToAction("Papelera");
             }
             else
@@ -1179,6 +1231,8 @@ namespace AppTaxi.Controllers
 
             if (respuesta)
             {
+                Transaccion t = Crear_Transaccion("Recuperar", "Vehiculo");
+                bool guardar = await _transaccion.Guardar(t, login);
                 return RedirectToAction("Papelera");
             }
             else
@@ -1206,6 +1260,8 @@ namespace AppTaxi.Controllers
 
             if (respuesta)
             {
+                Transaccion t = Crear_Transaccion("Recuperar", "Propietario");
+                bool guardar = await _transaccion.Guardar(t, login);
                 return RedirectToAction("Papelera");
             }
             else

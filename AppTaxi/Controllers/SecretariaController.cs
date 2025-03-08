@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ActionConstraints;
 using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages;
 using Newtonsoft.Json;
+using System.Transactions;
 
 namespace AppTaxi.Controllers
 {
@@ -16,9 +17,10 @@ namespace AppTaxi.Controllers
         private readonly I_Empresa _empresa;
         private readonly I_Conductor _conductor;
         private readonly I_Usuario _usuario;
+        private readonly I_Transaccion _transaccion;
 
         // Constructor que recibe las dependencias inyectadas.
-        public SecretariaController(I_Vehiculo vehiculo, I_Horario horario, I_Propietario propietario, I_Empresa empresa, I_Conductor conductor, I_Usuario usuario)
+        public SecretariaController(I_Vehiculo vehiculo, I_Horario horario, I_Propietario propietario, I_Empresa empresa, I_Conductor conductor, I_Usuario usuario, I_Transaccion transaccion)
         {
             _vehiculo = vehiculo;
             _horario = horario;
@@ -26,6 +28,7 @@ namespace AppTaxi.Controllers
             _empresa = empresa;
             _conductor = conductor;
             _usuario = usuario;
+            _transaccion = transaccion;
         }
 
         //------------ Métodos auxiliares ------------
@@ -45,6 +48,27 @@ namespace AppTaxi.Controllers
         private Models.Login CreateLogin(Usuario usuario)
         {
             return new Models.Login { Correo = usuario.Correo, Contrasena = usuario.Contrasena };
+        }
+
+        private Transaccion Crear_Transaccion(string accion, string modelo)
+        {
+            var usuario = GetUsuarioFromSession();
+            if (usuario == null)
+            {
+                Console.WriteLine("No Hay Usuario Registrado");
+            }
+
+            var login = CreateLogin(usuario);
+
+            Transaccion transaccion = new Transaccion();
+
+            transaccion.IdUsuario = usuario.IdUsuario;
+            transaccion.Modelo = modelo;
+            transaccion.Accion = accion;
+            transaccion.Fecha = DateTime.Now.Date;
+            transaccion.Hora = DateTime.Now.TimeOfDay;
+            return transaccion;
+
         }
 
         //------------ Acciones principales ------------
@@ -354,6 +378,8 @@ namespace AppTaxi.Controllers
 
             if(respuesta)
             {
+                Transaccion t = Crear_Transaccion("Guardar", "Empresa");
+                bool guardar = await _transaccion.Guardar(t, login);
                 return RedirectToAction("Empresas","Secretaria");
             }
             else
