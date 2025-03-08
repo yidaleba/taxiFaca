@@ -481,13 +481,16 @@ namespace AppTaxi.Controllers
 
             var login = CreateLogin(usuario);
             var conductor = await _conductor.Obtener(IdConductor, login);
-
+            Encriptado enc = new Encriptado();
+            string Contrasena = enc.DesencriptarSimple(conductor.Contrasena);
+            conductor.Contrasena = Contrasena;
             return View(conductor);
         }
 
         // Muestra el formulario para editar un conductor.
         public async Task<IActionResult> Editar_Conductor(int IdConductor)
         {
+            Encriptado enc = new Encriptado();
             var usuario = GetUsuarioFromSession();
             if (usuario == null)
             {
@@ -497,6 +500,8 @@ namespace AppTaxi.Controllers
             ModeloVista modelo = new ModeloVista();
             var login = CreateLogin(usuario);
             var conductor = await _conductor.Obtener(IdConductor, login);
+            //string Contrasena = enc.DesencriptarSimple(conductor.Contrasena);
+            //conductor.Contrasena = Contrasena;
             modelo.Conductor = conductor;
             return View(modelo);
         }
@@ -551,6 +556,13 @@ namespace AppTaxi.Controllers
                     modelo.Conductor.Foto = Convert.ToBase64String(ms.ToArray());
                 }
             }
+            if(modelo.Conductor.Contrasena != null)
+            {
+                Encriptado enc = new Encriptado();
+                string Contrasena = enc.EncriptarSimple(modelo.Conductor.Contrasena);
+                modelo.Conductor.Contrasena = Contrasena;
+            }
+            
 
             bool respuesta = await _conductor.Editar(modelo.Conductor, login);
 
@@ -663,8 +675,21 @@ namespace AppTaxi.Controllers
                     modelo.Conductor.Foto = Convert.ToBase64String(ms.ToArray());
                 }
             }
-            
+            Encriptado enc = new Encriptado();
+            string contrasenaBase;
+            if(modelo.Conductor.NumeroCedula != 0 && modelo.Conductor.Nombre != null)
+            {
+                contrasenaBase = enc.GenerarContrasena(modelo.Conductor.NumeroCedula.ToString(), modelo.Conductor.Nombre);
 
+            }
+            else
+            {
+                contrasenaBase = "Password123";
+            }
+
+
+            string Contrasena = enc.EncriptarSimple(contrasenaBase);
+            modelo.Conductor.Contrasena = Contrasena;
             // Guarda el conductor.
             bool respuesta = await _conductor.Guardar(modelo.Conductor, login);
 

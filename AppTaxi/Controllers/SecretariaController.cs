@@ -359,10 +359,9 @@ namespace AppTaxi.Controllers
             else
             {
                 ViewBag.Mensaje = "No se Pudo Guardar";
-                return View("Empresas");
+                return View("Vista_Agregar_Empresa");
             }
         }
-
 
     }
 }
