@@ -389,5 +389,13 @@ namespace AppTaxi.Controllers
             }
         }
 
+
+        public IActionResult Reporte()
+        {
+
+
+            return View();
+        }
+
     }
 }

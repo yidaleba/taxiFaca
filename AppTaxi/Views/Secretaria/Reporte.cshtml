@@ -1,0 +1,316 @@
+﻿@model ReporteSeleccion
+@{
+    ViewData["Title"] = "Reportes";
+    Layout = "~/Views/Shared/_LayoutSecretaria.cshtml";
+}
+
+<h2 class="text-center">Generar Reporte</h2>
+<br />
+
+<form asp-action="Reporte" asp-controller="Secretaria" method="post">
+    <div class="container">
+        <div class="accordion" id="accordionReportes">
+            <!-- Sección Conductor -->
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingConductor">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseConductor">
+                        Conductor
+                    </button>
+                </h2>
+                <div id="collapseConductor" class="accordion-collapse collapse show">
+                    <div class="accordion-body">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <input asp-for="IdConductor" type="checkbox" /> <label asp-for="IdConductor">ID Conductor</label>
+                            </div>
+                            <div class="col-md-4">
+                                <input asp-for="FotoConductor" type="checkbox" /> <label asp-for="FotoConductor">Foto</label>
+                            </div>
+                            <div class="col-md-4">
+                                <input asp-for="NombreConductor" type="checkbox" /> <label asp-for="NombreConductor">Nombre</label>
+                            </div>
+                            <div class="col-md-4">
+                                <input asp-for="NumeroCedulaConductor" type="checkbox" /> <label asp-for="NumeroCedulaConductor">Número Cédula</label>
+                            </div>
+                            <div class="col-md-4">
+                                <input asp-for="TelefonoConductor" type="checkbox" /> <label asp-for="TelefonoConductor">Teléfono</label>
+                            </div>
+                            <div class="col-md-4">
+                                <input asp-for="CorreoConductor" type="checkbox" /> <label asp-for="CorreoConductor">Correo</label>
+                            </div>
+                            <div class="col-md-4">
+                                <input asp-for="DireccionConductor" type="checkbox" /> <label asp-for="DireccionConductor">Dirección</label>
+                            </div>
+                            <div class="col-md-4">
+                                <input asp-for="CiudadConductor" type="checkbox" /> <label asp-for="CiudadConductor">Ciudad</label>
+                            </div>
+                            <div class="col-md-4">
+                                <input asp-for="CelularConductor" type="checkbox" /> <label asp-for="CelularConductor">Celular</label>
+                            </div>
+                            <div class="col-md-4">
+                                <input asp-for="EstadoConductor" type="checkbox" /> <label asp-for="EstadoConductor">Estado</label>
+                            </div>
+                            <div class="col-md-4">
+                                <input asp-for="GrupoSanguineoConductor" type="checkbox" /> <label asp-for="GrupoSanguineoConductor">Grupo Sanguíneo</label>
+                            </div>
+                            <div class="col-md-4">
+                                <input asp-for="EpsConductor" type="checkbox" /> <label asp-for="EpsConductor">EPS</label>
+                            </div>
+                            <div class="col-md-4">
+                                <input asp-for="ArlConductor" type="checkbox" /> <label asp-for="ArlConductor">ARL</label>
+                            </div>
+                            <div class="col-md-4">
+                                <input asp-for="IdEmpresaConductor" type="checkbox" /> <label asp-for="IdEmpresaConductor">Empresa</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sección Empresa -->
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingEmpresa">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseEmpresa">
+                        Empresa
+                    </button>
+                </h2>
+                <div id="collapseEmpresa" class="accordion-collapse collapse">
+                    <div class="accordion-body">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <input asp-for="IdEmpresa" type="checkbox" /> <label asp-for="IdEmpresa">ID Empresa</label>
+                            </div>
+                            <div class="col-md-4">
+                                <input asp-for="NombreEmpresa" type="checkbox" /> <label asp-for="NombreEmpresa">Nombre</label>
+                            </div>
+                            <div class="col-md-4">
+                                <input asp-for="NitEmpresa" type="checkbox" /> <label asp-for="NitEmpresa">NIT</label>
+                            </div>
+                            <div class="col-md-4">
+                                <input asp-for="RepresentanteEmpresa" type="checkbox" /> <label asp-for="RepresentanteEmpresa">Representante</label>
+                            </div>
+                            <div class="col-md-4">
+                                <input asp-for="RedPrincipalEmpresa" type="checkbox" /> <label asp-for="RedPrincipalEmpresa">Red Principal</label>
+                            </div>
+                            <div class="col-md-4">
+                                <input asp-for="RedSecundariaEmpresa" type="checkbox" /> <label asp-for="RedSecundariaEmpresa">Red Secundaria</label>
+                            </div>
+                            <div class="col-md-4">
+                                <input asp-for="IdUsuarioEmpresa" type="checkbox" /> <label asp-for="IdUsuarioEmpresa">Usuario Encargado</label>
+                            </div>
+                            <div class="col-md-4">
+                                <input asp-for="CuposEmpresa" type="checkbox" /> <label asp-for="CuposEmpresa">Cupos</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sección Horario -->
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingHorario">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseHorario">
+                        Horario
+                    </button>
+                </h2>
+                <div id="collapseHorario" class="accordion-collapse collapse">
+                    <div class="accordion-body">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <input asp-for="IdHorario" type="checkbox" /> <label asp-for="IdHorario">ID Horario</label>
+                            </div>
+                            <div class="col-md-4">
+                                <input asp-for="FechaHorario" type="checkbox" /> <label asp-for="FechaHorario">Fecha</label>
+                            </div>
+                            <div class="col-md-4">
+                                <input asp-for="HoraInicioHorario" type="checkbox" /> <label asp-for="HoraInicioHorario">Hora Inicio</label>
+                            </div>
+                            <div class="col-md-4">
+                                <input asp-for="HoraFinHorario" type="checkbox" /> <label asp-for="HoraFinHorario">Hora Fin</label>
+                            </div>
+                            <div class="col-md-4">
+                                <input asp-for="IdConductorHorario" type="checkbox" /> <label asp-for="IdConductorHorario">Conductor</label>
+                            </div>
+                            <div class="col-md-4">
+                                <input asp-for="IdVehiculoHorario" type="checkbox" /> <label asp-for="IdVehiculoHorario">Vehículo</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sección Transacción -->
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingTransaccion">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTransaccion">
+                        Transacción
+                    </button>
+                </h2>
+                <div id="collapseTransaccion" class="accordion-collapse collapse">
+                    <div class="accordion-body">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <input asp-for="IdAccion" type="checkbox" /> <label asp-for="IdAccion">ID Acción</label>
+                            </div>
+                            <div class="col-md-4">
+                                <input asp-for="IdUsuarioTransaccion" type="checkbox" /> <label asp-for="IdUsuarioTransaccion">Usuario</label>
+                            </div>
+                            <div class="col-md-4">
+                                <input asp-for="AccionTransaccion" type="checkbox" /> <label asp-for="AccionTransaccion">Acción</label>
+                            </div>
+                            <div class="col-md-4">
+                                <input asp-for="ModeloTransaccion" type="checkbox" /> <label asp-for="ModeloTransaccion">Modelo</label>
+                            </div>
+                            <div class="col-md-4">
+                                <input asp-for="FechaTransaccion" type="checkbox" /> <label asp-for="FechaTransaccion">Fecha</label>
+                            </div>
+                            <div class="col-md-4">
+                                <input asp-for="HoraTransaccion" type="checkbox" /> <label asp-for="HoraTransaccion">Hora</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sección Vehículo -->
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingVehiculo">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseVehiculo">
+                        Vehículo
+                    </button>
+                </h2>
+                <div id="collapseVehiculo" class="accordion-collapse collapse">
+                    <div class="accordion-body">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <input asp-for="IdVehiculo" type="checkbox" /> <label asp-for="IdVehiculo">ID Vehículo</label>
+                            </div>
+                            <div class="col-md-4">
+                                <input asp-for="PlacaVehiculo" type="checkbox" /> <label asp-for="PlacaVehiculo">Placa</label>
+                            </div>
+                            <div class="col-md-4">
+                                <input asp-for="EstadoVehiculo" type="checkbox" /> <label asp-for="EstadoVehiculo">Estado</label>
+                            </div>
+                            <div class="col-md-4">
+                                <input asp-for="SoatVehiculo" type="checkbox" /> <label asp-for="SoatVehiculo">SOAT</label>
+                            </div>
+                            <div class="col-md-4">
+                                <input asp-for="TecnicoMecanicaVehiculo" type="checkbox" /> <label asp-for="TecnicoMecanicaVehiculo">Técnico Mecánica</label>
+                            </div>
+                            <div class="col-md-4">
+                                <input asp-for="IdPropietarioVehiculo" type="checkbox" /> <label asp-for="IdPropietarioVehiculo">Propietario</label>
+                            </div>
+                            <div class="col-md-4">
+                                <input asp-for="IdEmpresaVehiculo" type="checkbox" /> <label asp-for="IdEmpresaVehiculo">Empresa</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sección Usuario -->
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingUsuario">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseUsuario">
+                        Usuario
+                    </button>
+                </h2>
+                <div id="collapseUsuario" class="accordion-collapse collapse">
+                    <div class="accordion-body">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <input asp-for="IdUsuario" type="checkbox" /> <label asp-for="IdUsuario">ID Usuario</label>
+                            </div>
+                            <div class="col-md-4">
+                                <input asp-for="CorreoUsuario" type="checkbox" /> <label asp-for="CorreoUsuario">Correo</label>
+                            </div>
+                            <div class="col-md-4">
+                                <input asp-for="ContrasenaUsuario" type="checkbox" /> <label asp-for="ContrasenaUsuario">Contraseña</label>
+                            </div>
+                            <div class="col-md-4">
+                                <input asp-for="FotoUsuario" type="checkbox" /> <label asp-for="FotoUsuario">Foto</label>
+                            </div>
+                            <div class="col-md-4">
+                                <input asp-for="NombreUsuario" type="checkbox" /> <label asp-for="NombreUsuario">Nombre</label>
+                            </div>
+                            <div class="col-md-4">
+                                <input asp-for="TelefonoUsuario" type="checkbox" /> <label asp-for="TelefonoUsuario">Teléfono</label>
+                            </div>
+                            <div class="col-md-4">
+                                <input asp-for="DireccionUsuario" type="checkbox" /> <label asp-for="DireccionUsuario">Dirección</label>
+                            </div>
+                            <div class="col-md-4">
+                                <input asp-for="CiudadUsuario" type="checkbox" /> <label asp-for="CiudadUsuario">Ciudad</label>
+                            </div>
+                            <div class="col-md-4">
+                                <input asp-for="CelularUsuario" type="checkbox" /> <label asp-for="CelularUsuario">Celular</label>
+                            </div>
+                            <div class="col-md-4">
+                                <input asp-for="EstadoUsuario" type="checkbox" /> <label asp-for="EstadoUsuario">Estado</label>
+                            </div>
+                            <div class="col-md-4">
+                                <input asp-for="IdRolUsuario" type="checkbox" /> <label asp-for="IdRolUsuario">Rol en Sistema</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- Sección Propietario -->
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingPropietario">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapsePropietario">
+                        Propietario
+                    </button>
+                </h2>
+                <div id="collapsePropietario" class="accordion-collapse collapse">
+                    <div class="accordion-body">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <input asp-for="IdPropietario" type="checkbox" /> <label asp-for="IdPropietario">ID Propietario</label>
+                            </div>
+                            <div class="col-md-4">
+                                <input asp-for="FotoPropietario" type="checkbox" /> <label asp-for="FotoPropietario">Foto</label>
+                            </div>
+                            <div class="col-md-4">
+                                <input asp-for="NombrePropietario" type="checkbox" /> <label asp-for="NombrePropietario">Nombre</label>
+                            </div>
+                            <div class="col-md-4">
+                                <input asp-for="NumeroCedulaPropietario" type="checkbox" /> <label asp-for="NumeroCedulaPropietario">Número Cédula</label>
+                            </div>
+                            <div class="col-md-4">
+                                <input asp-for="TelefonoPropietario" type="checkbox" /> <label asp-for="TelefonoPropietario">Teléfono</label>
+                            </div>
+                            <div class="col-md-4">
+                                <input asp-for="CorreoPropietario" type="checkbox" /> <label asp-for="CorreoPropietario">Correo</label>
+                            </div>
+                            <div class="col-md-4">
+                                <input asp-for="DireccionPropietario" type="checkbox" /> <label asp-for="DireccionPropietario">Dirección</label>
+                            </div>
+                            <div class="col-md-4">
+                                <input asp-for="CiudadPropietario" type="checkbox" /> <label asp-for="CiudadPropietario">Ciudad</label>
+                            </div>
+                            <div class="col-md-4">
+                                <input asp-for="CelularPropietario" type="checkbox" /> <label asp-for="CelularPropietario">Celular</label>
+                            </div>
+                            <div class="col-md-4">
+                                <input asp-for="EstadoPropietario" type="checkbox" /> <label asp-for="EstadoPropietario">Estado</label>
+                            </div>
+                            <div class="col-md-4">
+                                <input asp-for="DocumentoCedulaPropietario" type="checkbox" /> <label asp-for="DocumentoCedulaPropietario">Documento Cédula</label>
+                            </div>
+                            <div class="col-md-4">
+                                <input asp-for="IdEmpresaPropietario" type="checkbox" /> <label asp-for="IdEmpresaPropietario">Empresa</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <br />
+
+        <button type="submit" class="btn btn-primary">Generar Reporte</button>
+    </div>
+</form>

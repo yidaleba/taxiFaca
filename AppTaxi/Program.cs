@@ -11,6 +11,7 @@ builder.Services.AddScoped<I_Propietario, API_Propietario>();
 builder.Services.AddScoped<I_Rol, API_Rol>();
 builder.Services.AddScoped<I_Usuario, API_Usuario>();
 builder.Services.AddScoped<I_Vehiculo, API_Vehiculo>();
+builder.Services.AddScoped<I_Transaccion, API_Transaccion>();
 
 
 //Creacion de Sesiones: 
