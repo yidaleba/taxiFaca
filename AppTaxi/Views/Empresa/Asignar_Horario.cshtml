@@ -1,140 +1,162 @@
 ﻿@model ModeloVista
+
 @{
-    ViewData["Title"] = "Asignar Horarios";
+    ViewData["Title"] = "Asignar Horario";
     Layout = "~/Views/Shared/_LayoutEmpresa.cshtml";
 }
 
-<h1>Asignar Horarios</h1>
-@if (Model.Conductor.IdConductor != 0)
-{
-    <div class="card shadow-lg border-0 rounded-3">
-        <h5 class="card-header bg-primary text-white text-center py-3">Asignar un único horario</h5>
-        <div class="card-body">
-            <form asp-action="Crear_Horario" method="post" class="needs-validation" novalidate>
-                <input type="hidden" asp-for="Conductor.IdConductor" />
+<h1 class="text-center">Asignación de Horarios</h1>
 
-                <div class="row mb-3">
-                    <label class="col-sm-3 col-form-label"><strong>Fecha:</strong></label>
-                    <div class="col-sm-9">
-                        <input type="date" class="form-control" asp-for="Horario.Fecha" required>
-                    </div>
-                </div>
-
-                <div class="row mb-3">
-                    <label class="col-sm-3 col-form-label"><strong>Hora de Inicio:</strong></label>
-                    <div class="col-sm-9">
-                        <input type="time" class="form-control" asp-for="Horario.HoraInicio" required>
-                    </div>
-                </div>
-
-                <div class="row mb-3">
-                    <label class="col-sm-3 col-form-label"><strong>Hora de Fin:</strong></label>
-                    <div class="col-sm-9">
-                        <input type="time" class="form-control" asp-for="Horario.HoraFin" required>
-                    </div>
-                </div>
-
-                <div class="row mb-3">
-                    <label class="col-sm-3 col-form-label"><strong>Vehículo:</strong></label>
-                    <div class="col-sm-9">
-                        <select class="form-select" asp-for="Horario.IdVehiculo" required>
-                            <option value="">Seleccione un vehículo</option>
-                            @foreach (var vehiculo in Model.Vehiculos)
-                            {
-                                <option value="@vehiculo.IdVehiculo">@vehiculo.Placa</option>
-                            }
-                        </select>
-                    </div>
-                </div>
-
-                <div class="d-flex justify-content-center mt-4">
-                    <button type="submit" class="btn btn-success px-4 me-2"><i class="bi bi-check-circle"></i> <strong>Guardar Horario Único</strong></button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <hr class="my-4">
-    <p class="text-center fw-bold">O también:</p>
-    <hr class="my-4">
-
-    <div class="card shadow-lg border-0 rounded-3 mt-4">
-        <h5 class="card-header bg-primary text-white text-center py-3">Asignar múltiples horarios</h5>
-        <div class="card-body">
-            <form asp-action="Crear_RangoHorarios" method="post" class="needs-validation" novalidate>
-                <input type="hidden" asp-for="Conductor.IdConductor" />
-
-                <div class="row mb-3">
-                    <label class="col-sm-3 col-form-label"><strong>Fecha de Inicio:</strong></label>
-                    <div class="col-sm-9">
-                        <input type="date" class="form-control" name="FechaInicio" required>
-                    </div>
-                </div>
-
-                <div class="row mb-3">
-                    <label class="col-sm-3 col-form-label"><strong>Fecha de Fin:</strong></label>
-                    <div class="col-sm-9">
-                        <input type="date" class="form-control" name="FechaFin" required>
-                    </div>
-                </div>
-
-                <div class="row mb-3">
-                    <label class="col-sm-3 col-form-label"><strong>Hora de Inicio:</strong></label>
-                    <div class="col-sm-9">
-                        <input type="time" class="form-control" name="HoraInicio" required>
-                    </div>
-                </div>
-
-                <div class="row mb-3">
-                    <label class="col-sm-3 col-form-label"><strong>Hora de Fin:</strong></label>
-                    <div class="col-sm-9">
-                        <input type="time" class="form-control" name="HoraFin" required>
-                    </div>
-                </div>
-
-                <div class="row mb-3">
-                    <label class="col-sm-3 col-form-label"><strong>Vehículo:</strong></label>
-                    <div class="col-sm-9">
-                        <select class="form-select" name="IdVehiculo" required>
-                            <option value="">Seleccione un vehículo</option>
-                            @foreach (var vehiculo in Model.Vehiculos)
-                            {
-                                <option value="@vehiculo.IdVehiculo">@vehiculo.Placa</option>
-                            }
-                        </select>
-                    </div>
-                </div>
-
-                @if (!string.IsNullOrEmpty(ViewBag.Mensaje))
+<div class="container">
+    <div class="row">
+        <!-- Selección de vehículo -->
+        <div class="col-md-4">
+            <label for="vehiculo" class="form-label">Selecciona un Vehículo:</label>
+            <select id="vehiculo" class="form-select">
+                <option value="">--Seleccione--</option>
+                @foreach (var vehiculo in Model.Vehiculos)
                 {
-                    <div class="alert alert-info text-center" role="alert">
-                        @ViewBag.Mensaje
-                    </div>
+                    <option value="@vehiculo.IdVehiculo">@vehiculo.Placa</option>
                 }
+            </select>
+        </div>
 
-                <div class="d-flex justify-content-center mt-4">
-                    <button type="submit" class="btn btn-success px-4 me-2"><i class="bi bi-calendar-check"></i> <strong>Guardar Rango de Horarios</strong></button>
-                    <a href="javascript:history.back()" class="btn btn-primary px-4"><i class="bi bi-arrow-left"></i> Volver</a>
-                </div>
-                
-            </form>
+        <!-- Selección de periodo -->
+        <div class="col-md-3">
+            <label for="periodo" class="form-label">Selecciona un período:</label>
+            <select id="periodo" class="form-select" onchange="actualizarHorario()">
+                <option value="am" selected>A.M.</option>
+                <option value="pm">P.M.</option>
+            </select>
+        </div>
+
+        <!-- Selección de fecha -->
+        <div class="col-md-3">
+            <label for="fecha" class="form-label">Selecciona una fecha:</label>
+            <input type="date" id="fecha" class="form-control" onchange="actualizarFechas()">
+        </div>
+
+        <!-- Botón asignar -->
+        <div class="col-md-2 d-flex align-items-end">
+            <button type="button" class="btn btn-primary w-100" onclick="asignarHorario()">Asignar Horario</button>
         </div>
     </div>
-    
-}
-else
-{
-    <div class="alert alert-danger text-center mt-4">
-        <p><strong>No se encontró el usuario referenciado.</strong></p>
-        @if (!string.IsNullOrEmpty(ViewBag.Mensaje))
-        {
-            <p>@ViewBag.Mensaje</p>
+
+    <!-- Tabla de horarios -->
+    <div class="table-responsive mt-4">
+        <table class="table table-bordered text-center">
+            <thead class="table-dark">
+                <tr>
+                    <th>Hora</th>
+                    <th>Lunes <span class="date-label" id="fecha-lunes"></span></th>
+                    <th>Martes <span class="date-label" id="fecha-martes"></span></th>
+                    <th>Miércoles <span class="date-label" id="fecha-miercoles"></span></th>
+                    <th>Jueves <span class="date-label" id="fecha-jueves"></span></th>
+                    <th>Viernes <span class="date-label" id="fecha-viernes"></span></th>
+                    <th>Sábado <span class="date-label" id="fecha-sabado"></span></th>
+                    <th>Domingo <span class="date-label" id="fecha-domingo"></span></th>
+                </tr>
+            </thead>
+            <tbody id="horario"></tbody>
+        </table>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        let horariosGuardados = { am: {}, pm: {} };
+        const dias = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
+        const colores = {};
+
+        function generarColorPastel() {
+            const r = Math.floor(Math.random() * 156) + 100;
+            const g = Math.floor(Math.random() * 156) + 100;
+            const b = Math.floor(Math.random() * 156) + 100;
+            return `rgb(${r}, ${g}, ${b})`;
         }
-    </div>
-    <div class="d-flex justify-content-center mt-4">
-        <a href="javascript:history.back()" class="btn btn-secondary px-4"><i class="bi bi-arrow-left"></i> Volver</a>
-    </div>
+
+        function actualizarColores() {
+            const select = document.getElementById('vehiculo');
+            for (let i = 1; i < select.options.length; i++) {
+                const vehiculo = select.options[i].value;
+                if (!colores[vehiculo]) {
+                    colores[vehiculo] = generarColorPastel();
+                }
+            }
+        }
+
+        function generarHoras(periodo) {
+            return periodo === 'am' ?
+                ['00:00', '01:00', '02:00', '03:00', '04:00', '05:00', '06:00', '07:00', '08:00', '09:00', '10:00', '11:00'] :
+                ['12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00', '21:00', '22:00', '23:00'];
+        }
+
+        function actualizarHorario() {
+            const periodo = document.getElementById('periodo').value;
+            const horas = generarHoras(periodo);
+            let tbody = document.getElementById('horario');
+            tbody.innerHTML = '';
+
+            horas.forEach(hora => {
+                let row = `<tr><td>${hora}</td>`;
+                dias.forEach((dia) => {
+                    let key = `${hora}-${dia}`;
+                    let contenido = horariosGuardados[periodo][key] || '';
+                    let color = contenido ? colores[contenido] : '';
+                    row += `<td onclick="toggleHorario(this, '${hora}', '${dia}')" style="background-color:${color}">${contenido}</td>`;
+                });
+                row += '</tr>';
+                tbody.innerHTML += row;
+            });
+        }
+
+        function toggleHorario(td, hora, dia) {
+            actualizarColores();
+            const periodo = document.getElementById('periodo').value;
+            let vehiculo = document.getElementById('vehiculo').value;
+            let key = `${hora}-${dia}`;
+
+            if (vehiculo) {
+                if (td.textContent === vehiculo) {
+                    td.textContent = '';
+                    td.style.backgroundColor = '';
+                    delete horariosGuardados[periodo][key];
+                } else {
+                    td.textContent = vehiculo;
+                    td.style.backgroundColor = colores[vehiculo];
+                    horariosGuardados[periodo][key] = vehiculo;
+                }
+            } else {
+                alert('Seleccione un vehículo antes de asignar un horario.');
+            }
+        }
+
+        function actualizarFechas() {
+            const fechaInput = document.getElementById('fecha').value;
+            if (!fechaInput) return;
+
+            const fechaSeleccionada = new Date(fechaInput);
+            const diaSemana = fechaSeleccionada.getDay();
+            const lunes = new Date(fechaSeleccionada);
+            lunes.setDate(fechaSeleccionada.getDate() - ((diaSemana + 6) % 7));
+
+            const fechas = [];
+            for (let i = 0; i < 7; i++) {
+                let fecha = new Date(lunes);
+                fecha.setDate(lunes.getDate() + i);
+                let formatoFecha = fecha.toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' });
+                fechas.push(formatoFecha);
+            }
+
+            document.getElementById('fecha-lunes').textContent = fechas[0];
+            document.getElementById('fecha-martes').textContent = fechas[1];
+            document.getElementById('fecha-miercoles').textContent = fechas[2];
+            document.getElementById('fecha-jueves').textContent = fechas[3];
+            document.getElementById('fecha-viernes').textContent = fechas[4];
+            document.getElementById('fecha-sabado').textContent = fechas[5];
+            document.getElementById('fecha-domingo').textContent = fechas[6];
+        }
+
+        actualizarHorario();
+    </script>
 }
-
-
-

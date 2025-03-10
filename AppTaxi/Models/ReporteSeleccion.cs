@@ -3,6 +3,7 @@
     public class ReporteSeleccion
     {
         // Conductor
+
         public bool IdConductor { get; set; }
         public bool FotoConductor { get; set; }
         public bool NombreConductor { get; set; }
@@ -19,6 +20,7 @@
         public bool IdEmpresaConductor { get; set; }
 
         // Empresa
+
         public bool IdEmpresa { get; set; }
         public bool NombreEmpresa { get; set; }
         public bool NitEmpresa { get; set; }
@@ -29,6 +31,7 @@
         public bool CuposEmpresa { get; set; }
 
         // Horario
+
         public bool IdHorario { get; set; }
         public bool FechaHorario { get; set; }
         public bool HoraInicioHorario { get; set; }
@@ -37,6 +40,7 @@
         public bool IdVehiculoHorario { get; set; }
 
         // Transacción
+
         public bool IdAccion { get; set; }
         public bool IdUsuarioTransaccion { get; set; }
         public bool AccionTransaccion { get; set; }
@@ -45,6 +49,7 @@
         public bool HoraTransaccion { get; set; }
 
         // Vehículo
+
         public bool IdVehiculo { get; set; }
         public bool PlacaVehiculo { get; set; }
         public bool EstadoVehiculo { get; set; }
@@ -54,6 +59,7 @@
         public bool IdEmpresaVehiculo { get; set; }
 
         // Usuario
+
         public bool IdUsuario { get; set; }
         public bool CorreoUsuario { get; set; }
         public bool ContrasenaUsuario { get; set; }
@@ -67,10 +73,12 @@
         public bool IdRolUsuario { get; set; }
 
         // Rol
+
         public bool IdRol { get; set; }
         public bool DescripcionRol { get; set; }
 
         // Propietario
+
         public bool IdPropietario { get; set; }
         public bool FotoPropietario { get; set; }
         public bool NombrePropietario { get; set; }
