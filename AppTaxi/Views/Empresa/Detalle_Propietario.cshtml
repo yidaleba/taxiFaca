@@ -3,7 +3,8 @@
     ViewData["Title"] = "Detalle Propietario";
     Layout = "~/Views/Shared/_LayoutEmpresa.cshtml";
 }
-
+<p class="text-sm-center"><strong>Cupos Disponibles : </strong>@ViewBag.Cupos</p>
+<br />
 <h1 class="text-center text-primary fw-bold mb-4">Detalle del Propietario</h1>
 
 @if (Model.Propietario != null)

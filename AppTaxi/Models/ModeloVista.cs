@@ -1,4 +1,6 @@
-﻿namespace AppTaxi.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace AppTaxi.Models
 {
     public class ModeloVista
     {
@@ -24,9 +26,13 @@
         public List<Transaccion> Transacciones { get; set; }
 
         //Archivos: 
+        [Required(ErrorMessage = "Archivo es obligatorio.")]
         public IFormFile Archivo_1 { get; set; }
+        [Required(ErrorMessage = "Archivo es obligatorio.")]
         public IFormFile Archivo_2 { get; set; }
+        [Required(ErrorMessage = "Archivo es obligatorio.")]
         public IFormFile Archivo_3 { get; set; }
+        [Required(ErrorMessage = "Archivo es obligatorio.")]
         public IFormFile Archivo_4 { get; set; }
 
     }

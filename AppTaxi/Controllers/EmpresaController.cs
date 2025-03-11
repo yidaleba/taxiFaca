@@ -20,7 +20,7 @@ namespace AppTaxi.Controllers
         private readonly I_Empresa _empresa;
         private readonly I_Conductor _conductor;
         private readonly I_Transaccion _transaccion;
-
+        private int Cupo = 0;
         // Constructor que recibe las dependencias inyectadas.
         public EmpresaController(I_Vehiculo vehiculo, I_Horario horario, I_Propietario propietario, I_Empresa empresa, I_Conductor conductor, I_Transaccion transaccion)
         {
@@ -32,6 +32,25 @@ namespace AppTaxi.Controllers
             _transaccion = transaccion;
         }
 
+
+
+        private async void Cupos()
+        {
+            var usuario = GetUsuarioFromSession();
+            if (usuario == null)
+            {
+                Console.WriteLine("No Hay Usuario Registrado");
+            }
+
+            var login = CreateLogin(usuario);
+
+            var empresas = await _empresa.Lista(login);
+            var empresa = empresas.FirstOrDefault(e => e.IdUsuario == usuario.IdUsuario);
+
+            var vehiculos = await _vehiculo.Lista(login);
+            int Contador = vehiculos.Where(v => v.IdEmpresa == empresa.IdEmpresa).ToList().Count();
+            Cupo = empresa.Cupos - Contador;
+        }
         //------------ Métodos auxiliares ------------
 
         // Obtiene el usuario actual desde la sesión.
@@ -51,6 +70,7 @@ namespace AppTaxi.Controllers
             return new Models.Login { Correo = usuario.Correo, Contrasena = usuario.Contrasena };
         }
 
+       
 
         private Transaccion Crear_Transaccion(string accion,string modelo)
         {
@@ -137,6 +157,12 @@ namespace AppTaxi.Controllers
             }
 
             ViewBag.Mensaje = $"Bienvenid@ {usuario.Nombre}";
+
+            List<Empresa> empresas = await _empresa.Lista(login);
+
+            var empresa = empresas.Where(e => e.IdUsuario == usuario.IdUsuario).FirstOrDefault();
+            ViewBag.Cupos = empresa.Cupos;
+
             return View(DatosIniciales);
         }
 
@@ -205,6 +231,12 @@ namespace AppTaxi.Controllers
 
             // Obtiene el registro específico por su IdDato.
             var dato = DatosIniciales.FirstOrDefault(item => item.IdDato == IdDato);
+
+            List<Empresa> empresas = await _empresa.Lista(login);
+
+            var empresa = empresas.Where(e => e.IdUsuario == usuario.IdUsuario).FirstOrDefault();
+            ViewBag.Cupos = empresa.Cupos;
+
             return View(dato);
         }
 
@@ -245,6 +277,11 @@ namespace AppTaxi.Controllers
                     }
                 }
             }
+            List<Empresa> empresasTot = await _empresa.Lista(login);
+
+            var empresa = empresasTot.Where(e => e.IdUsuario == usuario.IdUsuario).FirstOrDefault();
+            ViewBag.Cupos = empresa.Cupos;
+
             return View(vehiculosEmpresa);
         }
 
@@ -265,6 +302,11 @@ namespace AppTaxi.Controllers
             var propietario = await _propietario.Obtener(vehiculo.IdPropietario, login);
 
             ViewBag.Propietario = propietario?.Nombre;
+            List<Empresa> empresasTot = await _empresa.Lista(login);
+
+            var empresa = empresasTot.Where(e => e.IdUsuario == usuario.IdUsuario).FirstOrDefault();
+            ViewBag.Cupos = empresa.Cupos;
+
             return View(vehiculo);
         }
 
@@ -282,6 +324,13 @@ namespace AppTaxi.Controllers
             var vehiculo = await _vehiculo.Obtener(IdVehiculo, login);
             ModeloVista modelo = new ModeloVista();
             modelo.Vehiculo = vehiculo;
+
+
+            List<Empresa> empresasTot = await _empresa.Lista(login);
+
+            var empresa = empresasTot.Where(e => e.IdUsuario == usuario.IdUsuario).FirstOrDefault();
+            ViewBag.Cupos = empresa.Cupos;
+
             return View(modelo);
         }
 
@@ -297,6 +346,12 @@ namespace AppTaxi.Controllers
             }
 
             var login = CreateLogin(usuario);
+
+            
+            var empresas = await _empresa.Lista(login);
+            var empresa = empresas.FirstOrDefault(e => e.IdUsuario == usuario.IdUsuario);
+
+            ViewBag.Cupos = empresa.Cupos;
             modelo.Vehiculo.Estado = true;
 
             // Convertir archivos PDF a Base64
@@ -344,6 +399,10 @@ namespace AppTaxi.Controllers
             }
 
             var login = CreateLogin(usuario);
+            var empresas = await _empresa.Lista(login);
+            var empresa = empresas.FirstOrDefault(e => e.IdUsuario == usuario.IdUsuario);
+
+            ViewBag.Cupos = empresa.Cupos;
             var vehiculo = await _vehiculo.Obtener(IdVehiculo, login);
             vehiculo.Estado = false;
 
@@ -387,6 +446,11 @@ namespace AppTaxi.Controllers
                 Propietarios = propietariosEmpresa // Asigna la lista de propietarios
             };
 
+            List<Empresa> empresasTot = await _empresa.Lista(login);
+
+            var empresa = empresasTot.Where(e => e.IdUsuario == usuario.IdUsuario).FirstOrDefault();
+            ViewBag.Cupos = empresa.Cupos;
+
             return View(viewModel);
         }
 
@@ -394,6 +458,7 @@ namespace AppTaxi.Controllers
         [HttpPost]
         public async Task<IActionResult> Crear_Vehiculo(ModeloVista viewModel)
         {
+
             var usuario = GetUsuarioFromSession();
             if (usuario == null)
             {
@@ -402,12 +467,25 @@ namespace AppTaxi.Controllers
             }
 
             var login = CreateLogin(usuario);
+            
+
             var empresas = await _empresa.Lista(login);
+            var empresa = empresas.FirstOrDefault(e => e.IdUsuario == usuario.IdUsuario);
+
+            ViewBag.Cupos = empresa.Cupos;
+            if (empresa.Cupos <= 0)
+            {
+                ViewBag.Mensaje = "No se puede agregar, No hay Cupos";
+                var propietariosTotales = await _propietario.Lista(login);
+                viewModel.Propietarios = propietariosTotales?.Where(p => p.IdEmpresa == viewModel.Vehiculo.IdEmpresa && p.Estado).ToList();
+
+                return View("Agregar_Vehiculo", viewModel);
+            }
             var vehiculos = await _vehiculo.Lista(login);
 
             viewModel.Vehiculo.Estado = true;
             viewModel.Vehiculo.IdEmpresa = empresas.FirstOrDefault(e => e.IdUsuario == usuario.IdUsuario)?.IdEmpresa ?? 0;
-            viewModel.Vehiculo.Placa = viewModel.Vehiculo.Placa.ToUpper();
+            if(viewModel.Vehiculo.Placa != null) viewModel.Vehiculo.Placa = viewModel.Vehiculo.Placa.ToUpper();
 
             // Validar si la placa ya existe
             if (vehiculos.Any(v => v.Placa == viewModel.Vehiculo.Placa))
@@ -429,6 +507,7 @@ namespace AppTaxi.Controllers
                 }
             }
 
+
             if (viewModel.Archivo_2 != null)
             {
                 using (var ms = new MemoryStream())
@@ -438,6 +517,8 @@ namespace AppTaxi.Controllers
                 }
             }
 
+            
+            
             // Guardar el vehículo en la BD
             bool respuesta = await _vehiculo.Guardar(viewModel.Vehiculo, login);
 
@@ -445,6 +526,8 @@ namespace AppTaxi.Controllers
             {
                 Transaccion t = Crear_Transaccion("Guardar", "Vehiculo");
                 bool guardar = await _transaccion.Guardar(t, login);
+                
+                
                 return RedirectToAction("Vehiculos");
             }
             else
@@ -495,6 +578,12 @@ namespace AppTaxi.Controllers
                 }
 
             }
+
+            List<Empresa> empresasTot = await _empresa.Lista(login);
+
+            var empresa = empresasTot.Where(e => e.IdUsuario == usuario.IdUsuario).FirstOrDefault();
+            ViewBag.Cupos = empresa.Cupos;
+
             return View(conductoresEmpresa);
         }
 
@@ -513,6 +602,11 @@ namespace AppTaxi.Controllers
             Encriptado enc = new Encriptado();
             string Contrasena = enc.DesencriptarSimple(conductor.Contrasena);
             conductor.Contrasena = Contrasena;
+
+            List<Empresa> empresasTot = await _empresa.Lista(login);
+
+            var empresa = empresasTot.Where(e => e.IdUsuario == usuario.IdUsuario).FirstOrDefault();
+            ViewBag.Cupos = empresa.Cupos;
             return View(conductor);
         }
 
@@ -532,6 +626,12 @@ namespace AppTaxi.Controllers
             //string Contrasena = enc.DesencriptarSimple(conductor.Contrasena);
             //conductor.Contrasena = Contrasena;
             modelo.Conductor = conductor;
+
+            List<Empresa> empresasTot = await _empresa.Lista(login);
+
+            var empresa = empresasTot.Where(e => e.IdUsuario == usuario.IdUsuario).FirstOrDefault();
+            ViewBag.Cupos = empresa.Cupos;
+
             return View(modelo);
         }
 
@@ -547,6 +647,11 @@ namespace AppTaxi.Controllers
             }
 
             var login = CreateLogin(usuario);
+
+            var empresas = await _empresa.Lista(login);
+            var empresa = empresas.FirstOrDefault(e => e.IdUsuario == usuario.IdUsuario);
+
+            ViewBag.Cupos = empresa.Cupos;
             modelo.Conductor.Estado = true;
             
             // Convertir archivos PDF a Base64
@@ -620,6 +725,10 @@ namespace AppTaxi.Controllers
             }
 
             var login = CreateLogin(usuario);
+            var empresas = await _empresa.Lista(login);
+            var empresa = empresas.FirstOrDefault(e => e.IdUsuario == usuario.IdUsuario);
+
+            ViewBag.Cupos = empresa.Cupos;
             var conductor = await _conductor.Obtener(IdConductor, login);
             conductor.Estado = false;
 
@@ -639,8 +748,21 @@ namespace AppTaxi.Controllers
         }
 
         // Muestra el formulario para agregar un nuevo conductor.
-        public IActionResult Agregar_Conductor()
+        public async Task<IActionResult> Agregar_Conductor()
         {
+            var usuario = GetUsuarioFromSession();
+            if (usuario == null)
+            {
+                ViewBag.Mensaje = "Usuario no autenticado.";
+                return RedirectToAction("Login", "Inicio");
+            }
+
+            var login = CreateLogin(usuario);
+
+            List<Empresa> empresasTot = await _empresa.Lista(login);
+
+            var empresa = empresasTot.Where(e => e.IdUsuario == usuario.IdUsuario).FirstOrDefault();
+            ViewBag.Cupos = empresa.Cupos;
             return View();
         }
 
@@ -656,7 +778,12 @@ namespace AppTaxi.Controllers
             }
 
             var login = CreateLogin(usuario);
+
             var empresas = await _empresa.Lista(login);
+
+            var empresa = empresas.FirstOrDefault(e => e.IdUsuario == usuario.IdUsuario);
+
+            ViewBag.Cupos = empresa.Cupos;
             var conductores = await _conductor.Lista(login);
 
             modelo.Conductor.Estado = true;
@@ -780,6 +907,10 @@ namespace AppTaxi.Controllers
                     }
                 }
             }
+            List<Empresa> empresasTot = await _empresa.Lista(login);
+
+            var empresa = empresasTot.Where(e => e.IdUsuario == usuario.IdUsuario).FirstOrDefault();
+            ViewBag.Cupos = empresa.Cupos;
             return View(propietariosEmpresa);
         }
 
@@ -801,6 +932,10 @@ namespace AppTaxi.Controllers
             var vehiculosTotales = await _vehiculo.Lista(login);
             modelo.Vehiculos = vehiculosTotales?.Where(v => v.IdPropietario == IdPropietario && v.Estado).ToList();
 
+            List<Empresa> empresasTot = await _empresa.Lista(login);
+
+            var empresa = empresasTot.Where(e => e.IdUsuario == usuario.IdUsuario).FirstOrDefault();
+            ViewBag.Cupos = empresa.Cupos;
             return View(modelo);
         }
 
@@ -818,6 +953,12 @@ namespace AppTaxi.Controllers
             var login = CreateLogin(usuario);
             var propietario = await _propietario.Obtener(IdPropietario, login);
             modelo.Propietario = propietario;
+
+            List<Empresa> empresasTot = await _empresa.Lista(login);
+
+            var empresa = empresasTot.Where(e => e.IdUsuario == usuario.IdUsuario).FirstOrDefault();
+            ViewBag.Cupos = empresa.Cupos;
+
             return View(modelo);
         }
 
@@ -833,6 +974,10 @@ namespace AppTaxi.Controllers
             }
 
             var login = CreateLogin(usuario);
+            var empresas = await _empresa.Lista(login);
+            var empresa = empresas.FirstOrDefault(e => e.IdUsuario == usuario.IdUsuario);
+
+            ViewBag.Cupos = empresa.Cupos;
             modelo.Propietario.Estado = true;
             if (modelo.Archivo_4 != null)
             {
@@ -869,6 +1014,10 @@ namespace AppTaxi.Controllers
             }
 
             var login = CreateLogin(usuario);
+            var empresas = await _empresa.Lista(login);
+            var empresa = empresas.FirstOrDefault(e => e.IdUsuario == usuario.IdUsuario);
+
+            ViewBag.Cupos = empresa.Cupos;
             var propietario = await _propietario.Obtener(IdPropietario, login);
             propietario.Estado = false;
 
@@ -888,8 +1037,20 @@ namespace AppTaxi.Controllers
         }
 
         // Muestra el formulario para agregar un nuevo propietario.
-        public IActionResult Agregar_Propietario()
+        public async Task<IActionResult> Agregar_Propietario()
         {
+            var usuario = GetUsuarioFromSession();
+            if (usuario == null)
+            {
+                ViewBag.Mensaje = "Usuario no autenticado.";
+                return RedirectToAction("Login", "Inicio");
+            }
+
+            var login = CreateLogin(usuario);
+            List<Empresa> empresasTot = await _empresa.Lista(login);
+
+            var empresa = empresasTot.Where(e => e.IdUsuario == usuario.IdUsuario).FirstOrDefault();
+            ViewBag.Cupos = empresa.Cupos;
             return View();
         }
 
@@ -906,6 +1067,9 @@ namespace AppTaxi.Controllers
 
             var login = CreateLogin(usuario);
             var empresas = await _empresa.Lista(login);
+            var empresa = empresas.FirstOrDefault(e => e.IdUsuario == usuario.IdUsuario);
+
+            ViewBag.Cupos = empresa.Cupos;
             var propietarios = await _propietario.Lista(login);
 
             modelo.Propietario.Estado = true;
@@ -971,7 +1135,11 @@ namespace AppTaxi.Controllers
             modelo.Vehiculos = await _vehiculo.Lista(login);
                        
             modelo.Horarios = Horarios?.Where(h => h.IdConductor == IdConductor).ToList();
-            
+
+            List<Empresa> empresasTot = await _empresa.Lista(login);
+
+            var empresa = empresasTot.Where(e => e.IdUsuario == usuario.IdUsuario).FirstOrDefault();
+            ViewBag.Cupos = empresa.Cupos;
 
             return View(modelo);
         }
@@ -994,6 +1162,12 @@ namespace AppTaxi.Controllers
             modelo.Vehiculos = vehiculos?.Where(v => v.IdEmpresa == IdEmpresa && v.Estado).ToList();
             modelo.Horario = await _horario.Obtener(IdHorario, login);
             modelo.Conductor = await _conductor.Obtener(modelo.Horario.IdConductor,login);
+
+            List<Empresa> empresasTot = await _empresa.Lista(login);
+
+            var empresa = empresasTot.Where(e => e.IdUsuario == usuario.IdUsuario).FirstOrDefault();
+            ViewBag.Cupos = empresa.Cupos;
+
             return View(modelo);
 
         }
@@ -1009,6 +1183,10 @@ namespace AppTaxi.Controllers
             }
             var login = CreateLogin(usuario);
 
+            var empresas = await _empresa.Lista(login);
+            var empresa = empresas.FirstOrDefault(e => e.IdUsuario == usuario.IdUsuario);
+
+            ViewBag.Cupos = empresa.Cupos;
             Horario h = modelo.Horario;
             bool respuesta = await _horario.Editar(h,login);
             if (respuesta)
@@ -1038,6 +1216,10 @@ namespace AppTaxi.Controllers
 
             var login = CreateLogin(usuario);
 
+            var empresas = await _empresa.Lista(login);
+            var empresa = empresas.FirstOrDefault(e => e.IdUsuario == usuario.IdUsuario);
+
+            ViewBag.Cupos = empresa.Cupos;
             bool respuesta = await _horario.Eliminar(IdHorario,login);
             if(respuesta)
             {
@@ -1071,6 +1253,10 @@ namespace AppTaxi.Controllers
             modelo.Vehiculos = vehiculos?.Where(v => v.IdEmpresa == IdEmpresa && v.Estado).ToList();
 
             modelo.Conductor = await _conductor.Obtener(IdConductor,login);
+            List<Empresa> empresasTot = await _empresa.Lista(login);
+
+            var empresa = empresasTot.Where(e => e.IdUsuario == usuario.IdUsuario).FirstOrDefault();
+            ViewBag.Cupos = empresa.Cupos;
             return View(modelo);
         }
 
@@ -1086,6 +1272,10 @@ namespace AppTaxi.Controllers
 
             var login = CreateLogin(usuario);
 
+            var empresas = await _empresa.Lista(login);
+            var empresa = empresas.FirstOrDefault(e => e.IdUsuario == usuario.IdUsuario);
+
+            ViewBag.Cupos = empresa.Cupos;
             // Asignar el IdConductor al horario
             modelo.Horario.IdConductor = modelo.Conductor.IdConductor;
 
@@ -1119,6 +1309,10 @@ namespace AppTaxi.Controllers
 
             var login = CreateLogin(usuario);
 
+            var empresas = await _empresa.Lista(login);
+            var empresa = empresas.FirstOrDefault(e => e.IdUsuario == usuario.IdUsuario);
+
+            ViewBag.Cupos = empresa.Cupos;
             // Crear la lista de horarios
             var horarios = new List<Horario>();
             for (var fecha = FechaInicio; fecha <= FechaFin; fecha = fecha.AddDays(1))
@@ -1180,7 +1374,10 @@ namespace AppTaxi.Controllers
             modelo.Propietarios = modeloTotal.Propietarios.Where(item => item.Estado == false && item.IdEmpresa == IdEmpresa).ToList();
             modelo.Vehiculos = modeloTotal.Vehiculos.Where(item => item.Estado == false && item.IdEmpresa == IdEmpresa).ToList();
 
+            List<Empresa> empresasTot = await _empresa.Lista(login);
 
+            var empresa = empresasTot.Where(e => e.IdUsuario == usuario.IdUsuario).FirstOrDefault();
+            ViewBag.Cupos = empresa.Cupos;
             return View(modelo);
         }
 
@@ -1195,6 +1392,10 @@ namespace AppTaxi.Controllers
             }
 
             var login = CreateLogin(usuario);
+            var empresas = await _empresa.Lista(login);
+            var empresa = empresas.FirstOrDefault(e => e.IdUsuario == usuario.IdUsuario);
+
+            ViewBag.Cupos = empresa.Cupos;
             var conductor = await _conductor.Obtener(IdConductor, login);
             conductor.Estado = true;
 
@@ -1224,6 +1425,10 @@ namespace AppTaxi.Controllers
             }
 
             var login = CreateLogin(usuario);
+            var empresas = await _empresa.Lista(login);
+            var empresa = empresas.FirstOrDefault(e => e.IdUsuario == usuario.IdUsuario);
+
+            ViewBag.Cupos = empresa.Cupos;
             var vehiculo = await _vehiculo.Obtener(IdVehiculo, login);
             vehiculo.Estado = true;
 
@@ -1253,6 +1458,10 @@ namespace AppTaxi.Controllers
             }
 
             var login = CreateLogin(usuario);
+            var empresas = await _empresa.Lista(login);
+            var empresa = empresas.FirstOrDefault(e => e.IdUsuario == usuario.IdUsuario);
+
+            ViewBag.Cupos = empresa.Cupos;
             var propietario = await _propietario.Obtener(IdPropietario, login);
             propietario.Estado = true;
 
