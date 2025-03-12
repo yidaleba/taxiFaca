@@ -33,7 +33,7 @@
             font-family: 'Arial', sans-serif;
         }
 
-        /* Sidebar lateral */
+        /* Sidebar lateral con animación */
         .sidebar {
             width: 250px;
             background: #2C3E50;
@@ -41,9 +41,58 @@
             position: fixed;
             height: 100%;
             padding: 20px;
+            transition: all 0.3s ease-in-out;
+            left: 0; /* Visible por defecto */
+        }
+
+            /* Ocultar sidebar cuando está cerrada */
+            .sidebar.closed {
+                left: -250px; /* La mueve fuera de la pantalla */
+            }
+
+        /* Ajustar el contenido principal cuando la sidebar está cerrada */
+        .main-content {
+            flex: 1;
+            margin-left: 250px;
+            padding: 30px;
+            transition: all 0.3s ease-in-out;
+        }
+
+            .main-content.full-width {
+                margin-left: 0; /* Se expande cuando la sidebar está oculta */
+            }
+
+        /* Estilos del botón de menú */
+        .menu-toggle {
+            position: fixed;
+            bottom: 15px; /* Lo coloca en la parte inferior */
+            left: 15px; /* Lo mantiene alineado a la izquierda */
+            background: #2C3E50;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            border-radius: 5px;
+            z-index: 1000;
             transition: all 0.3s;
         }
 
+            .menu-toggle:hover {
+                background: #1F2C38;
+            }
+
+        /* Estilos de la barra de navegación superior */
+        .navbar-top {
+            background: white;
+            padding: 15px;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Estilos de la lista de la sidebar */
         .sidebar .logo {
             text-align: center;
             font-size: 1.5rem;
@@ -58,63 +107,32 @@
             margin: 20px 0;
         }
 
-        .sidebar ul li {
-            margin: 10px 0;
-        }
+            .sidebar ul li {
+                margin: 10px 0;
+            }
 
-        .sidebar ul li a {
-            text-decoration: none;
-            color: white;
-            font-size: 1rem;
-            font-weight: 600;
-            padding: 12px 15px;
-            display: flex;
-            align-items: center;
-            transition: all 0.3s;
-            border-radius: 5px;
-        }
+                .sidebar ul li a {
+                    text-decoration: none;
+                    color: white;
+                    font-size: 1rem;
+                    font-weight: 600;
+                    padding: 12px 15px;
+                    display: flex;
+                    align-items: center;
+                    transition: all 0.3s;
+                    border-radius: 5px;
+                }
 
-        .sidebar ul li a i {
-            margin-right: 10px;
-        }
+                    .sidebar ul li a i {
+                        margin-right: 10px;
+                    }
 
-        .sidebar ul li a:hover {
-            background: rgba(255, 255, 255, 0.2);
-            padding-left: 20px;
-        }
+                    .sidebar ul li a:hover {
+                        background: rgba(255, 255, 255, 0.2);
+                        padding-left: 20px;
+                    }
 
-        /* Botón para abrir/cerrar sidebar en móviles */
-        .menu-toggle {
-            display: none;
-            position: absolute;
-            top: 15px;
-            left: 15px;
-            background: #2C3E50;
-            color: white;
-            border: none;
-            padding: 10px;
-            font-size: 1.2rem;
-            cursor: pointer;
-            border-radius: 5px;
-        }
-
-        /* Contenido principal */
-        .main-content {
-            flex: 1;
-            margin-left: 250px;
-            padding: 30px;
-            transition: all 0.3s;
-        }
-
-        .navbar-top {
-            background: white;
-            padding: 15px;
-            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
+        /* Botón de cerrar sesión */
         .logout-btn {
             background: #E74C3C;
             color: white;
@@ -125,22 +143,18 @@
             text-decoration: none;
         }
 
-        .logout-btn:hover {
-            background: #C0392B;
-        }
+            .logout-btn:hover {
+                background: #C0392B;
+            }
 
-        
         /* ----- RESPONSIVE DESIGN ----- */
         @@media (max-width: 768px) {
             .sidebar {
-                width: 0;
-                overflow: hidden;
-                padding: 0;
+                left: -250px; /* Oculta la sidebar en móviles por defecto */
             }
 
                 .sidebar.open {
-                    width: 250px;
-                    padding: 20px;
+                    left: 0; /* La muestra cuando se abre */
                 }
 
             .main-content {
@@ -151,13 +165,12 @@
                 display: block;
             }
         }
-        
     </style>
 </head>
 <body>
 
-    <!-- Botón para abrir/cerrar el menú en móviles -->
-    <button class="menu-toggle" onclick="toggleSidebar()">☰</button>
+    <!-- Botón para abrir/cerrar el menú -->
+    <button class="menu-toggle" onclick="toggleSidebar()">☰ Menú</button>
 
     <!-- Sidebar lateral -->
     <div class="sidebar">
@@ -194,7 +207,11 @@
     <script>
         function toggleSidebar() {
             let sidebar = document.querySelector(".sidebar");
-            sidebar.classList.toggle("open");
+            let content = document.querySelector(".main-content");
+
+            // Alternar clases para mostrar u ocultar la sidebar
+            sidebar.classList.toggle("closed");
+            content.classList.toggle("full-width");
         }
     </script>
 

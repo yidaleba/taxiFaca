@@ -1,6 +1,6 @@
 ﻿@model ModeloVista
 @{
-    ViewData["Title"] = "Ver Horario";
+    ViewData["Title"] = "Ver Horarios";
     Layout = "~/Views/Shared/_LayoutEmpresa.cshtml";
 }
 <p class="text-sm-center"><strong>Cupos Disponibles : </strong>@ViewBag.Cupos</p>
@@ -10,7 +10,6 @@
     <div class="alert alert-info text-center">@TempData["Mensaje"]</div>
 }
 <div class="container mt-4">
-    <h1 class="text-center">Ver Horarios</h1>
 
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h5 class="mb-0">👤 Señor/a <strong>@Model.Conductor.Nombre</strong></h5>
