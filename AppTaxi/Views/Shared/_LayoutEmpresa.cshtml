@@ -5,22 +5,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewData["Title"] - Empresa</title>
 
+    <!-- Bootstrap y Google Fonts -->
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true">
     <link rel="stylesheet" href="~/AppTaxi.styles.css" asp-append-version="true">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Big+Shoulders:opsz,wght@10..72,100..900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Big+Shoulders:wght@100..900&display=swap" rel="stylesheet">
+
     <style>
+        /* Fuente personalizada */
         .title-font {
             font-family: "Big Shoulders", sans-serif;
             font-optical-sizing: auto;
-            font-weight: 700; /* Puedes cambiarlo entre 100 y 900 */
+            font-weight: 700;
             font-style: normal;
-            font-size: 2rem; /* Ajusta el tamaño según tu preferencia */
-            text-transform: uppercase; /* Opcional, para que se vea más profesional */
-            letter-spacing: 1px; /* Opcional, mejora la legibilidad */
+            font-size: 2rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
+
         /* Estilos generales */
         body {
             display: flex;
@@ -40,50 +44,66 @@
             transition: all 0.3s;
         }
 
-            .sidebar .logo {
-                text-align: center;
-                font-size: 1.5rem;
-                font-weight: bold;
-                padding-bottom: 20px;
-                border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-            }
+        .sidebar .logo {
+            text-align: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
 
-            .sidebar ul {
-                list-style: none;
-                padding: 0;
-                margin: 20px 0;
-            }
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+            margin: 20px 0;
+        }
 
-                .sidebar ul li {
-                    margin: 10px 0;
-                }
+        .sidebar ul li {
+            margin: 10px 0;
+        }
 
-                    .sidebar ul li a {
-                        text-decoration: none;
-                        color: white;
-                        font-size: 1rem;
-                        font-weight: 600;
-                        padding: 12px 15px;
-                        display: flex;
-                        align-items: center;
-                        transition: all 0.3s;
-                        border-radius: 5px;
-                    }
+        .sidebar ul li a {
+            text-decoration: none;
+            color: white;
+            font-size: 1rem;
+            font-weight: 600;
+            padding: 12px 15px;
+            display: flex;
+            align-items: center;
+            transition: all 0.3s;
+            border-radius: 5px;
+        }
 
-                        .sidebar ul li a i {
-                            margin-right: 10px;
-                        }
+        .sidebar ul li a i {
+            margin-right: 10px;
+        }
 
-                        .sidebar ul li a:hover {
-                            background: rgba(255, 255, 255, 0.2);
-                            padding-left: 20px;
-                        }
+        .sidebar ul li a:hover {
+            background: rgba(255, 255, 255, 0.2);
+            padding-left: 20px;
+        }
+
+        /* Botón para abrir/cerrar sidebar en móviles */
+        .menu-toggle {
+            display: none;
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background: #2C3E50;
+            color: white;
+            border: none;
+            padding: 10px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            border-radius: 5px;
+        }
 
         /* Contenido principal */
         .main-content {
             flex: 1;
             margin-left: 250px;
             padding: 30px;
+            transition: all 0.3s;
         }
 
         .navbar-top {
@@ -105,13 +125,39 @@
             text-decoration: none;
         }
 
-            .logout-btn:hover {
-                background: #C0392B;
+        .logout-btn:hover {
+            background: #C0392B;
+        }
+
+        
+        /* ----- RESPONSIVE DESIGN ----- */
+        @@media (max-width: 768px) {
+            .sidebar {
+                width: 0;
+                overflow: hidden;
+                padding: 0;
             }
 
+                .sidebar.open {
+                    width: 250px;
+                    padding: 20px;
+                }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .menu-toggle {
+                display: block;
+            }
+        }
+        
     </style>
 </head>
 <body>
+
+    <!-- Botón para abrir/cerrar el menú en móviles -->
+    <button class="menu-toggle" onclick="toggleSidebar()">☰</button>
 
     <!-- Sidebar lateral -->
     <div class="sidebar">
@@ -129,7 +175,7 @@
     <!-- Contenido principal -->
     <div class="main-content">
         <nav class="navbar-top justify-content-center">
-            <h4 class="m-0 text-dark"><strong>@ViewData["Title"]</strong></h4>
+            <h4 class="m-0 text-dark title-font"><strong>@ViewData["Title"]</strong></h4>
         </nav>
 
         <main role="main" class="py-4">
@@ -142,7 +188,15 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+
     @await RenderSectionAsync("Scripts", required: false)
+
+    <script>
+        function toggleSidebar() {
+            let sidebar = document.querySelector(".sidebar");
+            sidebar.classList.toggle("open");
+        }
+    </script>
 
 </body>
 </html>
