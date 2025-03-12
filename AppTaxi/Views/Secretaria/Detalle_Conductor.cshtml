@@ -4,6 +4,10 @@
     Layout = "~/Views/Shared/_LayoutSecretaria.cshtml";
 }
 
+@if (TempData["Mensaje"] != null)
+{
+    <div class="alert alert-info text-center">@TempData["Mensaje"]</div>
+}
 @if (Model != null)
 {
     <div class="d-flex justify-content-center mt-4">
@@ -31,7 +35,15 @@
                                 <p class="card-text"><strong>Cédula:</strong> <span class="text-muted">@Model.NumeroCedula</span></p>
                                 <p class="card-text"><strong>Teléfono:</strong> <span class="text-muted">@Model.Telefono</span></p>
                                 <p class="card-text"><strong>Correo:</strong> <span class="text-muted">@Model.Correo</span></p>
-                                
+                                <p class="card-text">
+                                    <strong>Contraseña:</strong>
+                                    <div class="input-group w-65">
+                                        <input type="password" id="passwordField" class="form-control text-muted" value="@Model.Contrasena" readonly>
+                                        <button type="button" class="btn btn-outline-secondary" onclick="togglePassword()">
+                                            <strong>Ver</strong>
+                                        </button>
+                                    </div>
+                                </p>
                                 <p class="card-text"><strong>Dirección:</strong> <span class="text-muted">@Model.Direccion</span></p>
                                 <p class="card-text"><strong>Ciudad:</strong> <span class="text-muted">@Model.Ciudad</span></p>
                                 <p class="card-text">
@@ -74,7 +86,7 @@
 
             <!-- Botones de acción -->
             <div class="d-flex justify-content-center mt-4 gap-2">
-                <a asp-action="Ver_Horario" asp-controller="Secretaria" asp-route-IdConductor="@Model.IdConductor" class="btn btn-secondary">Consultar Horarios</a>               
+                <a asp-action="Ver_Horario" asp-controller="Secretaria" asp-route-IdConductor="@Model.IdConductor" class="btn btn-secondary">Consultar Horarios</a>
                 
                 <a href="javascript:history.back()" class="btn btn-success">Volver</a>
             </div>
@@ -113,5 +125,3 @@ else
         }
     }
 </script>
-
-

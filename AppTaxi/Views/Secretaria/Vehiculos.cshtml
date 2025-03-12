@@ -4,10 +4,13 @@
     Layout = "~/Views/Shared/_LayoutSecretaria.cshtml";
 }
 
-<h1 class="mb-4 text-center text-primary">Vehículos de la empresa</h1>
-
+@if (TempData["Mensaje"] != null)
+{
+    <div class="alert alert-info text-center">@TempData["Mensaje"]</div>
+}
 <div class="d-flex justify-content-between align-items-center mb-3">
-    <a href="javascript:history.back()" class="btn btn-danger">Volver</a>
+    <a href="javascript:history.back()" class="btn btn-outline-secondary">Volver</a>
+
     <input type="text" id="buscarVehiculo" class="form-control w-25" placeholder="🔍 Buscar por placa..." onkeyup="filtrarVehiculos()">
 </div>
 
@@ -38,16 +41,8 @@
                             </span>
                         </td>
                         <td>@item.IdVehiculo</td>
-                        <td>
-                            <span class="badge @(item.Soat != null ? "bg-success" : "bg-danger")">
-                                @(item.Soat != null ? "Sí" : "No")
-                            </span>
-                        </td>
-                        <td>
-                            <span class="badge @(item.TecnicoMecanica != null ? "bg-success" : "bg-danger")">
-                                @(item.TecnicoMecanica != null ? "Sí" : "No")
-                            </span>
-                        </td>
+                        <td>@Html.Raw(item.ObtenerEstadoDocumento(item.VenceSoat))</td>
+                        <td>@Html.Raw(item.ObtenerEstadoDocumento(item.VenceTecnicoMecanica))</td>
                         <td>
                             <a asp-action="Detalle_Vehiculo" asp-controller="Secretaria" asp-route-IdVehiculo="@item.IdVehiculo" class="btn btn-primary btn-sm">
                                 Detalle
