@@ -29,7 +29,7 @@
                 <div class="row">
                     <div class="col-md-6">
                         <label class="form-label"><strong>Documento:</strong></label>
-                        <input type="text" readonly class="form-control" asp-for="Conductor.NumeroCedula">
+                        <input type="text"  class="form-control" asp-for="Conductor.NumeroCedula">
                     </div>
                     <div class="col-md-6">
                         <label class="form-label"><strong>ID:</strong></label>
@@ -97,17 +97,17 @@
                 <div class="row mt-3">
                     <div class="col-md-4">
                         <label class="form-label"><strong>Documento Cédula:</strong></label>
-                        <input type="file" readonly class="form-control" asp-for="Conductor.DocumentoCedula">
+                        <input type="file"  class="form-control" asp-for="Conductor.DocumentoCedula">
                         <small class="text-muted">¿Hay archivo cargado?: @(string.IsNullOrEmpty(Model.Conductor.DocumentoCedula) ? "No" : "Sí")</small>
                     </div>
                     <div class="col-md-4">
                         <label class="form-label"><strong>Documento EPS:</strong></label>
-                        <input type="file" readonly class="form-control" asp-for="Conductor.DocumentoEps">
+                        <input type="file"  class="form-control" asp-for="Conductor.DocumentoEps">
                         <small class="text-muted">¿Hay archivo cargado?: @(string.IsNullOrEmpty(Model.Conductor.DocumentoEps) ? "No" : "Sí")</small>
                     </div>
                     <div class="col-md-4">
                         <label class="form-label"><strong>Documento ARL:</strong></label>
-                        <input type="file" readonly class="form-control" asp-for="Conductor.DocumentoArl">
+                        <input type="file"  class="form-control" asp-for="Conductor.DocumentoArl">
                         <small class="text-muted">¿Hay archivo cargado?: @(string.IsNullOrEmpty(Model.Conductor.DocumentoArl) ? "No" : "Sí")</small>
                     </div>
                 </div>
