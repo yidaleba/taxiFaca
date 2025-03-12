@@ -1,63 +1,198 @@
 ﻿<!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewData["Title"] - Empresa</title>
 
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/AppTaxi.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true">
+    <link rel="stylesheet" href="~/AppTaxi.styles.css" asp-append-version="true">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Big+Shoulders:opsz,wght@10..72,100..900&display=swap" rel="stylesheet">
+    <style>
+        .title-font {
+            font-family: "Big Shoulders", sans-serif;
+            font-optical-sizing: auto;
+            font-weight: 700;
+            font-style: normal;
+            font-size: 2rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Estilos generales */
+        body {
+            display: flex;
+            min-height: 100vh;
+            background-color: #f4f4f4;
+            font-family: 'Arial', sans-serif;
+        }
+
+        /* Sidebar lateral */
+        .sidebar {
+            width: 250px;
+            background: #2C3E50;
+            color: white;
+            position: fixed;
+            height: 100%;
+            padding: 20px;
+            transition: all 0.3s ease-in-out;
+            left: 0;
+        }
+
+        /* Botón de mostrar/ocultar menú */
+        .toggle-menu {
+            background: #2C3E50;
+            color: white;
+            border: none;
+            font-size: 1.5rem;
+            padding: 10px 15px;
+            cursor: pointer;
+            position: absolute;
+            top: 15px;
+            left: 260px; /* Para que esté justo al lado del menú */
+            transition: left 0.3s ease-in-out;
+            border-radius: 5px;
+        }
+
+            .toggle-menu:hover {
+                background: #1F2C39;
+            }
+
+        /* Clases para ocultar el menú */
+        .sidebar.hidden {
+            left: -250px;
+        }
+
+        .toggle-menu.hidden {
+            left: 10px;
+        }
+
+        /* Ajustar el contenido cuando la barra se oculta */
+        .main-content {
+            flex: 1;
+            margin-left: 250px;
+            padding: 30px;
+            transition: margin-left 0.3s ease-in-out;
+        }
+
+            .main-content.full {
+                margin-left: 0;
+            }
+
+        .sidebar .logo {
+            text-align: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+            margin: 20px 0;
+        }
+
+            .sidebar ul li {
+                margin: 10px 0;
+            }
+
+                .sidebar ul li a {
+                    text-decoration: none;
+                    color: white;
+                    font-size: 1rem;
+                    font-weight: 600;
+                    padding: 12px 15px;
+                    display: flex;
+                    align-items: center;
+                    transition: all 0.3s;
+                    border-radius: 5px;
+                }
+
+                    .sidebar ul li a i {
+                        margin-right: 10px;
+                    }
+
+                    .sidebar ul li a:hover {
+                        background: rgba(255, 255, 255, 0.2);
+                        padding-left: 20px;
+                    }
+
+        .navbar-top {
+            background: white;
+            padding: 15px;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .logout-btn {
+            background: #E74C3C;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            font-weight: bold;
+            border-radius: 5px;
+            text-decoration: none;
+        }
+
+            .logout-btn:hover {
+                background: #C0392B;
+            }
+    </style>
 </head>
 <body>
-    <header>
-        <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm p-3">
-            <div class="container">
-                <a class="navbar-brand fw-bold" asp-area="" asp-controller="Empresa" asp-action="Inicio">Página Principal</a>
 
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-                        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
+    <!-- Botón para ocultar/mostrar la barra lateral -->
+    <button class="toggle-menu" id="menuToggle"><i class="fas fa-bars"></i></button>
 
-                <div class="collapse navbar-collapse" id="navbarNav">
-                    <ul class="navbar-nav ms-auto">
-                        <li class="nav-item mx-2">
-                            <a class="nav-link fw-semibold text-dark" asp-area="" asp-controller="Empresa" asp-action="Vehiculos">🚗 Vehículos</a>
-                        </li>
-                        <li class="nav-item mx-2">
-                            <a class="nav-link fw-semibold text-dark" asp-area="" asp-controller="Empresa" asp-action="Conductores">👨‍✈️ Conductores</a>
-                        </li>
-                        <li class="nav-item mx-2">
-                            <a class="nav-link fw-semibold text-dark" asp-area="" asp-controller="Empresa" asp-action="Propietarios">👥 Propietarios</a>
-                        </li>
-                        <li class="nav-item mx-2">
-                            <a class="nav-link fw-semibold text-dark" asp-area="" asp-controller="Empresa" asp-action="Papelera">🗑️ Papelera</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="btn btn-outline-danger fw-semibold px-3" asp-area="" asp-controller="Inicio" asp-action="CerrarSesion">❌ Cerrar Sesión</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
+    <!-- Sidebar lateral -->
+    <div class="sidebar" id="sidebar">
+        <div class="logo">Faca Taxis</div>
+        <ul>
+            <li><a asp-controller="Empresa" asp-action="Inicio"><i class="fas fa-home"></i> Inicio</a></li>
+            <li><a asp-controller="Empresa" asp-action="Vehiculos"><i class="fas fa-car"></i> Vehículos</a></li>
+            <li><a asp-controller="Empresa" asp-action="Conductores"><i class="fas fa-user-tie"></i> Conductores</a></li>
+            <li><a asp-controller="Empresa" asp-action="Propietarios"><i class="fas fa-users"></i> Propietarios</a></li>
+            <li><a asp-controller="Empresa" asp-action="Papelera"><i class="fas fa-trash"></i> Papelera</a></li>
+            <li><a class="logout-btn" asp-controller="Inicio" asp-action="CerrarSesion"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</a></li>
+        </ul>
+    </div>
+
+    <!-- Contenido principal -->
+    <div class="main-content" id="mainContent">
+        <nav class="navbar-top">
+            <h4 class="m-0 text-dark title-font"><strong>@ViewData["Title"]</strong></h4>
         </nav>
-    </header>
 
-    <div class="container">
-        <main role="main" class="pb-3">
+        <main role="main" class="py-4">
             @RenderBody()
         </main>
     </div>
-    <!--
-    <footer class="border-top footer text-muted text-center py-3">
-        <div class="container">
-            &copy; 2025 - AppTaxi | <a asp-area="" asp-controller="Home" asp-action="Privacy">Política de privacidad</a>
-        </div>
-    </footer>-->
 
+    <!-- Scripts -->
+    <script src="https://kit.fontawesome.com/a076d05399.js"></script>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
+
+    <!-- JavaScript para ocultar/mostrar la barra lateral -->
+    <script>
+        document.getElementById("menuToggle").addEventListener("click", function () {
+            let sidebar = document.getElementById("sidebar");
+            let mainContent = document.getElementById("mainContent");
+            let toggleBtn = document.getElementById("menuToggle");
+
+            sidebar.classList.toggle("hidden");
+            mainContent.classList.toggle("full");
+            toggleBtn.classList.toggle("hidden");
+        });
+    </script>
+
 </body>
 </html>
