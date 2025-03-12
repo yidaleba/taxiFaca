@@ -338,6 +338,7 @@ namespace AppTaxi.Controllers
         [HttpPost]
         public async Task<IActionResult> Guardar_Vehiculo(ModeloVista modelo)
         {
+            
             var usuario = GetUsuarioFromSession();
             if (usuario == null)
             {
@@ -372,6 +373,7 @@ namespace AppTaxi.Controllers
                     modelo.Vehiculo.TecnicoMecanica = Convert.ToBase64String(ms.ToArray());
                 }
             }
+            
             bool respuesta = await _vehiculo.Editar(modelo.Vehiculo, login);
 
             if (respuesta)

@@ -43,16 +43,8 @@
                             </span>
                         </td>
                         <td>@item.IdVehiculo</td>
-                        <td>
-                            <span class="badge @(item.Soat != null ? "bg-success" : "bg-danger")">
-                                @(item.Soat != null ? "Sí" : "No")
-                            </span>
-                        </td>
-                        <td>
-                            <span class="badge @(item.TecnicoMecanica != null ? "bg-success" : "bg-danger")">
-                                @(item.TecnicoMecanica != null ? "Sí" : "No")
-                            </span>
-                        </td>
+                        <td>@Html.Raw(item.ObtenerEstadoDocumento(item.VenceSoat))</td>
+                        <td>@Html.Raw(item.ObtenerEstadoDocumento(item.VenceTecnicoMecanica))</td>
                         <td>
                             <a asp-action="Detalle_Vehiculo" asp-controller="Empresa" asp-route-IdVehiculo="@item.IdVehiculo" class="btn btn-primary btn-sm">
                                 Detalle

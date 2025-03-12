@@ -18,7 +18,7 @@
                 <h5 class="mb-0">Vehículo - Placa: @Model.Vehiculo.Placa</h5>
             </div>
             <div class="card-body">
-                <form asp-action="Guardar_Vehiculo" asp-controller="Empresa" method="post" enctype="multipart/form-data">
+                <form id="formEditarVehiculo" asp-action="Guardar_Vehiculo" asp-controller="Empresa" method="post" enctype="multipart/form-data">
 
                     <div class="row mb-3">
                         <div class="col-md-6">
@@ -41,6 +41,20 @@
                             <label class="form-label"><strong>Técnico Mecánica (Archivo PDF): </strong></label>
                             <input type="file" class="form-control" asp-for="Archivo_2" accept=".pdf">
                             <small class="text-muted">¿Hay archivo cargado?: @(string.IsNullOrEmpty(Model.Vehiculo.TecnicoMecanica) ? "No" : "Sí")</small>
+                        </div>
+                    </div>
+
+                    <!-- Campos de Fecha de Vencimiento -->
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label"><strong>Fecha de Vencimiento SOAT:</strong></label>
+                            <input type="date" class="form-control" id="VenceSoat" asp-for="Vehiculo.VenceSoat"
+                                   value="@Model.Vehiculo.VenceSoat.ToString("yyyy-MM-dd")">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label"><strong>Fecha de Vencimiento Técnico Mecánica:</strong></label>
+                            <input type="date" class="form-control" id="VenceTecnicoMecanica" asp-for="Vehiculo.VenceTecnicoMecanica"
+                                   value="@Model.Vehiculo.VenceTecnicoMecanica.ToString("yyyy-MM-dd")">
                         </div>
                     </div>
 
@@ -68,3 +82,28 @@
         </div>
     }
 </div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        document.getElementById("formEditarVehiculo").addEventListener("submit", function (event) {
+            let fechaActual = new Date().toISOString().split("T")[0]; // Fecha actual en formato YYYY-MM-DD
+            let venceSoat = document.getElementById("VenceSoat").value;
+            let venceTecnico = document.getElementById("VenceTecnicoMecanica").value;
+
+            let mensajeError = "";
+
+            if (venceSoat && venceSoat <= fechaActual) {
+                mensajeError += "📅 La fecha de vencimiento del SOAT debe ser mayor a la fecha actual.\n";
+            }
+
+            if (venceTecnico && venceTecnico <= fechaActual) {
+                mensajeError += "📅 La fecha de vencimiento de la Técnico Mecánica debe ser mayor a la fecha actual.\n";
+            }
+
+            if (mensajeError) {
+                alert(mensajeError); // Muestra un mensaje de error al usuario
+                event.preventDefault(); // Evita que el formulario se envíe
+            }
+        });
+    });
+</script>

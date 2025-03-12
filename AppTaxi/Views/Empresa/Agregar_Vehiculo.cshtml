@@ -6,10 +6,11 @@
 <p class="text-sm-center"><strong>Cupos Disponibles : </strong>@ViewBag.Cupos</p>
 <br />
 <h1>Agregar un Vehículo</h1>
+
 <div class="card shadow-lg border-0 rounded-3">
     <h5 class="card-header bg-primary text-white text-center py-3">Ingrese los Datos del Vehículo</h5>
     <div class="card-body">
-        <form asp-action="Crear_Vehiculo" asp-controller="Empresa" method="post" enctype="multipart/form-data" class="needs-validation" novalidate>
+        <form asp-action="Crear_Vehiculo" asp-controller="Empresa" method="post" enctype="multipart/form-data" class="needs-validation" novalidate id="formVehiculo">
 
             <div class="row mb-3">
                 <label class="col-sm-3 col-form-label"><strong>Placa:</strong></label>
@@ -18,7 +19,7 @@
                 </div>
             </div>
 
-            <!-- SOAT -->
+            <!-- SOAT y Técnico Mecánica -->
             <div class="row mb-3">
                 <div class="col-md-6">
                     <label class="form-label"><strong>SOAT (Archivo PDF): </strong></label>
@@ -26,7 +27,6 @@
                     <small class="text-muted">Suba el archivo del SOAT</small>
                 </div>
 
-                <!-- Técnico Mecánica -->
                 <div class="col-md-6">
                     <label class="form-label"><strong>Técnico Mecánica (Archivo PDF): </strong></label>
                     <input type="file" class="form-control" asp-for="Archivo_2" accept=".pdf" required>
@@ -34,6 +34,22 @@
                 </div>
             </div>
 
+            <!-- Fechas de Vencimiento -->
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label class="form-label"><strong>Fecha de Vencimiento SOAT:</strong></label>
+                    <input type="date" class="form-control" asp-for="Vehiculo.VenceSoat" id="venceSoat" required>
+                    <small class="text-danger d-none" id="errorSoat">❌ La fecha debe ser mayor a hoy.</small>
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label"><strong>Fecha de Vencimiento Técnico Mecánica:</strong></label>
+                    <input type="date" class="form-control" asp-for="Vehiculo.VenceTecnicoMecanica" id="venceTecno" required>
+                    <small class="text-danger d-none" id="errorTecno">❌ La fecha debe ser mayor a hoy.</small>
+                </div>
+            </div>
+
+            <!-- Propietario -->
             <div class="row mb-3">
                 <label class="col-sm-3 col-form-label"><strong>Propietario:</strong></label>
                 <div class="col-sm-9">
@@ -89,6 +105,31 @@
             if (exito === "True") {
                 $('#successModal').modal('show'); // Muestra el modal automáticamente si el guardado fue exitoso
             }
+
+            $("#formVehiculo").submit(function (event) {
+                var fechaHoy = new Date().toISOString().split("T")[0]; // Obtener fecha actual en formato YYYY-MM-DD
+                var venceSoat = $("#venceSoat").val();
+                var venceTecno = $("#venceTecno").val();
+                var valido = true;
+
+                if (venceSoat && venceSoat <= fechaHoy) {
+                    $("#errorSoat").removeClass("d-none");
+                    valido = false;
+                } else {
+                    $("#errorSoat").addClass("d-none");
+                }
+
+                if (venceTecno && venceTecno <= fechaHoy) {
+                    $("#errorTecno").removeClass("d-none");
+                    valido = false;
+                } else {
+                    $("#errorTecno").addClass("d-none");
+                }
+
+                if (!valido) {
+                    event.preventDefault(); // Evita el envío del formulario si hay errores
+                }
+            });
         });
     </script>
 }

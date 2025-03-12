@@ -4,10 +4,6 @@
     Layout = "~/Views/Shared/_LayoutEmpresa.cshtml";
 }
 
-@{
-    var soatFileName = "SOAT_" + Model.Placa + ".pdf";
-    var tecnicoFileName = "TecnicoMecanica_" + Model.Placa + ".pdf";
-}
 <p class="text-sm-center"><strong>Cupos Disponibles : </strong>@ViewBag.Cupos</p>
 <br />
 
@@ -26,21 +22,28 @@
                 </div>
             </div>
 
+            
+            <!-- SOAT -->
             <div class="mb-3 row">
                 <label class="col-sm-3 col-form-label fw-bold">SOAT:</label>
                 <div class="col-sm-9">
-                    <iframe src="data:application/pdf;base64,@Model.Soat"
-                            width="60%" height="300px">
-                    </iframe>
+                    <iframe src="data:application/pdf;base64,@Model.Soat" width="60%" height="300px"></iframe>
+                    <p class="mt-2 @(Model.VenceSoat <= DateTime.Today ? "text-danger fw-bold" : "text-muted")">
+                        <strong>Fecha de vencimiento:</strong> @Model.VenceSoat.ToString("dd-MM-yyyy")
+                        @(Model.VenceSoat <= DateTime.Today ? " - Vencida" : "")
+                    </p>
                 </div>
             </div>
 
+            <!-- Técnico Mecánica -->
             <div class="mb-3 row">
                 <label class="col-sm-3 col-form-label fw-bold">Técnico Mecánica:</label>
                 <div class="col-sm-9">
-                    <iframe src="data:application/pdf;base64,@Model.TecnicoMecanica"
-                            width="60%" height="300px">
-                    </iframe>
+                    <iframe src="data:application/pdf;base64,@Model.TecnicoMecanica" width="60%" height="300px"></iframe>
+                    <p class="mt-2 @(Model.VenceTecnicoMecanica <= DateTime.Today ? "text-danger fw-bold" : "text-muted")">
+                        <strong>Fecha de vencimiento:</strong> @Model.VenceTecnicoMecanica.ToString("dd-MM-yyyy")
+                        @(Model.VenceTecnicoMecanica <= DateTime.Today ? " - Vencida" : "")
+                    </p>
                 </div>
             </div>
 
