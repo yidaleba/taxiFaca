@@ -15,13 +15,12 @@
         .title-font {
             font-family: "Big Shoulders", sans-serif;
             font-optical-sizing: auto;
-            font-weight: 700;
+            font-weight: 700; /* Puedes cambiarlo entre 100 y 900 */
             font-style: normal;
-            font-size: 2rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
+            font-size: 2rem; /* Ajusta el tamaño según tu preferencia */
+            text-transform: uppercase; /* Opcional, para que se vea más profesional */
+            letter-spacing: 1px; /* Opcional, mejora la legibilidad */
         }
-
         /* Estilos generales */
         body {
             display: flex;
@@ -38,95 +37,61 @@
             position: fixed;
             height: 100%;
             padding: 20px;
-            transition: all 0.3s ease-in-out;
-            left: 0;
+            transition: all 0.3s;
         }
 
-        /* Botón de mostrar/ocultar menú */
-        .toggle-menu {
-            background: #2C3E50;
-            color: white;
-            border: none;
-            font-size: 1.5rem;
-            padding: 10px 15px;
-            cursor: pointer;
-            position: absolute;
-            top: 15px;
-            left: 260px; /* Para que esté justo al lado del menú */
-            transition: left 0.3s ease-in-out;
-            border-radius: 5px;
-        }
-
-            .toggle-menu:hover {
-                background: #1F2C39;
+            .sidebar .logo {
+                text-align: center;
+                font-size: 1.5rem;
+                font-weight: bold;
+                padding-bottom: 20px;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.2);
             }
 
-        /* Clases para ocultar el menú */
-        .sidebar.hidden {
-            left: -250px;
-        }
+            .sidebar ul {
+                list-style: none;
+                padding: 0;
+                margin: 20px 0;
+            }
 
-        .toggle-menu.hidden {
-            left: 10px;
-        }
+                .sidebar ul li {
+                    margin: 10px 0;
+                }
 
-        /* Ajustar el contenido cuando la barra se oculta */
+                    .sidebar ul li a {
+                        text-decoration: none;
+                        color: white;
+                        font-size: 1rem;
+                        font-weight: 600;
+                        padding: 12px 15px;
+                        display: flex;
+                        align-items: center;
+                        transition: all 0.3s;
+                        border-radius: 5px;
+                    }
+
+                        .sidebar ul li a i {
+                            margin-right: 10px;
+                        }
+
+                        .sidebar ul li a:hover {
+                            background: rgba(255, 255, 255, 0.2);
+                            padding-left: 20px;
+                        }
+
+        /* Contenido principal */
         .main-content {
             flex: 1;
             margin-left: 250px;
             padding: 30px;
-            transition: margin-left 0.3s ease-in-out;
         }
-
-            .main-content.full {
-                margin-left: 0;
-            }
-
-        .sidebar .logo {
-            text-align: center;
-            font-size: 1.5rem;
-            font-weight: bold;
-            padding-bottom: 20px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-        }
-
-        .sidebar ul {
-            list-style: none;
-            padding: 0;
-            margin: 20px 0;
-        }
-
-            .sidebar ul li {
-                margin: 10px 0;
-            }
-
-                .sidebar ul li a {
-                    text-decoration: none;
-                    color: white;
-                    font-size: 1rem;
-                    font-weight: 600;
-                    padding: 12px 15px;
-                    display: flex;
-                    align-items: center;
-                    transition: all 0.3s;
-                    border-radius: 5px;
-                }
-
-                    .sidebar ul li a i {
-                        margin-right: 10px;
-                    }
-
-                    .sidebar ul li a:hover {
-                        background: rgba(255, 255, 255, 0.2);
-                        padding-left: 20px;
-                    }
 
         .navbar-top {
             background: white;
             padding: 15px;
             box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
             display: flex;
-            justify-content: center;
+            justify-content: space-between;
             align-items: center;
         }
 
@@ -143,15 +108,13 @@
             .logout-btn:hover {
                 background: #C0392B;
             }
+
     </style>
 </head>
 <body>
 
-    <!-- Botón para ocultar/mostrar la barra lateral -->
-    <button class="toggle-menu" id="menuToggle"><i class="fas fa-bars"></i></button>
-
     <!-- Sidebar lateral -->
-    <div class="sidebar" id="sidebar">
+    <div class="sidebar">
         <div class="logo">Faca Taxis</div>
         <ul>
             <li><a asp-controller="Empresa" asp-action="Inicio"><i class="fas fa-home"></i> Inicio</a></li>
@@ -164,9 +127,9 @@
     </div>
 
     <!-- Contenido principal -->
-    <div class="main-content" id="mainContent">
-        <nav class="navbar-top">
-            <h4 class="m-0 text-dark title-font"><strong>@ViewData["Title"]</strong></h4>
+    <div class="main-content">
+        <nav class="navbar-top justify-content-center">
+            <h4 class="m-0 text-dark"><strong>@ViewData["Title"]</strong></h4>
         </nav>
 
         <main role="main" class="py-4">
@@ -180,19 +143,6 @@
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
-
-    <!-- JavaScript para ocultar/mostrar la barra lateral -->
-    <script>
-        document.getElementById("menuToggle").addEventListener("click", function () {
-            let sidebar = document.getElementById("sidebar");
-            let mainContent = document.getElementById("mainContent");
-            let toggleBtn = document.getElementById("menuToggle");
-
-            sidebar.classList.toggle("hidden");
-            mainContent.classList.toggle("full");
-            toggleBtn.classList.toggle("hidden");
-        });
-    </script>
 
 </body>
 </html>
