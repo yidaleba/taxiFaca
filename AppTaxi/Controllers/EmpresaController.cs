@@ -20,7 +20,7 @@ namespace AppTaxi.Controllers
         private readonly I_Empresa _empresa;
         private readonly I_Conductor _conductor;
         private readonly I_Transaccion _transaccion;
-        private int Cupo = 0;
+        
         // Constructor que recibe las dependencias inyectadas.
         public EmpresaController(I_Vehiculo vehiculo, I_Horario horario, I_Propietario propietario, I_Empresa empresa, I_Conductor conductor, I_Transaccion transaccion)
         {
@@ -385,7 +385,8 @@ namespace AppTaxi.Controllers
             else
             {
                 ViewBag.Mensaje = "No se pudo Guardar";
-                return NoContent();
+                TempData["Mensaje"] = "No se pudo Guardar";
+                return RedirectToAction("Editar_Vehiculo", new { IdVehiculo = modelo.Vehiculo.IdVehiculo });
             }
         }
 
@@ -419,7 +420,8 @@ namespace AppTaxi.Controllers
             else
             {
                 ViewBag.Mensaje = "No se pudo Guardar";
-                return NoContent();
+                TempData["Mensaje"] = "No se pudo Guardar";
+                return RedirectToAction("Editar_Vehiculo", new { IdVehiculo = IdVehiculo });
             }
         }
 
@@ -711,7 +713,8 @@ namespace AppTaxi.Controllers
             else
             {
                 ViewBag.Mensaje = "No se pudo Guardar";
-                return NoContent();
+                TempData["Mensaje"] = "No se pudo Guardar";
+                return RedirectToAction("Editar_Conductor", new { IdConductor = modelo.Conductor.IdConductor });
             }
         }
 
@@ -745,7 +748,8 @@ namespace AppTaxi.Controllers
             else
             {
                 ViewBag.Mensaje = "No se pudo Guardar";
-                return NoContent();
+                TempData["Mensaje"] = "No se pudo Guardar";
+                return RedirectToAction("Editar_Conductor", new { IdConductor = IdConductor });
             }
         }
 
@@ -1000,7 +1004,8 @@ namespace AppTaxi.Controllers
             else
             {
                 ViewBag.Mensaje = "No se pudo Guardar";
-                return NoContent();
+                TempData["Mensaje"] = "No se pudo Guardar";
+                return RedirectToAction("Editar_Propietario", new { IdPropietario = modelo.Propietario.IdPropietario });
             }
         }
 
@@ -1034,7 +1039,8 @@ namespace AppTaxi.Controllers
             else
             {
                 ViewBag.Mensaje = "No se pudo Guardar";
-                return NoContent();
+                TempData["Mensaje"] = "No se pudo Guardar";
+                return RedirectToAction("Editar_Propietario", new { IdPropietario = IdPropietario });
             }
         }
 
@@ -1201,7 +1207,8 @@ namespace AppTaxi.Controllers
             else
             {
                 ViewBag.Mensaje = "No se pudo Guardar";
-                return NoContent();
+                TempData["Mensaje"] = "No se pudo Guardar";
+                return RedirectToAction("Editar_Horario", new { IdHorario= modelo.Horario.IdHorario });
             }
 
         }
@@ -1231,8 +1238,9 @@ namespace AppTaxi.Controllers
             }
             else
             {
-                ViewBag.Mensaje = "No se pudo Eliminar";
-                return NoContent();
+                ViewBag.Mensaje = "No se pudo Guardar";
+                TempData["Mensaje"] = "No se pudo Guardar";
+                return RedirectToAction("Editar_Horario", new { IdHorario = IdHorario });
             }
         }
 
@@ -1281,22 +1289,45 @@ namespace AppTaxi.Controllers
             // Asignar el IdConductor al horario
             modelo.Horario.IdConductor = modelo.Conductor.IdConductor;
 
-            // Guardar el horario
-            bool respuesta = await _horario.Guardar(modelo.Horario, login);
+            List<Horario> horarios = await _horario.Lista(login);
 
-            if (respuesta)
+            bool existeConflicto = horarios.Any(h =>
+                h.Fecha.Date == modelo.Horario.Fecha.Date &&
+                (h.IdVehiculo == modelo.Horario.IdVehiculo || h.IdConductor == modelo.Horario.IdConductor) &&
+                (modelo.Horario.HoraInicio < h.HoraFin && modelo.Horario.HoraFin > h.HoraInicio)
+            );
+
+            if (!existeConflicto)
             {
+                // No existe conflicto, se puede guardar el horario
+                bool respuesta = await _horario.Guardar(modelo.Horario, login);
 
-                ViewBag.Mensaje = "Horario guardado correctamente.";
-                Transaccion t = Crear_Transaccion("Guardar", "Horario");
-                bool guardar = await _transaccion.Guardar(t, login);
-                return RedirectToAction("Ver_Horario", new { IdConductor = modelo.Conductor.IdConductor });
+                if (respuesta)
+                {
+
+                    ViewBag.Mensaje = "Horario guardado correctamente.";
+                    Transaccion t = Crear_Transaccion("Guardar", "Horario");
+                    bool guardar = await _transaccion.Guardar(t, login);
+                    return RedirectToAction("Ver_Horario", new { IdConductor = modelo.Conductor.IdConductor });
+                }
+                else
+                {
+                    ViewBag.Mensaje = "No se pudo Guardar el Horario";
+                    TempData["Mensaje"] = "No se pudo Guardar  el Horario";
+                    return RedirectToAction("Asignar_Horario", new { IdConductor = modelo.Conductor.IdConductor });
+                }
             }
             else
             {
-                ViewBag.Mensaje = "No se pudo guardar el horario.";
-                return NoContent();
+                TempData["Mensaje"] = "Ya hay un horario asignado en ese horario";
+
+                ViewBag.Mensaje = "Ya hay un horario asignado en ese horario";
+
+                return RedirectToAction("Asignar_Horario", new { IdConductor = modelo.Conductor.IdConductor });
+                
             }
+            // Guardar el horario
+            
         }
 
         [HttpPost]
@@ -1315,7 +1346,30 @@ namespace AppTaxi.Controllers
             var empresa = empresas.FirstOrDefault(e => e.IdUsuario == usuario.IdUsuario);
 
             ViewBag.Cupos = empresa.Cupos - await Cupos();
-            // Crear la lista de horarios
+
+            // Obtener todos los horarios existentes (se podría filtrar por rango de fechas si la cantidad es grande)
+            List<Horario> horariosExistentes = await _horario.Lista(login);
+
+            // Verificar conflicto para cada fecha en el rango
+            for (var fecha = FechaInicio; fecha <= FechaFin; fecha = fecha.AddDays(1))
+            {
+                bool existeConflicto = horariosExistentes.Any(h =>
+                    h.Fecha.Date == fecha.Date &&
+                    (h.IdVehiculo == IdVehiculo || h.IdConductor == modelo.Conductor.IdConductor) &&
+                    (HoraInicio < h.HoraFin && HoraFin > h.HoraInicio)
+                );
+
+                if (existeConflicto)
+                {
+                    TempData["Mensaje"] = "Ya hay un horario asignado en el rango de fechas y horas asignadas";
+
+                    ViewBag.Mensaje = "Ya hay un horario asignado en el rango de fechas y horas asignadas";
+
+                    return RedirectToAction("Asignar_Horario", new { IdConductor = modelo.Conductor.IdConductor });
+                }
+            }
+
+            // Si no hay conflictos, se crea la lista de horarios a guardar
             var horarios = new List<Horario>();
             for (var fecha = FechaInicio; fecha <= FechaFin; fecha = fecha.AddDays(1))
             {
@@ -1340,16 +1394,19 @@ namespace AppTaxi.Controllers
             {
                 Transaccion t = Crear_Transaccion("Guardar", "Horarios");
                 bool guardar = await _transaccion.Guardar(t, login);
-                ViewBag.Mensaje = "Horario guardado correctamente.";
+
+                TempData["Mensaje"] = "Horarios guardados correctamente.";
+                ViewBag.Mensaje = "Horarios guardados correctamente.";
                 return RedirectToAction("Ver_Horario", new { IdConductor = modelo.Conductor.IdConductor });
             }
             else
             {
-                ViewBag.Mensaje = "No se pudo guardar el horario.";
-                return NoContent();
+                ViewBag.Mensaje = "No se pudo Guardar el Horario";
+                TempData["Mensaje"] = "No se pudo Guardar  el Horario";
+                return RedirectToAction("Asignar_Horario", new { IdConductor = modelo.Conductor.IdConductor });
             }
-
         }
+
 
         public async Task<IActionResult> Papelera()
         {

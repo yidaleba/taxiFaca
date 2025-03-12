@@ -6,7 +6,10 @@
 
 <p class="text-sm-center"><strong>Cupos Disponibles : </strong>@ViewBag.Cupos</p>
 <br />
-
+@if (TempData["Mensaje"] != null)
+{
+        <div class="alert alert-info text-center">@TempData["Mensaje"]</div>
+}
 <div class="container mt-4">
     <div class="card shadow-lg rounded">
         <div class="card-header bg-primary text-white">

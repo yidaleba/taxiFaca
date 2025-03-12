@@ -7,7 +7,10 @@
 <br />
 
 <h1 class="mb-4 text-center text-primary">Vehículos de la empresa</h1>
-
+@if (TempData["Mensaje"] != null)
+{
+    <div class="alert alert-info text-center">@TempData["Mensaje"]</div>
+}
 <div class="d-flex justify-content-between align-items-center mb-3">
     <a asp-action="Agregar_Vehiculo" asp-controller="Empresa" class="btn btn-outline-success">
         <strong>➕ Agregar Vehículo</strong>
