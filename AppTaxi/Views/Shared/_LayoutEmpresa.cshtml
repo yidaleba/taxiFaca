@@ -65,8 +65,8 @@
         /* Estilos del botón de menú */
         .menu-toggle {
             position: fixed;
-            bottom: 15px; /* Lo coloca en la parte inferior */
-            left: 15px; /* Lo mantiene alineado a la izquierda */
+            bottom: 15px;
+            left: 15px;
             background: #2C3E50;
             color: white;
             border: none;
@@ -174,13 +174,12 @@
 
     <!-- Sidebar lateral -->
     <div class="sidebar">
-        <div class="logo">Faca Taxis</div>
+        <div class="logo">Empresa</div>
         <ul>
             <li><a asp-controller="Empresa" asp-action="Inicio"><i class="fas fa-home"></i> Inicio</a></li>
+            <li><a asp-controller="Empresa" asp-action="Conductores"><i class="fas fa-id-badge"></i> Conductores</a></li>
             <li><a asp-controller="Empresa" asp-action="Vehiculos"><i class="fas fa-car"></i> Vehículos</a></li>
-            <li><a asp-controller="Empresa" asp-action="Conductores"><i class="fas fa-user-tie"></i> Conductores</a></li>
-            <li><a asp-controller="Empresa" asp-action="Propietarios"><i class="fas fa-users"></i> Propietarios</a></li>
-            <li><a asp-controller="Empresa" asp-action="Papelera"><i class="fas fa-trash"></i> Papelera</a></li>
+            <li><a asp-controller="Empresa" asp-action="Reportes"><i class="fas fa-chart-line"></i> Reportes</a></li>
             <li><a class="logout-btn" asp-controller="Inicio" asp-action="CerrarSesion"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</a></li>
         </ul>
     </div>
@@ -205,14 +204,32 @@
     @await RenderSectionAsync("Scripts", required: false)
 
     <script>
-        function toggleSidebar() {
+        document.addEventListener("DOMContentLoaded", function () {
             let sidebar = document.querySelector(".sidebar");
             let content = document.querySelector(".main-content");
 
-            // Alternar clases para mostrar u ocultar la sidebar
-            sidebar.classList.toggle("closed");
-            content.classList.toggle("full-width");
-        }
+            // Verificar el estado guardado en localStorage
+            if (localStorage.getItem("sidebarState") === "closed") {
+                sidebar.classList.add("closed");
+                content.classList.add("full-width");
+                }
+
+                    // Función para alternar la sidebar y guardar el estado
+                    function toggleSidebar() {
+                        sidebar.classList.toggle("closed");
+                        content.classList.toggle("full-width");
+
+                        // Guardar el estado en localStorage
+                        if (sidebar.classList.contains("closed")) {
+                            localStorage.setItem("sidebarState", "closed");
+                        } else {
+                            localStorage.setItem("sidebarState", "open");
+                        }
+                    }
+
+                    // Asignar evento al botón de menú
+                    document.querySelector(".menu-toggle").addEventListener("click", toggleSidebar);
+                });
     </script>
 
 </body>
