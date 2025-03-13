@@ -942,6 +942,10 @@ namespace AppTaxi.Controllers
 
             var empresa = empresasTot.Where(e => e.IdUsuario == usuario.IdUsuario).FirstOrDefault();
             ViewBag.Cupos = empresa.Cupos - await Cupos();
+
+            var ocrService = new ValidacionDocumentos();
+            string texto = ocrService.ProcesarImagenConOCR("wwwroot/temp/Cedula3.png");
+            TempData["Mensaje"] = texto;
             return View(modelo);
         }
 
