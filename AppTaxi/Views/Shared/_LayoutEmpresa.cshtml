@@ -65,8 +65,8 @@
         /* Estilos del botón de menú */
         .menu-toggle {
             position: fixed;
-            bottom: 15px;
-            left: 15px;
+            top: 15px; /* Lo mueve a la parte superior */
+            left: 15px; /* Lo mantiene alineado a la izquierda */
             background: #2C3E50;
             color: white;
             border: none;
@@ -172,9 +172,12 @@
     <!-- Botón para abrir/cerrar el menú -->
     <button class="menu-toggle" onclick="toggleSidebar()">☰ Menú</button>
 
+    
     <!-- Sidebar lateral -->
     <div class="sidebar">
-        <div class="logo">Empresa</div>
+        <br />
+        <br />
+        <div class="logo">Taxis Faca</div>
         <ul>
             <li><a asp-controller="Empresa" asp-action="Inicio"><i class="fas fa-home"></i> Inicio</a></li>
             <li><a asp-controller="Empresa" asp-action="Conductores"><i class="fas fa-id-badge"></i> Conductores</a></li>
