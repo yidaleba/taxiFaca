@@ -13,9 +13,7 @@
 
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h5 class="mb-0">👤 Señor/a <strong>@Model.Conductor.Nombre</strong></h5>
-        <a asp-action="Asignar_Horario" asp-controller="Empresa" asp-route-IdConductor="@Model.Conductor.IdConductor" class="btn btn-outline-success">
-            ➕ Asignar Horario
-        </a>
+        
     </div>
 
     @if (Model.Conductor != null && Model.Horarios != null && Model.Horarios.Any())

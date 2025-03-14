@@ -659,13 +659,43 @@ namespace AppTaxi.Controllers
             modelo.Conductor.Estado = true;
 
             // Convertir archivos PDF a Base64
-            if (modelo.Archivo_1 != null)
+            if (modelo.Archivo_1 != null && modelo.Archivo_1.Length > 0)
             {
-                using (var ms = new MemoryStream())
+                try
                 {
-                    await modelo.Archivo_1.CopyToAsync(ms);
-                    modelo.Conductor.DocumentoCedula = Convert.ToBase64String(ms.ToArray());
+                    ValidacionDocumentos sistema = new ValidacionDocumentos();
+
+                    // Aplicar OCR al PDF y extraer texto
+                    string textoExtraido = sistema.ProcesarPdfConOCR(modelo.Archivo_1);
+
+                    // Validar si el documento es una cédula
+                    bool esDocumento = sistema.Contiene(textoExtraido.ToUpper(), new string[] { "REPÚBLICA", "COLOMBIA", "IDENTIFICACIÓN", "PERSONAL" }, 'O');
+
+                    if (esDocumento)
+                    {
+                        using (var ms = new MemoryStream())
+                        {
+                            await modelo.Archivo_1.CopyToAsync(ms);
+                            modelo.Conductor.DocumentoCedula = Convert.ToBase64String(ms.ToArray());
+                        }
+                    }
+                    else
+                    {
+                        //TempData["Mensaje"] = textoExtraido;
+                        TempData["Mensaje"] = $"El documento ingresado no es una Cédula o no es legible";
+                        return RedirectToAction("Editar_Conductor", new {IdConductor = modelo.Conductor.IdConductor});
+                    }
                 }
+                catch (Exception ex)
+                {
+                    ViewBag.Mensaje = $"Error al procesar el documento: {ex.Message}";
+                    return RedirectToAction("Editar_Conductor", new { IdConductor = modelo.Conductor.IdConductor });
+                }
+            }
+            else
+            {
+                ViewBag.Mensaje = "No se ha subido ningún archivo.";
+                return View("Agregar_Conductor");
             }
 
             if (modelo.Archivo_2 != null)
@@ -813,7 +843,7 @@ namespace AppTaxi.Controllers
                     string textoExtraido = sistema.ProcesarPdfConOCR(modelo.Archivo_1);
 
                     // Validar si el documento es una cédula
-                    bool esDocumento = sistema.Contiene(textoExtraido.ToUpper(), new string[] { "REPÚBLICA", "COLOMBIA" }, 'O');
+                    bool esDocumento = sistema.Contiene(textoExtraido.ToUpper(), new string[] { "REPÚBLICA", "COLOMBIA", "IDENTIFICACIÓN","PERSONAL"}, 'O');
 
                     if (esDocumento)
                     {
@@ -870,6 +900,10 @@ namespace AppTaxi.Controllers
                     await modelo.Archivo_4.CopyToAsync(ms);
                     modelo.Conductor.Foto = Convert.ToBase64String(ms.ToArray());
                 }
+            }
+            else
+            {
+                modelo.Conductor.Foto = "N/F";
             }
             Encriptado enc = new Encriptado();
             string contrasenaBase;
@@ -1297,12 +1331,14 @@ namespace AppTaxi.Controllers
             var empresa = empresas.FirstOrDefault(e => e.IdUsuario == usuario.IdUsuario);
 
             ViewBag.Cupos = empresa.Cupos - await Cupos();
+            var horario = await _horario.Obtener(IdHorario, login);
             bool respuesta = await _horario.Eliminar(IdHorario, login);
             if (respuesta)
             {
                 Transaccion t = Crear_Transaccion("Eliminar", "Horario");
                 bool guardar = await _transaccion.Guardar(t, login);
-                return RedirectToAction("Conductores");
+                TempData["Mensaje"] = "Eliminado Correctamente";
+                return RedirectToAction("Ver_Horario_Conductor",new {IdConductor = horario.IdConductor});
             }
             else
             {

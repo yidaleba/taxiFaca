@@ -195,7 +195,13 @@
                                 <input asp-for="SoatVehiculo" type="checkbox" /> <label asp-for="SoatVehiculo">SOAT</label>
                             </div>
                             <div class="col-md-4">
+                                <input asp-for="VenceSoat" type="checkbox" /> <label asp-for="VenceSoat">Vencimiento SOAT</label>
+                            </div>
+                            <div class="col-md-4">
                                 <input asp-for="TecnicoMecanicaVehiculo" type="checkbox" /> <label asp-for="TecnicoMecanicaVehiculo">Técnico Mecánica</label>
+                            </div>
+                            <div class="col-md-4">
+                                <input asp-for="VenceTecnicoMecanica" type="checkbox" /> <label asp-for="VenceTecnicoMecanica">Vencimiento Técnico Mecánica</label>
                             </div>
                             <div class="col-md-4">
                                 <input asp-for="IdPropietarioVehiculo" type="checkbox" /> <label asp-for="IdPropietarioVehiculo">Propietario</label>
@@ -311,6 +317,8 @@
 
         <br />
 
-        <button type="submit" class="btn btn-primary">Generar Reporte</button>
+        <div class="text-center">
+            <button type="submit" class="btn btn-primary">Generar Reporte</button>
+        </div>
     </div>
 </form>

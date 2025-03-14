@@ -52,6 +52,8 @@
         public bool TecnicoMecanicaVehiculo { get; set; }
         public bool IdPropietarioVehiculo { get; set; }
         public bool IdEmpresaVehiculo { get; set; }
+        public bool VenceSoat { get; set; }
+        public bool VenceTecnicoMecanica { get; set; }
 
         // Usuario
         public bool IdUsuario { get; set; }

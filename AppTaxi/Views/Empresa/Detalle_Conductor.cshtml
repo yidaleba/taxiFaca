@@ -89,7 +89,7 @@
 
             <!-- Botones de acción -->
             <div class="d-flex justify-content-center mt-4 gap-2">
-                <a asp-action="Ver_Horario" asp-controller="Empresa" asp-route-IdConductor="@Model.IdConductor" class="btn btn-secondary">Consultar Horarios</a>
+                <a asp-action="Ver_Horario_Conductor" asp-controller="Empresa" asp-route-IdConductor="@Model.IdConductor" class="btn btn-secondary">Consultar Horarios</a>
                 <a asp-action="Editar_Conductor" asp-controller="Empresa" asp-route-IdConductor="@Model.IdConductor" class="btn btn-warning">Editar</a>
                 <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal">Eliminar</button>
                 <a href="javascript:history.back()" class="btn btn-success">Volver</a>
