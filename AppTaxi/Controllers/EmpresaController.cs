@@ -1192,7 +1192,7 @@ namespace AppTaxi.Controllers
         }
 
         //------------------------- Horario ----------------------------------------------
-        public async Task<IActionResult> Ver_Horario(int IdConductor)
+        public async Task<IActionResult> Ver_Horario_Conductor(int IdConductor)
         {
             var usuario = GetUsuarioFromSession();
             if (usuario == null)
@@ -1229,10 +1229,13 @@ namespace AppTaxi.Controllers
             ModeloVista modelo = new ModeloVista();
 
             var vehiculos = await _vehiculo.Lista(login);
+            var conductores = await _conductor.Lista(login);
             var empresas = await _empresa.Lista(login);
             int IdEmpresa = empresas.Where(e => e.IdUsuario == usuario.IdUsuario).FirstOrDefault().IdEmpresa;
 
             modelo.Vehiculos = vehiculos?.Where(v => v.IdEmpresa == IdEmpresa && v.Estado).ToList();
+            modelo.Conductores = conductores?.Where(c => c.IdEmpresa == IdEmpresa && c.Estado).ToList();
+
             modelo.Horario = await _horario.Obtener(IdHorario, login);
             modelo.Conductor = await _conductor.Obtener(modelo.Horario.IdConductor, login);
 
@@ -1604,6 +1607,94 @@ namespace AppTaxi.Controllers
             }
         }
 
+        public async Task<IActionResult> Horarios()
+        {
+            var usuario = GetUsuarioFromSession();
+            if (usuario == null)
+            {
+                ViewBag.Mensaje = "Usuario no autenticado.";
+                return RedirectToAction("Login", "Inicio");
+            }
+
+            var login = CreateLogin(usuario);
+
+            var empresas = await _empresa.Lista(login);
+            var empresa = empresas.FirstOrDefault(e => e.IdUsuario == usuario.IdUsuario);
+
+            ViewBag.Cupos = empresa.Cupos - await Cupos();
+
+            var conductoresTotales = await _conductor.Lista(login);
+            var vehiculosTotales = await _vehiculo.Lista(login);
+
+            ModeloVista modelo = new ModeloVista();
+            modelo.Conductores = conductoresTotales.Where(i => i.IdEmpresa == empresa.IdEmpresa && i.Estado).ToList();
+            modelo.Vehiculos = vehiculosTotales.Where(i => i.IdEmpresa == empresa.IdEmpresa && i.Estado).ToList();
+            if (modelo.Conductores.Count() > 0)
+            {
+
+                int i = 0;
+                while (true)
+                {
+                    modelo.Conductores[i].Contador = i + 1;
+                    if (i == modelo.Conductores.Count() - 1)
+                    {
+                        break;
+                    }
+                    else
+                    {
+                        i++;
+                    }
+                }
+            }
+
+            if (modelo.Vehiculos.Count() > 0)
+            {
+
+                int i = 0;
+                while (true)
+                {
+                    modelo.Vehiculos[i].Contador = i + 1;
+                    if (i == modelo.Vehiculos.Count() - 1)
+                    {
+                        break;
+                    }
+                    else
+                    {
+                        i++;
+                    }
+                }
+            }
+            return View(modelo);
+        }
+
+                
+        public async Task<IActionResult> Ver_Horario_Vehiculo(int IdVehiculo)
+        {
+            var usuario = GetUsuarioFromSession();
+            if (usuario == null)
+            {
+                ViewBag.Mensaje = "Usuario no autenticado.";
+                return RedirectToAction("Login", "Inicio");
+            }
+
+            var login = CreateLogin(usuario);
+            ModeloVista modelo = new ModeloVista();
+            modelo.Vehiculo = await _vehiculo.Obtener(IdVehiculo, login);
+            var Horarios = await _horario.Lista(login);
+            var conductoresTotales = await _conductor.Lista(login);
+            
+
+            modelo.Horarios = Horarios?.Where(h => h.IdVehiculo == IdVehiculo).ToList();
+
+            List<Empresa> empresasTot = await _empresa.Lista(login);
+
+            var empresa = empresasTot.Where(e => e.IdUsuario == usuario.IdUsuario).FirstOrDefault();
+
+            modelo.Conductores = conductoresTotales.Where(c => c.IdEmpresa == empresa.IdEmpresa).ToList();
+            ViewBag.Cupos = empresa.Cupos - await Cupos();
+
+            return View(modelo);
+        }
 
     }
 

@@ -1,31 +1,33 @@
 ﻿@model ModeloVista
 @{
-    ViewData["Title"] = "Ver Horarios";
+    ViewData["Title"] = "Ver Horario por Vehiculo";
     Layout = "~/Views/Shared/_LayoutEmpresa.cshtml";
 }
+
 <p class="text-sm-center"><strong>Cupos Disponibles : </strong>@ViewBag.Cupos</p>
 <br />
 @if (TempData["Mensaje"] != null)
 {
     <div class="alert alert-info text-center">@TempData["Mensaje"]</div>
 }
+
 <div class="container mt-4">
 
-    <div class="d-flex justify-content-between align-items-center mb-3">
-        <h5 class="mb-0">👤 Señor/a <strong>@Model.Conductor.Nombre</strong></h5>
-        <a asp-action="Asignar_Horario" asp-controller="Empresa" asp-route-IdConductor="@Model.Conductor.IdConductor" class="btn btn-outline-success">
-            ➕ Asignar Horario
-        </a>
+    <div class="d-flex justify-content-center align-items-center mb-3">
+        <h5 class="mb-0 text-center" ><strong><i>Vehiculo :</i> @Model.Vehiculo.Placa</strong></h5>
+        
     </div>
 
-    @if (Model.Conductor != null && Model.Horarios != null && Model.Horarios.Any())
+    @if (Model.Vehiculo != null && Model.Horarios != null && Model.Horarios.Any())
     {
         <div class="table-responsive">
             <table class="table table-hover table-striped text-center shadow">
                 <thead class="table-dark">
                     <tr>
                         <th scope="col">#</th>
-                        <th scope="col">Vehículo</th>
+                        <th scope="col">Conductor</th>
+                        <th scope="col">Correo</th>
+                        <th scope="col">ID Conductor</th>
                         <th scope="col">Fecha</th>
                         <th scope="col">Desde</th>
                         <th scope="col">Hasta</th>
@@ -35,10 +37,12 @@
                 <tbody>
                     @foreach (var item in Model.Horarios)
                     {
-                        var vehiculo = Model.Vehiculos.FirstOrDefault(v => v.IdVehiculo == item.IdVehiculo);
+                        
                         <tr>
                             <td><strong>@item.IdHorario</strong></td>
-                            <td>@(vehiculo != null ? vehiculo.Placa : "N/A")</td>
+                            <td>@Model.Conductores.Where(c => c.IdConductor == item.IdConductor).FirstOrDefault().Nombre</td>
+                            <td>@Model.Conductores.Where(c => c.IdConductor == item.IdConductor).FirstOrDefault().Correo</td>
+                            <td>@Model.Conductores.Where(c => c.IdConductor == item.IdConductor).FirstOrDefault().IdConductor</td>
                             <td>@item.Fecha.ToString("yyyy-MM-dd")</td>
                             <td>@item.HoraInicio</td>
                             <td>@item.HoraFin</td>
@@ -76,3 +80,6 @@
         }
     }
 </script>
+
+
+

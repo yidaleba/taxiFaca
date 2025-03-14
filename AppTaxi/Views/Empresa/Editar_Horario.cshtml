@@ -17,15 +17,21 @@
 
         <div class="card shadow-lg">
             <div class="card-header bg-primary text-white">
-                <h5 class="mb-0">Horario del Conductor - ID: @Model.Conductor.IdConductor</h5>
+                <h5 class="mb-0">Horario a Editar N° @Model.Horario.IdHorario</h5>
             </div>
             <div class="card-body">
                 <form asp-action="Guardar_Horario" asp-controller="Empresa" method="post">
 
                     <div class="row mb-3">
                         <div class="col-md-6">
-                            <label class="form-label"><strong>ID Conductor:</strong></label>
-                            <input type="number" readonly class="form-control" asp-for="Conductor.IdConductor">
+                            <label class="form-label"><strong>Conductor Asignado:</strong></label>
+                            <select class="form-control" asp-for="Horario.IdConductor" required>
+                                <option value="">Seleccione un conductor</option>
+                                @foreach (var conductor in Model.Conductores)
+                                {
+                                    <option value="@conductor.IdConductor">@conductor.Nombre</option>
+                                }
+                            </select>
                         </div>
                         <div class="col-md-6">
                             <label class="form-label"><strong>ID Horario:</strong></label>

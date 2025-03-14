@@ -1,0 +1,137 @@
+﻿@model ModeloVista
+@{
+    ViewData["Title"] = "Horarios";
+    Layout = "~/Views/Shared/_LayoutEmpresa.cshtml";
+}
+
+<p class="text-sm-center"><strong>Cupos Disponibles : </strong>@ViewBag.Cupos</p>
+<br />
+@if (TempData["Mensaje"] != null)
+{
+    <div class="alert alert-info text-center">@TempData["Mensaje"]</div>
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <a asp-action="Agregar_Horario" asp-controller="Empresa" class="btn btn-outline-success">
+        <strong>➕ Agregar Horario</strong>
+    </a>
+
+    <input type="text" id="buscarHorario" class="form-control w-25" placeholder="🔍 Buscar por conductor..." onkeyup="filtrarHorarios()">
+</div>
+<div class="container">
+    <!-- Conductores -->
+    <h3 class="mb-4 text-center text-primary">Conductores</h3>
+    <div class="d-flex justify-content-between align-items-center mb-3">
+
+        <input type="text" id="buscarConductor" class="form-control w-25" placeholder="🔍 Buscar por nombre..." onkeyup="filtrarTabla('buscarConductor', 'tablaConductores')">
+    </div>
+
+    @if (Model != null && Model.Conductores.Any())
+    {
+        <div class="table-responsive">
+            <table class="table table-hover table-striped text-center" id="tablaConductores">
+                <thead class="table-dark">
+                    <tr>
+                        <th>ID</th>
+                        <th>Estado</th>
+                        <th>Nombre</th>
+
+                        <th>Cédula</th>
+                        <th>Teléfono</th>
+                        <th>Correo</th>
+                        <th>Ciudad</th>
+                        <th>Detalles</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Conductores)
+                    {
+                        <tr data-search="@item.Nombre">
+                            <td>@item.IdConductor</td>
+                            <td><span class="badge @(item.Estado ? "bg-success" : "bg-danger")">@(item.Estado ? "Activo" : "Inactivo")</span></td>
+                            <td>@item.Nombre</td>
+
+                            <td>@item.NumeroCedula</td>
+                            <td>@item.Telefono</td>
+                            <td>@item.Correo</td>
+                            <td>@item.Ciudad</td>
+                            <td>
+                                <a asp-action="Ver_Horario_Conductor" asp-route-IdConductor="@item.IdConductor" class="btn btn-outline-primary btn-sm">Horarios</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-warning text-center mt-4">
+            <strong>⚠ No se encontraron conductores.</strong>
+        </div>
+    }
+
+    <hr class="my-5">
+
+    <!-- Vehículos -->
+    <h3 class="mb-4 text-center text-primary">Vehículos</h3>
+    <div class="d-flex justify-content-between align-items-center mb-3">
+
+        <input type="text" id="buscarVehiculo" class="form-control w-25" placeholder="🔍 Buscar por placa..." onkeyup="filtrarTabla('buscarVehiculo', 'tablaVehiculos')">
+    </div>
+
+    @if (Model != null && Model.Vehiculos.Any())
+    {
+        <div class="table-responsive">
+            <table class="table table-hover table-striped text-center" id="tablaVehiculos">
+                <thead class="table-dark">
+                    <tr>
+                        <th>ID</th>
+                        <th>Estado</th>
+                        <th>Placa</th>
+                        <th>SOAT</th>
+                        <th>Técnico Mecánica</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Vehiculos)
+                    {
+                        <tr data-search="@item.Placa">
+                            <td>@item.IdVehiculo</td>
+                            <td><span class="badge @(item.Estado ? "bg-success" : "bg-danger")">@(item.Estado ? "Habilitado" : "No Habilitado")</span></td>
+                            <td>@item.Placa</td>
+                            <td>@Html.Raw(item.ObtenerEstadoDocumento(item.VenceSoat))</td>
+                            <td>@Html.Raw(item.ObtenerEstadoDocumento(item.VenceTecnicoMecanica))</td>
+                            <td>
+                                <a asp-action="Ver_Horario_Vehiculo" asp-route-IdVehiculo="@item.IdVehiculo" class="btn btn-outline-primary btn-sm">Horarios</a>
+                               
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-warning text-center mt-4">
+            <strong>⚠ No se encontraron vehículos eliminados.</strong>
+        </div>
+    }
+
+    <hr class="my-5">
+</div>
+
+
+<script>
+    function filtrarTabla(inputId, tableId) {
+        let input = document.getElementById(inputId).value.toLowerCase();
+        let filas = document.querySelectorAll(`#${tableId} tbody tr`);
+
+        filas.forEach(fila => {
+            let contenido = fila.getAttribute("data-search").toLowerCase();
+            fila.style.display = contenido.includes(input) ? "" : "none";
+        });
+    }
+</script>
