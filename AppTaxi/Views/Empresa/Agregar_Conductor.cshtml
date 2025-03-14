@@ -117,13 +117,35 @@
     </div>
 </div>
 
-<p>@ViewBag.Mensaje</p>
+<br />
+<p class="text-center">@ViewBag.Mensaje</p>
 @section Scripts {
     <script>
         $(document).ready(function () {
             var exito = "@ViewBag.Exito";
             if (exito === "True") {
                 $('#successModal').modal('show'); // Muestra el modal automáticamente si el guardado fue exitoso
+            }
+        });
+        // Validación de correo antes de enviar el formulario
+        $("form").submit(function (event) {
+            var email = $("#Conductor_Correo").val(); // Obtiene el valor del campo de correo
+            var dominiosPermitidos = ["@@gmail.com", "@@hotmail.com", "@@outlook.com"];
+            var esValido = false;
+
+            // Recorre la lista de dominios permitidos y verifica si el correo tiene alguno de ellos
+            for (var i = 0; i < dominiosPermitidos.length; i++) {
+                if (email.endsWith(dominiosPermitidos[i])) {
+                    esValido = true;
+                    break;
+                }
+            }
+
+            // Si el correo no es válido, muestra una alerta y cancela el envío del formulario
+            if (!esValido) {
+                event.preventDefault(); // Evita que el formulario se envíe
+                alert("⚠️ El correo debe ser de dominio @@gmail.com, @@hotmail.com o @@outlook.com");
+                return false;
             }
         });
     </script>

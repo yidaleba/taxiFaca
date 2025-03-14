@@ -14,7 +14,7 @@
 <div class="card shadow-lg border-0 rounded-3">
     <h5 class="card-header bg-primary text-white text-center py-3">Ingrese los Datos</h5>
     <div class="card-body">
-        <form asp-action="Crear_Propietario" asp-controller="Empresa" method="post" class="needs-validation" novalidate enctype="multipart/form-data">
+        <form asp-action="Crear_Propietario" asp-controller="Empresa" method="post" enctype="multipart/form-data">
 
             <div class="row mb-3">
                 <label class="col-sm-3 col-form-label"><strong>Foto:</strong></label>
@@ -107,8 +107,8 @@
         </div>
     </div>
 </div>
-
-<p>@ViewBag.Mensaje</p>
+<br>
+<p class="text-center">@ViewBag.Mensaje</p>
 @section Scripts {
     <script>
         $(document).ready(function () {
@@ -116,6 +116,8 @@
             if (exito === "True") {
                 $('#successModal').modal('show'); // Muestra el modal automáticamente si el guardado fue exitoso
             }
+
         });
     </script>
 }
+
