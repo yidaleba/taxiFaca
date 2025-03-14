@@ -803,13 +803,43 @@ namespace AppTaxi.Controllers
             }
 
             // Convertir archivos PDF a Base64
-            if (modelo.Archivo_1 != null)
+            if (modelo.Archivo_1 != null && modelo.Archivo_1.Length > 0)
             {
-                using (var ms = new MemoryStream())
+                try
                 {
-                    await modelo.Archivo_1.CopyToAsync(ms);
-                    modelo.Conductor.DocumentoCedula = Convert.ToBase64String(ms.ToArray());
+                    ValidacionDocumentos sistema = new ValidacionDocumentos();
+
+                    // Aplicar OCR al PDF y extraer texto
+                    string textoExtraido = sistema.ProcesarPdfConOCR(modelo.Archivo_1);
+
+                    // Validar si el documento es una cédula
+                    bool esDocumento = sistema.Contiene(textoExtraido.ToUpper(), new string[] { "REPÚBLICA", "COLOMBIA" }, 'O');
+
+                    if (esDocumento)
+                    {
+                        using (var ms = new MemoryStream())
+                        {
+                            await modelo.Archivo_1.CopyToAsync(ms);
+                            modelo.Conductor.DocumentoCedula = Convert.ToBase64String(ms.ToArray());
+                        }
+                    }
+                    else
+                    {
+                        //TempData["Mensaje"] = textoExtraido;
+                        ViewBag.Mensaje = $"El documento ingresado no es una Cédula o no es legible";
+                        return View("Agregar_Conductor");
+                    }
                 }
+                catch (Exception ex)
+                {
+                    ViewBag.Mensaje = $"Error al procesar el documento: {ex.Message}";
+                    return View("Agregar_Conductor");
+                }
+            }
+            else
+            {
+                ViewBag.Mensaje = "No se ha subido ningún archivo.";
+                return View("Agregar_Conductor");
             }
 
 
@@ -942,6 +972,10 @@ namespace AppTaxi.Controllers
 
             var empresa = empresasTot.Where(e => e.IdUsuario == usuario.IdUsuario).FirstOrDefault();
             ViewBag.Cupos = empresa.Cupos - await Cupos();
+
+            //var ocrService = new ValidacionDocumentos();
+            //string texto = ocrService.ProcesarImagenConOCR("wwwroot/temp/Cedula3.png");
+            //TempData["Mensaje"] = texto;
             return View(modelo);
         }
 
@@ -1098,14 +1132,45 @@ namespace AppTaxi.Controllers
                 }
             }
 
-            if (modelo.Archivo_1 != null)
+            if (modelo.Archivo_1 != null && modelo.Archivo_1.Length > 0)
             {
-                using (var ms = new MemoryStream())
+                try
                 {
-                    await modelo.Archivo_1.CopyToAsync(ms);
-                    modelo.Propietario.DocumentoCedula = Convert.ToBase64String(ms.ToArray());
+                    ValidacionDocumentos sistema = new ValidacionDocumentos();
+
+                    // Aplicar OCR al PDF y extraer texto
+                    string textoExtraido = sistema.ProcesarPdfConOCR(modelo.Archivo_1);
+
+                    // Validar si el documento es una cédula
+                    bool esDocumento = sistema.Contiene(textoExtraido.ToUpper(), new string[] { "REPÚBLICA", "COLOMBIA" }, 'O');
+
+                    if (esDocumento)
+                    {
+                        using (var ms = new MemoryStream())
+                        {
+                            await modelo.Archivo_1.CopyToAsync(ms);
+                            modelo.Propietario.DocumentoCedula = Convert.ToBase64String(ms.ToArray());
+                        }
+                    }
+                    else
+                    {
+                        //TempData["Mensaje"] = textoExtraido;
+                        ViewBag.Mensaje = $"El documento ingresado no es una Cédula o no es legible";
+                        return View("Agregar_Propietario");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    ViewBag.Mensaje = $"Error al procesar el documento: {ex.Message}";
+                    return View("Agregar_Propietario");
                 }
             }
+            else
+            {
+                ViewBag.Mensaje = "No se ha subido ningún archivo.";
+                return View("Agregar_Propietario");
+            }
+
             // Guarda el propietario.
             bool respuesta = await _propietario.Guardar(modelo.Propietario, login);
 
