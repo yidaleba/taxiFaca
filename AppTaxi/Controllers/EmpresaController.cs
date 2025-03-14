@@ -1312,7 +1312,7 @@ namespace AppTaxi.Controllers
             }
         }
 
-        public async Task<IActionResult> Asignar_Horario(int IdConductor)
+        public async Task<IActionResult> Asignar_Horario()
         {
             var usuario = GetUsuarioFromSession();
             if (usuario == null)
@@ -1326,11 +1326,12 @@ namespace AppTaxi.Controllers
 
             var vehiculos = await _vehiculo.Lista(login);
             var empresas = await _empresa.Lista(login);
+            var conductores = await _conductor.Lista(login);
             int IdEmpresa = empresas.Where(e => e.IdUsuario == usuario.IdUsuario).FirstOrDefault().IdEmpresa;
 
             modelo.Vehiculos = vehiculos?.Where(v => v.IdEmpresa == IdEmpresa && v.Estado).ToList();
 
-            modelo.Conductor = await _conductor.Obtener(IdConductor, login);
+            modelo.Conductores = conductores.Where(c => c.IdEmpresa == IdEmpresa && c.Estado).ToList();
             List<Empresa> empresasTot = await _empresa.Lista(login);
 
             var empresa = empresasTot.Where(e => e.IdUsuario == usuario.IdUsuario).FirstOrDefault();
