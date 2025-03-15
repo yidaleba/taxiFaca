@@ -407,9 +407,13 @@ namespace AppTaxi.Controllers
             }
 
             var login = CreateLogin(usuario);
+            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+            var stream = new MemoryStream();
+
 
             using (var excelPackage = new ExcelPackage())
             {
+
                 // Procesar cada modelo según los campos seleccionados
                 await ProcesarModelo<Conductor>(excelPackage, campos, login, "Conductor");
                 await ProcesarModelo<Empresa>(excelPackage, campos, login, "Empresa");
@@ -420,45 +424,56 @@ namespace AppTaxi.Controllers
                 await ProcesarModelo<Propietario>(excelPackage, campos, login, "Propietario");
 
                 // Generar el archivo Excel
-                var stream = new MemoryStream();
+                
                 excelPackage.SaveAs(stream);
-                stream.Position = 0;
-
-                return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Reporte.xlsx");
+                
             }
+            stream.Position = 0;
+
+            return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Reporte.xlsx");
         }
 
-        private async Task ProcesarModelo<T>(ExcelPackage excelPackage,ReporteSeleccion campos,Models.Login login,string nombreModelo) where T : class
+        private async Task ProcesarModelo<T>(
+    ExcelPackage excelPackage,
+    ReporteSeleccion campos,
+    Models.Login login,
+    string nombreModelo) where T : class
         {
-            // Obtener las propiedades seleccionadas para el modelo (ej: "NombreEmpresa" → "Nombre")
             var propiedadesSeleccionadas = ObtenerPropiedadesSeleccionadas(campos, nombreModelo);
-
             if (propiedadesSeleccionadas.Count == 0) return;
 
-            // Obtener datos del servicio correspondiente (ej: I_Empresa.Lista())
-            var datos = await ObtenerDatosDesdeServicio<T>(login, nombreModelo);
-
+            var datos = await ObtenerDatosDesdeServicio<T>(login,nombreModelo);
             if (datos == null || datos.Count == 0) return;
 
-            // Crear hoja en Excel
             var worksheet = excelPackage.Workbook.Worksheets.Add(nombreModelo);
 
-            // Escribir encabezados
+            // Encabezados
             for (int i = 0; i < propiedadesSeleccionadas.Count; i++)
             {
                 worksheet.Cells[1, i + 1].Value = propiedadesSeleccionadas[i];
             }
 
-            // Escribir datos
+            // Datos
             for (int row = 0; row < datos.Count; row++)
             {
                 var item = datos[row];
                 for (int col = 0; col < propiedadesSeleccionadas.Count; col++)
                 {
                     var propiedad = typeof(T).GetProperty(propiedadesSeleccionadas[col]);
-                    worksheet.Cells[row + 2, col + 1].Value = propiedad?.GetValue(item)?.ToString() ?? "";
+                    var valor = propiedad?.GetValue(item);
+
+                    // Manejar valores nulos y fechas
+                    worksheet.Cells[row + 2, col + 1].Value = valor switch
+                    {
+                        DateTime date => date.ToString("yyyy-MM-dd"),
+                        TimeSpan time => time.ToString(@"hh\:mm"),
+                        _ => valor?.ToString() ?? ""
+                    };
                 }
             }
+
+            // Ajustar ancho de columnas
+            worksheet.Cells[worksheet.Dimension.Address].AutoFitColumns();
         }
 
 
