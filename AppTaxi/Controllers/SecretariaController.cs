@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Mvc.ActionConstraints;
 using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages;
 using Newtonsoft.Json;
 using OfficeOpenXml;
+using OfficeOpenXml.Style;
+using System.Drawing;
 using System.Transactions;
 
 namespace AppTaxi.Controllers
@@ -433,11 +435,7 @@ namespace AppTaxi.Controllers
             return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Reporte.xlsx");
         }
 
-        private async Task ProcesarModelo<T>(
-    ExcelPackage excelPackage,
-    ReporteSeleccion campos,
-    Models.Login login,
-    string nombreModelo) where T : class
+        private async Task ProcesarModelo<T>(ExcelPackage excelPackage, ReporteSeleccion campos, Models.Login login, string nombreModelo) where T : class
         {
             var propiedadesSeleccionadas = ObtenerPropiedadesSeleccionadas(campos, nombreModelo);
             if (propiedadesSeleccionadas.Count == 0) return;
@@ -450,7 +448,21 @@ namespace AppTaxi.Controllers
             // Encabezados
             for (int i = 0; i < propiedadesSeleccionadas.Count; i++)
             {
+
                 worksheet.Cells[1, i + 1].Value = propiedadesSeleccionadas[i];
+
+            }
+            using (var range = worksheet.Cells["1:1"])
+            {
+
+                range.Style.Font.Bold = true;
+                range.Style.Border.Top.Style = ExcelBorderStyle.Thin;
+                range.Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+                range.Style.Border.Left.Style = ExcelBorderStyle.Thin;
+                range.Style.Border.Right.Style = ExcelBorderStyle.Thin;
+                range.Style.Fill.PatternType = ExcelFillStyle.Solid;
+                range.Style.Fill.BackgroundColor.SetColor(Color.LightBlue);
+
             }
 
             // Datos
