@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ActionConstraints;
 using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages;
 using Newtonsoft.Json;
+using OfficeOpenXml;
 using System.Transactions;
 
 namespace AppTaxi.Controllers
@@ -392,10 +393,106 @@ namespace AppTaxi.Controllers
 
         public IActionResult Reporte()
         {
-
-
             return View();
         }
+
+        public async Task<IActionResult> Generar_Reporte(ReporteSeleccion campos)
+        {
+            // Obtener el usuario autenticado (ajusta según tu lógica de login)
+            var usuario = GetUsuarioFromSession();
+            if (usuario == null)
+            {
+                ViewBag.Mensaje = "Usuario no autenticado.";
+                return RedirectToAction("Login", "Inicio");
+            }
+
+            var login = CreateLogin(usuario);
+
+            using (var excelPackage = new ExcelPackage())
+            {
+                // Procesar cada modelo según los campos seleccionados
+                await ProcesarModelo<Conductor>(excelPackage, campos, login, "Conductor");
+                await ProcesarModelo<Empresa>(excelPackage, campos, login, "Empresa");
+                await ProcesarModelo<Horario>(excelPackage, campos, login, "Horario");
+                await ProcesarModelo<Transaccion>(excelPackage, campos, login, "Transaccion");
+                await ProcesarModelo<Vehiculo>(excelPackage, campos, login, "Vehiculo");
+                await ProcesarModelo<Usuario>(excelPackage, campos, login, "Usuario");
+                await ProcesarModelo<Propietario>(excelPackage, campos, login, "Propietario");
+
+                // Generar el archivo Excel
+                var stream = new MemoryStream();
+                excelPackage.SaveAs(stream);
+                stream.Position = 0;
+
+                return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Reporte.xlsx");
+            }
+        }
+
+        private async Task ProcesarModelo<T>(ExcelPackage excelPackage,ReporteSeleccion campos,Models.Login login,string nombreModelo) where T : class
+        {
+            // Obtener las propiedades seleccionadas para el modelo (ej: "NombreEmpresa" → "Nombre")
+            var propiedadesSeleccionadas = ObtenerPropiedadesSeleccionadas(campos, nombreModelo);
+
+            if (propiedadesSeleccionadas.Count == 0) return;
+
+            // Obtener datos del servicio correspondiente (ej: I_Empresa.Lista())
+            var datos = await ObtenerDatosDesdeServicio<T>(login, nombreModelo);
+
+            if (datos == null || datos.Count == 0) return;
+
+            // Crear hoja en Excel
+            var worksheet = excelPackage.Workbook.Worksheets.Add(nombreModelo);
+
+            // Escribir encabezados
+            for (int i = 0; i < propiedadesSeleccionadas.Count; i++)
+            {
+                worksheet.Cells[1, i + 1].Value = propiedadesSeleccionadas[i];
+            }
+
+            // Escribir datos
+            for (int row = 0; row < datos.Count; row++)
+            {
+                var item = datos[row];
+                for (int col = 0; col < propiedadesSeleccionadas.Count; col++)
+                {
+                    var propiedad = typeof(T).GetProperty(propiedadesSeleccionadas[col]);
+                    worksheet.Cells[row + 2, col + 1].Value = propiedad?.GetValue(item)?.ToString() ?? "";
+                }
+            }
+        }
+
+
+        private List<string> ObtenerPropiedadesSeleccionadas(ReporteSeleccion campos, string nombreModelo)
+        {
+            return campos.GetType().GetProperties()
+                .Where(p => p.Name.EndsWith(nombreModelo) && p.PropertyType == typeof(bool) && (bool)p.GetValue(campos))
+                .Select(p => p.Name.Replace(nombreModelo, ""))
+                .ToList();
+        }
+
+        private async Task<List<T>> ObtenerDatosDesdeServicio<T>(Models.Login login, string nombreModelo)
+        {
+            switch (nombreModelo)
+            {
+                case "Conductor":
+                    return (await _conductor.Lista(login)).Cast<T>().ToList();
+                case "Empresa":
+                    return (await _empresa.Lista(login)).Cast<T>().ToList();
+                case "Horario":
+                    return (await _horario.Lista(login)).Cast<T>().ToList();
+                case "Transaccion":
+                    return (await _transaccion.Lista(login)).Cast<T>().ToList();
+                case "Vehiculo":
+                    return (await _vehiculo.Lista(login)).Cast<T>().ToList();
+                case "Usuario":
+                    return (await _usuario.Lista(login)).Cast<T>().ToList();
+                case "Propietario":
+                    return (await _propietario.Lista(login)).Cast<T>().ToList();
+                default:
+                    return null;
+            }
+        }
+
 
     }
 }
