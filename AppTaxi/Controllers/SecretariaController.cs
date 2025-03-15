@@ -497,9 +497,9 @@ namespace AppTaxi.Controllers
                             && (bool)p.GetValue(campos))
                 .Select(p =>
                 {
-                    // Si la propiedad es "Id...", no remover el sufijo
-                    if (p.Name.StartsWith("Id"))
-                        return p.Name; // Ej: "IdConductor"
+                    if (p.Name.Equals("Id" + nombreModelo))
+                        return p.Name;
+                    
                     else
                         return p.Name.Replace(nombreModelo, ""); // Ej: "NombreConductor" → "Nombre"
                 })
