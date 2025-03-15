@@ -18,48 +18,54 @@
                 </h2>
                 <div id="collapseConductor" class="accordion-collapse collapse show">
                     <div class="accordion-body">
+                        <!-- Inicio -->
+                        <div class="row mb-3">
+                        <div class="col-md-12">
+                                <input type="checkbox" class="select-all" data-target="Conductor" id="selectAllConductor" />
+                                <label for="selectAllConductor" class="fw-bold">Seleccionar todo</label>
+                            </div>
+                        </div>
+                        <!-- Fin -->
                         <div class="row">
                             <div class="col-md-4">
-                                <input asp-for="IdConductor" type="checkbox" /> <label asp-for="IdConductor">ID Conductor</label>
+                                <input asp-for="IdConductor" type="checkbox" class="check-conductor"/> <label asp-for="IdConductor">ID Conductor</label>
+                            </div>
+                            
+                            <div class="col-md-4">
+                                <input asp-for="NombreConductor" type="checkbox" class="check-conductor"/> <label asp-for="NombreConductor">Nombre</label>
                             </div>
                             <div class="col-md-4">
-                                <input asp-for="FotoConductor" type="checkbox" /> <label asp-for="FotoConductor">Foto</label>
+                                <input asp-for="NumeroCedulaConductor" type="checkbox" class="check-conductor"/> <label asp-for="NumeroCedulaConductor">Número Cédula</label>
                             </div>
                             <div class="col-md-4">
-                                <input asp-for="NombreConductor" type="checkbox" /> <label asp-for="NombreConductor">Nombre</label>
+                                <input asp-for="TelefonoConductor" type="checkbox" class="check-conductor"/> <label asp-for="TelefonoConductor">Teléfono</label>
                             </div>
                             <div class="col-md-4">
-                                <input asp-for="NumeroCedulaConductor" type="checkbox" /> <label asp-for="NumeroCedulaConductor">Número Cédula</label>
+                                <input asp-for="CorreoConductor" type="checkbox" class="check-conductor" /> <label asp-for="CorreoConductor">Correo</label>
                             </div>
                             <div class="col-md-4">
-                                <input asp-for="TelefonoConductor" type="checkbox" /> <label asp-for="TelefonoConductor">Teléfono</label>
+                                <input asp-for="DireccionConductor" type="checkbox" class="check-conductor" /> <label asp-for="DireccionConductor">Dirección</label>
                             </div>
                             <div class="col-md-4">
-                                <input asp-for="CorreoConductor" type="checkbox" /> <label asp-for="CorreoConductor">Correo</label>
+                                <input asp-for="CiudadConductor" type="checkbox" class="check-conductor"/> <label asp-for="CiudadConductor">Ciudad</label>
                             </div>
                             <div class="col-md-4">
-                                <input asp-for="DireccionConductor" type="checkbox" /> <label asp-for="DireccionConductor">Dirección</label>
+                                <input asp-for="CelularConductor" type="checkbox" class="check-conductor"/> <label asp-for="CelularConductor">Celular</label>
                             </div>
                             <div class="col-md-4">
-                                <input asp-for="CiudadConductor" type="checkbox" /> <label asp-for="CiudadConductor">Ciudad</label>
+                                <input asp-for="EstadoConductor" type="checkbox" class="check-conductor"/> <label asp-for="EstadoConductor">Estado</label>
                             </div>
                             <div class="col-md-4">
-                                <input asp-for="CelularConductor" type="checkbox" /> <label asp-for="CelularConductor">Celular</label>
+                                <input asp-for="GrupoSanguineoConductor" type="checkbox" class="check-conductor"/> <label asp-for="GrupoSanguineoConductor">Grupo Sanguíneo</label>
                             </div>
                             <div class="col-md-4">
-                                <input asp-for="EstadoConductor" type="checkbox" /> <label asp-for="EstadoConductor">Estado</label>
+                                <input asp-for="EpsConductor" type="checkbox" class="check-conductor"/> <label asp-for="EpsConductor">EPS</label>
                             </div>
                             <div class="col-md-4">
-                                <input asp-for="GrupoSanguineoConductor" type="checkbox" /> <label asp-for="GrupoSanguineoConductor">Grupo Sanguíneo</label>
+                                <input asp-for="ArlConductor" type="checkbox" class="check-conductor"/> <label asp-for="ArlConductor">ARL</label>
                             </div>
                             <div class="col-md-4">
-                                <input asp-for="EpsConductor" type="checkbox" /> <label asp-for="EpsConductor">EPS</label>
-                            </div>
-                            <div class="col-md-4">
-                                <input asp-for="ArlConductor" type="checkbox" /> <label asp-for="ArlConductor">ARL</label>
-                            </div>
-                            <div class="col-md-4">
-                                <input asp-for="IdEmpresaConductor" type="checkbox" /> <label asp-for="IdEmpresaConductor">Empresa</label>
+                                <input asp-for="IdEmpresaConductor" type="checkbox" class="check-conductor"/> <label asp-for="IdEmpresaConductor">Empresa</label>
                             </div>
                         </div>
                     </div>
@@ -76,30 +82,39 @@
                 </h2>
                 <div id="collapseEmpresa" class="accordion-collapse collapse">
                     <div class="accordion-body">
+
+                        <!-- Inicio -->
+                        <div class="row mb-3">
+                        <div class="col-md-12">
+                                <input type="checkbox" class="select-all" data-target="Empresa" id="selectAllEmpresa" />
+                                <label for="selectAllEmpresa" class="fw-bold">Seleccionar todo</label>
+                            </div>
+                        </div>
+                        <!-- Fin -->
                         <div class="row">
                             <div class="col-md-4">
-                                <input asp-for="IdEmpresa" type="checkbox" /> <label asp-for="IdEmpresa">ID Empresa</label>
+                                <input asp-for="IdEmpresa" type="checkbox" class="check-empresa"/> <label asp-for="IdEmpresa">ID Empresa</label>
                             </div>
                             <div class="col-md-4">
-                                <input asp-for="NombreEmpresa" type="checkbox" /> <label asp-for="NombreEmpresa">Nombre</label>
+                                <input asp-for="NombreEmpresa" type="checkbox" class="check-empresa"/> <label asp-for="NombreEmpresa">Nombre</label>
                             </div>
                             <div class="col-md-4">
-                                <input asp-for="NitEmpresa" type="checkbox" /> <label asp-for="NitEmpresa">NIT</label>
+                                <input asp-for="NitEmpresa" type="checkbox" class="check-empresa"/> <label asp-for="NitEmpresa">NIT</label>
                             </div>
                             <div class="col-md-4">
-                                <input asp-for="RepresentanteEmpresa" type="checkbox" /> <label asp-for="RepresentanteEmpresa">Representante</label>
+                                <input asp-for="RepresentanteEmpresa" type="checkbox" class="check-empresa"/> <label asp-for="RepresentanteEmpresa">Representante</label>
                             </div>
                             <div class="col-md-4">
-                                <input asp-for="RedPrincipalEmpresa" type="checkbox" /> <label asp-for="RedPrincipalEmpresa">Red Principal</label>
+                                <input asp-for="RedPrincipalEmpresa" type="checkbox" class="check-empresa"/> <label asp-for="RedPrincipalEmpresa">Red Principal</label>
                             </div>
                             <div class="col-md-4">
-                                <input asp-for="RedSecundariaEmpresa" type="checkbox" /> <label asp-for="RedSecundariaEmpresa">Red Secundaria</label>
+                                <input asp-for="RedSecundariaEmpresa" type="checkbox" class="check-empresa"/> <label asp-for="RedSecundariaEmpresa">Red Secundaria</label>
                             </div>
                             <div class="col-md-4">
-                                <input asp-for="IdUsuarioEmpresa" type="checkbox" /> <label asp-for="IdUsuarioEmpresa">Usuario Encargado</label>
+                                <input asp-for="IdUsuarioEmpresa" type="checkbox" class="check-empresa"/> <label asp-for="IdUsuarioEmpresa">Usuario Encargado</label>
                             </div>
                             <div class="col-md-4">
-                                <input asp-for="CuposEmpresa" type="checkbox" /> <label asp-for="CuposEmpresa">Cupos</label>
+                                <input asp-for="CuposEmpresa" type="checkbox" class="check-empresa"/> <label asp-for="CuposEmpresa">Cupos</label>
                             </div>
                         </div>
                     </div>
@@ -116,24 +131,33 @@
                 </h2>
                 <div id="collapseHorario" class="accordion-collapse collapse">
                     <div class="accordion-body">
+
+                        <!-- Inicio -->
+                        <div class="row mb-3">
+                        <div class="col-md-12">
+                                <input type="checkbox" class="select-all" data-target="Horario" id="selectAllHorario" />
+                                <label for="selectAllHorario" class="fw-bold">Seleccionar todo</label>
+                            </div>
+                        </div>
+                        <!-- Fin -->
                         <div class="row">
                             <div class="col-md-4">
-                                <input asp-for="IdHorario" type="checkbox" /> <label asp-for="IdHorario">ID Horario</label>
+                                <input asp-for="IdHorario" type="checkbox" class="check-horario"/> <label asp-for="IdHorario">ID Horario</label>
                             </div>
                             <div class="col-md-4">
-                                <input asp-for="FechaHorario" type="checkbox" /> <label asp-for="FechaHorario">Fecha</label>
+                                <input asp-for="FechaHorario" type="checkbox" class="check-horario"/> <label asp-for="FechaHorario">Fecha</label>
                             </div>
                             <div class="col-md-4">
-                                <input asp-for="HoraInicioHorario" type="checkbox" /> <label asp-for="HoraInicioHorario">Hora Inicio</label>
+                                <input asp-for="HoraInicioHorario" type="checkbox" class="check-horario"/> <label asp-for="HoraInicioHorario">Hora Inicio</label>
                             </div>
                             <div class="col-md-4">
-                                <input asp-for="HoraFinHorario" type="checkbox" /> <label asp-for="HoraFinHorario">Hora Fin</label>
+                                <input asp-for="HoraFinHorario" type="checkbox" class="check-horario"/> <label asp-for="HoraFinHorario">Hora Fin</label>
                             </div>
                             <div class="col-md-4">
-                                <input asp-for="IdConductorHorario" type="checkbox" /> <label asp-for="IdConductorHorario">Conductor</label>
+                                <input asp-for="IdConductorHorario" type="checkbox" class="check-horario"/> <label asp-for="IdConductorHorario">Conductor</label>
                             </div>
                             <div class="col-md-4">
-                                <input asp-for="IdVehiculoHorario" type="checkbox" /> <label asp-for="IdVehiculoHorario">Vehículo</label>
+                                <input asp-for="IdVehiculoHorario" type="checkbox" class="check-horario"/> <label asp-for="IdVehiculoHorario">Vehículo</label>
                             </div>
                         </div>
                     </div>
@@ -150,24 +174,34 @@
                 </h2>
                 <div id="collapseTransaccion" class="accordion-collapse collapse">
                     <div class="accordion-body">
+
+                        <!-- Inicio -->
+                        <div class="row mb-3">
+                        <div class="col-md-12">
+                                <input type="checkbox" class="select-all" data-target="Transaccion" id="selectAllTransaccion" />
+                                <label for="selectAllTransaccion" class="fw-bold">Seleccionar todo</label>
+                            </div>
+                        </div>
+                        <!-- Fin -->
+
                         <div class="row">
                             <div class="col-md-4">
-                                <input asp-for="IdAccion" type="checkbox" /> <label asp-for="IdAccion">ID Acción</label>
+                                <input asp-for="IdAccion" type="checkbox" class="check-transaccion"/> <label asp-for="IdAccion">ID Acción</label>
                             </div>
                             <div class="col-md-4">
-                                <input asp-for="IdUsuarioTransaccion" type="checkbox" /> <label asp-for="IdUsuarioTransaccion">Usuario</label>
+                                <input asp-for="IdUsuarioTransaccion" type="checkbox" class="check-transaccion"/> <label asp-for="IdUsuarioTransaccion">Usuario</label>
                             </div>
                             <div class="col-md-4">
-                                <input asp-for="AccionTransaccion" type="checkbox" /> <label asp-for="AccionTransaccion">Acción</label>
+                                <input asp-for="AccionTransaccion" type="checkbox" class="check-transaccion"/> <label asp-for="AccionTransaccion">Acción</label>
                             </div>
                             <div class="col-md-4">
-                                <input asp-for="ModeloTransaccion" type="checkbox" /> <label asp-for="ModeloTransaccion">Modelo</label>
+                                <input asp-for="ModeloTransaccion" type="checkbox" class="check-transaccion"/> <label asp-for="ModeloTransaccion">Modelo</label>
                             </div>
                             <div class="col-md-4">
-                                <input asp-for="FechaTransaccion" type="checkbox" /> <label asp-for="FechaTransaccion">Fecha</label>
+                                <input asp-for="FechaTransaccion" type="checkbox" class="check-transaccion"/> <label asp-for="FechaTransaccion">Fecha</label>
                             </div>
                             <div class="col-md-4">
-                                <input asp-for="HoraTransaccion" type="checkbox" /> <label asp-for="HoraTransaccion">Hora</label>
+                                <input asp-for="HoraTransaccion" type="checkbox" class="check-transaccion"/> <label asp-for="HoraTransaccion">Hora</label>
                             </div>
                         </div>
                     </div>
@@ -184,33 +218,39 @@
                 </h2>
                 <div id="collapseVehiculo" class="accordion-collapse collapse">
                     <div class="accordion-body">
+
+                         <!-- Inicio -->
+                        <div class="row mb-3">
+                        <div class="col-md-12">
+                                <input type="checkbox" class="select-all" data-target="Vehiculo" id="selectAllVehiculo" />
+                                <label for="selectAllVehiculo" class="fw-bold">Seleccionar todo</label>
+                            </div>
+                        </div>
+                        <!-- Fin -->
+
                         <div class="row">
                             <div class="col-md-4">
-                                <input asp-for="IdVehiculo" type="checkbox" /> <label asp-for="IdVehiculo">ID Vehículo</label>
+                                <input asp-for="IdVehiculo" type="checkbox" class="check-vehiculo"/> <label asp-for="IdVehiculo">ID Vehículo</label>
                             </div>
                             <div class="col-md-4">
-                                <input asp-for="PlacaVehiculo" type="checkbox" /> <label asp-for="PlacaVehiculo">Placa</label>
+                                <input asp-for="PlacaVehiculo" type="checkbox" class="check-vehiculo"/> <label asp-for="PlacaVehiculo">Placa</label>
                             </div>
                             <div class="col-md-4">
-                                <input asp-for="EstadoVehiculo" type="checkbox" /> <label asp-for="EstadoVehiculo">Estado</label>
+                                <input asp-for="EstadoVehiculo" type="checkbox" class="check-vehiculo"/> <label asp-for="EstadoVehiculo">Estado</label>
+                            </div>
+                           
+                            <div class="col-md-4">
+                                <input asp-for="VenceSoat" type="checkbox" class="check-vehiculo"/> <label asp-for="VenceSoat">Vencimiento SOAT</label>
+                            </div>
+                            
+                            <div class="col-md-4">
+                                <input asp-for="VenceTecnicoMecanica" type="checkbox" class="check-vehiculo"/> <label asp-for="VenceTecnicoMecanica">Vencimiento Técnico Mecánica</label>
                             </div>
                             <div class="col-md-4">
-                                <input asp-for="SoatVehiculo" type="checkbox" /> <label asp-for="SoatVehiculo">SOAT</label>
+                                <input asp-for="IdPropietarioVehiculo" type="checkbox" class="check-vehiculo"/> <label asp-for="IdPropietarioVehiculo">Propietario</label>
                             </div>
                             <div class="col-md-4">
-                                <input asp-for="VenceSoat" type="checkbox" /> <label asp-for="VenceSoat">Vencimiento SOAT</label>
-                            </div>
-                            <div class="col-md-4">
-                                <input asp-for="TecnicoMecanicaVehiculo" type="checkbox" /> <label asp-for="TecnicoMecanicaVehiculo">Técnico Mecánica</label>
-                            </div>
-                            <div class="col-md-4">
-                                <input asp-for="VenceTecnicoMecanica" type="checkbox" /> <label asp-for="VenceTecnicoMecanica">Vencimiento Técnico Mecánica</label>
-                            </div>
-                            <div class="col-md-4">
-                                <input asp-for="IdPropietarioVehiculo" type="checkbox" /> <label asp-for="IdPropietarioVehiculo">Propietario</label>
-                            </div>
-                            <div class="col-md-4">
-                                <input asp-for="IdEmpresaVehiculo" type="checkbox" /> <label asp-for="IdEmpresaVehiculo">Empresa</label>
+                                <input asp-for="IdEmpresaVehiculo" type="checkbox" class="check-vehiculo"/> <label asp-for="IdEmpresaVehiculo">Empresa</label>
                             </div>
                         </div>
                     </div>
@@ -227,39 +267,45 @@
                 </h2>
                 <div id="collapseUsuario" class="accordion-collapse collapse">
                     <div class="accordion-body">
+
+                         <!-- Inicio -->
+                        <div class="row mb-3">
+                        <div class="col-md-12">
+                                <input type="checkbox" class="select-all" data-target="Usuario" id="selectAllUsuario" />
+                                <label for="selectAllUsuario" class="fw-bold">Seleccionar todo</label>
+                            </div>
+                        </div>
+                        <!-- Fin -->
+
                         <div class="row">
                             <div class="col-md-4">
-                                <input asp-for="IdUsuario" type="checkbox" /> <label asp-for="IdUsuario">ID Usuario</label>
+                                <input asp-for="IdUsuario" type="checkbox" class="check-usuario" /> <label asp-for="IdUsuario">ID Usuario</label>
                             </div>
                             <div class="col-md-4">
-                                <input asp-for="CorreoUsuario" type="checkbox" /> <label asp-for="CorreoUsuario">Correo</label>
+                                <input asp-for="CorreoUsuario" type="checkbox" class="check-usuario" /> <label asp-for="CorreoUsuario">Correo</label>
+                            </div>
+                            
+                            
+                            <div class="col-md-4">
+                                <input asp-for="NombreUsuario" type="checkbox" class="check-usuario" /> <label asp-for="NombreUsuario">Nombre</label>
                             </div>
                             <div class="col-md-4">
-                                <input asp-for="ContrasenaUsuario" type="checkbox" /> <label asp-for="ContrasenaUsuario">Contraseña</label>
+                                <input asp-for="TelefonoUsuario" type="checkbox" class="check-usuario" /> <label asp-for="TelefonoUsuario">Teléfono</label>
                             </div>
                             <div class="col-md-4">
-                                <input asp-for="FotoUsuario" type="checkbox" /> <label asp-for="FotoUsuario">Foto</label>
+                                <input asp-for="DireccionUsuario" type="checkbox" class="check-usuario" /> <label asp-for="DireccionUsuario">Dirección</label>
                             </div>
                             <div class="col-md-4">
-                                <input asp-for="NombreUsuario" type="checkbox" /> <label asp-for="NombreUsuario">Nombre</label>
+                                <input asp-for="CiudadUsuario" type="checkbox" class="check-usuario" /> <label asp-for="CiudadUsuario">Ciudad</label>
                             </div>
                             <div class="col-md-4">
-                                <input asp-for="TelefonoUsuario" type="checkbox" /> <label asp-for="TelefonoUsuario">Teléfono</label>
+                                <input asp-for="CelularUsuario" type="checkbox" class="check-usuario" /> <label asp-for="CelularUsuario">Celular</label>
                             </div>
                             <div class="col-md-4">
-                                <input asp-for="DireccionUsuario" type="checkbox" /> <label asp-for="DireccionUsuario">Dirección</label>
+                                <input asp-for="EstadoUsuario" type="checkbox" class="check-usuario" /> <label asp-for="EstadoUsuario">Estado</label>
                             </div>
                             <div class="col-md-4">
-                                <input asp-for="CiudadUsuario" type="checkbox" /> <label asp-for="CiudadUsuario">Ciudad</label>
-                            </div>
-                            <div class="col-md-4">
-                                <input asp-for="CelularUsuario" type="checkbox" /> <label asp-for="CelularUsuario">Celular</label>
-                            </div>
-                            <div class="col-md-4">
-                                <input asp-for="EstadoUsuario" type="checkbox" /> <label asp-for="EstadoUsuario">Estado</label>
-                            </div>
-                            <div class="col-md-4">
-                                <input asp-for="IdRolUsuario" type="checkbox" /> <label asp-for="IdRolUsuario">Rol en Sistema</label>
+                                <input asp-for="IdRolUsuario" type="checkbox" class="check-usuario" /> <label asp-for="IdRolUsuario">Rol en Sistema</label>
                             </div>
                         </div>
                     </div>
@@ -276,42 +322,50 @@
                 </h2>
                 <div id="collapsePropietario" class="accordion-collapse collapse">
                     <div class="accordion-body">
+
+                        <!-- Inicio -->
+                        <div class="row mb-3">
+                        <div class="col-md-12">
+                                <input type="checkbox" class="select-all" data-target="Propietario" id="selectAllPropietario" />
+                                <label for="selectAllPropietario" class="fw-bold">Seleccionar todo</label>
+                            </div>
+                        </div>
+                        <!-- Fin -->
+
                         <div class="row">
                             <div class="col-md-4">
-                                <input asp-for="IdPropietario" type="checkbox" /> <label asp-for="IdPropietario">ID Propietario</label>
+                                <input asp-for="IdPropietario" type="checkbox" class="check-propietario"/> <label asp-for="IdPropietario">ID Propietario</label>
+                            </div>
+                            
+                            <div class="col-md-4">
+                                <input asp-for="NombrePropietario" type="checkbox" class="check-propietario"/> <label asp-for="NombrePropietario">Nombre</label>
                             </div>
                             <div class="col-md-4">
-                                <input asp-for="FotoPropietario" type="checkbox" /> <label asp-for="FotoPropietario">Foto</label>
+                                <input asp-for="NumeroCedulaPropietario" type="checkbox" class="check-propietario"/> <label asp-for="NumeroCedulaPropietario">Número Cédula</label>
                             </div>
                             <div class="col-md-4">
-                                <input asp-for="NombrePropietario" type="checkbox" /> <label asp-for="NombrePropietario">Nombre</label>
+                                <input asp-for="TelefonoPropietario" type="checkbox" class="check-propietario"/> <label asp-for="TelefonoPropietario">Teléfono</label>
                             </div>
                             <div class="col-md-4">
-                                <input asp-for="NumeroCedulaPropietario" type="checkbox" /> <label asp-for="NumeroCedulaPropietario">Número Cédula</label>
+                                <input asp-for="CorreoPropietario" type="checkbox" class="check-propietario"/> <label asp-for="CorreoPropietario">Correo</label>
                             </div>
                             <div class="col-md-4">
-                                <input asp-for="TelefonoPropietario" type="checkbox" /> <label asp-for="TelefonoPropietario">Teléfono</label>
+                                <input asp-for="DireccionPropietario" type="checkbox" class="check-propietario"/> <label asp-for="DireccionPropietario">Dirección</label>
                             </div>
                             <div class="col-md-4">
-                                <input asp-for="CorreoPropietario" type="checkbox" /> <label asp-for="CorreoPropietario">Correo</label>
+                                <input asp-for="CiudadPropietario" type="checkbox" class="check-propietario"/> <label asp-for="CiudadPropietario">Ciudad</label>
                             </div>
                             <div class="col-md-4">
-                                <input asp-for="DireccionPropietario" type="checkbox" /> <label asp-for="DireccionPropietario">Dirección</label>
+                                <input asp-for="CelularPropietario" type="checkbox" class="check-propietario"/> <label asp-for="CelularPropietario">Celular</label>
                             </div>
                             <div class="col-md-4">
-                                <input asp-for="CiudadPropietario" type="checkbox" /> <label asp-for="CiudadPropietario">Ciudad</label>
+                                <input asp-for="EstadoPropietario" type="checkbox" class="check-propietario"/> <label asp-for="EstadoPropietario">Estado</label>
                             </div>
                             <div class="col-md-4">
-                                <input asp-for="CelularPropietario" type="checkbox" /> <label asp-for="CelularPropietario">Celular</label>
+                                <input asp-for="DocumentoCedulaPropietario" type="checkbox" class="check-propietario"/> <label asp-for="DocumentoCedulaPropietario">Documento Cédula</label>
                             </div>
                             <div class="col-md-4">
-                                <input asp-for="EstadoPropietario" type="checkbox" /> <label asp-for="EstadoPropietario">Estado</label>
-                            </div>
-                            <div class="col-md-4">
-                                <input asp-for="DocumentoCedulaPropietario" type="checkbox" /> <label asp-for="DocumentoCedulaPropietario">Documento Cédula</label>
-                            </div>
-                            <div class="col-md-4">
-                                <input asp-for="IdEmpresaPropietario" type="checkbox" /> <label asp-for="IdEmpresaPropietario">Empresa</label>
+                                <input asp-for="IdEmpresaPropietario" type="checkbox" class="check-propietario"/> <label asp-for="IdEmpresaPropietario">Empresa</label>
                             </div>
                         </div>
                     </div>
@@ -326,3 +380,27 @@
         </div>
     </div>
 </form>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            // Manejar "Seleccionar todo"
+            $('.select-all').click(function () {
+                const target = $(this).data('target'); // Ej: "Conductor"
+                const isChecked = $(this).prop('checked');
+                
+                // Seleccionar/deseleccionar todos los checkboxes del grupo
+                $(`.check-${target.toLowerCase()}`).prop('checked', isChecked);
+            });
+
+            // Actualizar estado de "Seleccionar todo" cuando cambia un checkbox individual
+            $('[class^="check-"]').change(function () {
+                const targetClass = $(this).attr('class').split(' ').find(c => c.startsWith('check-'));
+                const target = targetClass.replace('check-', '');
+                const allChecked = $(`.${targetClass}`).length === $(`.${targetClass}:checked`).length;
+                
+                $(`#selectAll${target}`).prop('checked', allChecked);
+            });
+        });
+    </script>
+}

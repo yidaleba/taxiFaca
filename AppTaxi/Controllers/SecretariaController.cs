@@ -492,8 +492,17 @@ namespace AppTaxi.Controllers
         private List<string> ObtenerPropiedadesSeleccionadas(ReporteSeleccion campos, string nombreModelo)
         {
             return campos.GetType().GetProperties()
-                .Where(p => p.Name.EndsWith(nombreModelo) && p.PropertyType == typeof(bool) && (bool)p.GetValue(campos))
-                .Select(p => p.Name.Replace(nombreModelo, ""))
+                .Where(p => p.Name.EndsWith(nombreModelo)
+                            && p.PropertyType == typeof(bool)
+                            && (bool)p.GetValue(campos))
+                .Select(p =>
+                {
+                    // Si la propiedad es "Id...", no remover el sufijo
+                    if (p.Name.StartsWith("Id"))
+                        return p.Name; // Ej: "IdConductor"
+                    else
+                        return p.Name.Replace(nombreModelo, ""); // Ej: "NombreConductor" → "Nombre"
+                })
                 .ToList();
         }
 
