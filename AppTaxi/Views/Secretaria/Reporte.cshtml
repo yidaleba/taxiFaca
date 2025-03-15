@@ -1,15 +1,14 @@
 ﻿@model ReporteSeleccion
 @{
-    ViewData["Title"] = "Reportes";
+    ViewData["Title"] = "Generar Reporte";
     Layout = "~/Views/Shared/_LayoutSecretaria.cshtml";
 }
 
-<h2 class="text-center">Generar Reporte</h2>
 <br />
-
 <form asp-action="Generar_Reporte" asp-controller="Secretaria" method="post">
     <div class="container">
         <div class="accordion" id="accordionReportes">
+
             <!-- Sección Conductor -->
             <div class="accordion-item">
                 <h2 class="accordion-header" id="headingConductor">
@@ -67,6 +66,7 @@
                 </div>
             </div>
 
+
             <!-- Sección Empresa -->
             <div class="accordion-item">
                 <h2 class="accordion-header" id="headingEmpresa">
@@ -106,6 +106,7 @@
                 </div>
             </div>
 
+
             <!-- Sección Horario -->
             <div class="accordion-item">
                 <h2 class="accordion-header" id="headingHorario">
@@ -139,6 +140,7 @@
                 </div>
             </div>
 
+
             <!-- Sección Transacción -->
             <div class="accordion-item">
                 <h2 class="accordion-header" id="headingTransaccion">
@@ -171,6 +173,7 @@
                     </div>
                 </div>
             </div>
+
 
             <!-- Sección Vehículo -->
             <div class="accordion-item">
@@ -213,6 +216,7 @@
                     </div>
                 </div>
             </div>
+
 
             <!-- Sección Usuario -->
             <div class="accordion-item">
