@@ -669,7 +669,7 @@ namespace AppTaxi.Controllers
                     string textoExtraido = sistema.ProcesarPdfConOCR(modelo.Archivo_1);
 
                     // Validar si el documento es una cédula
-                    bool esDocumento = sistema.Contiene(textoExtraido.ToUpper(), new string[] { "REPÚBLICA", "COLOMBIA", "IDENTIFICACIÓN", "PERSONAL" }, 'O');
+                    bool esDocumento = sistema.Contiene(textoExtraido.ToUpper(), new string[] { "REPÚBLICA", "COLOMBIA" },'Y');
 
                     if (esDocumento)
                     {
@@ -695,7 +695,7 @@ namespace AppTaxi.Controllers
             else
             {
                 ViewBag.Mensaje = "No se ha subido ningún archivo.";
-                return View("Agregar_Conductor");
+                return RedirectToAction("Editar_Conductor", new { IdConductor = modelo.Conductor.IdConductor });
             }
 
             if (modelo.Archivo_2 != null)
@@ -843,7 +843,7 @@ namespace AppTaxi.Controllers
                     string textoExtraido = sistema.ProcesarPdfConOCR(modelo.Archivo_1);
 
                     // Validar si el documento es una cédula
-                    bool esDocumento = sistema.Contiene(textoExtraido.ToUpper(), new string[] { "REPÚBLICA", "COLOMBIA", "IDENTIFICACIÓN","PERSONAL"}, 'O');
+                    bool esDocumento = sistema.Contiene(textoExtraido.ToUpper(), new string[] { "REPÚBLICA", "COLOMBIA"}, 'Y');
 
                     if (esDocumento)
                     {
@@ -1176,7 +1176,7 @@ namespace AppTaxi.Controllers
                     string textoExtraido = sistema.ProcesarPdfConOCR(modelo.Archivo_1);
 
                     // Validar si el documento es una cédula
-                    bool esDocumento = sistema.Contiene(textoExtraido.ToUpper(), new string[] { "REPÚBLICA", "COLOMBIA" }, 'O');
+                    bool esDocumento = sistema.Contiene(textoExtraido.ToUpper(), new string[] { "REPÚBLICA", "COLOMBIA" }, 'Y');
 
                     if (esDocumento)
                     {
