@@ -16,6 +16,18 @@
 <h1 class="mb-4 text-center text-primary">@ViewBag.Mensaje</h1>
 <p class="lead text-secondary text-center">Datos Encontrados:</p>
 
+<p><strong>Mostrar Campos:</strong></p>
+
+@foreach (var campo in new[] { "Placa", "Propietario", "Conductor", "Fecha", "Desde", "Hasta" })
+{
+    <div class="form-check form-check-inline">
+        <input class="form-check-input column-toggle" type="checkbox" value="@campo" id="chk@campo" checked>
+        <label class="form-check-label" for="chk@campo">@campo</label>
+    </div>
+}
+
+<hr />
+
 <div class="d-flex justify-content-between align-items-center mb-3">
     <input type="text" id="buscarConductor" class="form-control w-25" placeholder="🔍 Buscar por conductor..." onkeyup="filtrarConductores()">
 </div>
@@ -65,18 +77,7 @@ else
     </div>
 }
 
-<hr />
-<p><strong>Mostrar Campos:</strong></p>
 
-@foreach (var campo in new[] { "Placa", "Propietario", "Conductor", "Fecha", "Desde", "Hasta" })
-{
-    <div class="form-check form-check-inline">
-        <input class="form-check-input column-toggle" type="checkbox" value="@campo" id="chk@campo" checked>
-        <label class="form-check-label" for="chk@campo">@campo</label>
-    </div>
-}
-
-<hr />
 
 <script>
     function filtrarConductores() {

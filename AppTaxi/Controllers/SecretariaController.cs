@@ -454,7 +454,7 @@ namespace AppTaxi.Controllers
             }
             using (var range = worksheet.Cells["1:1"])
             {
-
+                worksheet.View.FreezePanes(2, 1);
                 range.Style.Font.Bold = true;
                 range.Style.Border.Top.Style = ExcelBorderStyle.Thin;
                 range.Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
