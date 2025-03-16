@@ -37,7 +37,7 @@
         public bool IdVehiculoHorario { get; set; }
 
         // Transacción
-        public bool IdAccion { get; set; }
+        public bool IdTransaccion { get; set; }
         public bool IdUsuarioTransaccion { get; set; }
         public bool AccionTransaccion { get; set; }
         public bool ModeloTransaccion { get; set; }

@@ -22,12 +22,12 @@ namespace AppTaxi.Servicios
             return lista;
         }
 
-        public async Task<Transaccion> Obtener(int IdAccion, Login login)
+        public async Task<Transaccion> Obtener(int IdTransaccion, Login login)
         {
             Transaccion transaccion = new Transaccion();
             await Autenticar(login);
 
-            var response = await _httpClient.GetAsync($"api/Transaccion/Obtener/{IdAccion}");
+            var response = await _httpClient.GetAsync($"api/Transaccion/Obtener/{IdTransaccion}");
 
             if (response.IsSuccessStatusCode)
             {
@@ -70,12 +70,12 @@ namespace AppTaxi.Servicios
             return Respuesta;
         }
         
-        public async Task<bool> Eliminar(int IdAccion, Login login)
+        public async Task<bool> Eliminar(int IdTransaccion, Login login)
         {
             bool Respuesta = false;
             await Autenticar(login);
 
-            var response = await _httpClient.DeleteAsync($"api/Transaccion/Eliminar/{IdAccion}");
+            var response = await _httpClient.DeleteAsync($"api/Transaccion/Eliminar/{IdTransaccion}");
 
             if (response.IsSuccessStatusCode)
             {
