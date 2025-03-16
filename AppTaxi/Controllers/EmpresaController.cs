@@ -48,7 +48,7 @@ namespace AppTaxi.Controllers
             var empresa = empresas.FirstOrDefault(e => e.IdUsuario == usuario.IdUsuario);
 
             var vehiculos = await _vehiculo.Lista(login);
-            int Contador = vehiculos.Where(v => v.IdEmpresa == empresa.IdEmpresa).Count();
+            int Contador = vehiculos.Where(v => v.IdEmpresa == empresa.IdEmpresa && v.Estado).Count();
             return Contador;
         }
         //------------ Métodos auxiliares ------------
@@ -480,8 +480,8 @@ namespace AppTaxi.Controllers
             if (empresa.Cupos - await Cupos() <= 0)
             {
                 ViewBag.Mensaje = "No se puede agregar, No hay Cupos";
-                var propietariosTotales = await _propietario.Lista(login);
-                viewModel.Propietarios = propietariosTotales?.Where(p => p.IdEmpresa == viewModel.Vehiculo.IdEmpresa && p.Estado).ToList();
+                //var propietariosTotales = await _propietario.Lista(login);
+                //viewModel.Propietarios = propietariosTotales?.Where(p => p.IdEmpresa == viewModel.Vehiculo.IdEmpresa && p.Estado).ToList();
 
                 return View("Agregar_Vehiculo", viewModel);
             }
@@ -489,8 +489,11 @@ namespace AppTaxi.Controllers
 
             viewModel.Vehiculo.Estado = true;
             viewModel.Vehiculo.IdEmpresa = empresas.FirstOrDefault(e => e.IdUsuario == usuario.IdUsuario)?.IdEmpresa ?? 0;
-            if (viewModel.Vehiculo.Placa != null) viewModel.Vehiculo.Placa = viewModel.Vehiculo.Placa.ToUpper();
-
+            if (viewModel.Vehiculo.Placa != null)
+            {
+                viewModel.Vehiculo.Placa = viewModel.Vehiculo.Placa.ToUpper();
+            }
+                
             // Validar si la placa ya existe
             if (vehiculos.Any(v => v.Placa == viewModel.Vehiculo.Placa))
             {
