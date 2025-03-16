@@ -1341,13 +1341,13 @@ namespace AppTaxi.Controllers
                 Transaccion t = Crear_Transaccion("Eliminar", "Horario");
                 bool guardar = await _transaccion.Guardar(t, login);
                 TempData["Mensaje"] = "Eliminado Correctamente";
-                return RedirectToAction("Ver_Horario_Conductor",new {IdConductor = horario.IdConductor});
+                return RedirectToAction("Horarios");
             }
             else
             {
                 ViewBag.Mensaje = "No se pudo Guardar";
                 TempData["Mensaje"] = "No se pudo Guardar";
-                return RedirectToAction("Editar_Horario", new { IdHorario = IdHorario });
+                return RedirectToAction("Horarios");
             }
         }
 
@@ -1395,7 +1395,7 @@ namespace AppTaxi.Controllers
 
             ViewBag.Cupos = empresa.Cupos - await Cupos();
             // Asignar el IdConductor al horario
-            modelo.Horario.IdConductor = modelo.Conductor.IdConductor;
+            //modelo.Horario.IdConductor = modelo.Conductor.IdConductor;
 
             List<Horario> horarios = await _horario.Lista(login);
 
@@ -1416,7 +1416,7 @@ namespace AppTaxi.Controllers
                     ViewBag.Mensaje = "Horario guardado correctamente.";
                     Transaccion t = Crear_Transaccion("Guardar", "Horario");
                     bool guardar = await _transaccion.Guardar(t, login);
-                    return RedirectToAction("Ver_Horario", new { IdConductor = modelo.Conductor.IdConductor });
+                    return RedirectToAction("Ver_Horario_Conductor", new { IdConductor = modelo.Horario.IdConductor });
                 }
                 else
                 {

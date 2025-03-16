@@ -20,7 +20,7 @@
     <h5 class="card-header bg-primary text-white text-center py-3">Asignar un único horario</h5>
     <div class="card-body">
         <form asp-action="Crear_Horario" method="post" class="needs-validation" novalidate>
-            <input type="hidden" asp-for="Conductor.IdConductor" />
+            
 
             <div class="row mb-3">
                 <label class="col-sm-3 col-form-label"><strong>Fecha:</strong></label>
@@ -84,7 +84,7 @@
     <h5 class="card-header bg-primary text-white text-center py-3">Asignar múltiples horarios</h5>
     <div class="card-body">
         <form asp-action="Crear_RangoHorarios" method="post" class="needs-validation" novalidate>
-            <input type="hidden" asp-for="Conductor.IdConductor" />
+            
 
             <div class="row mb-3">
                 <label class="col-sm-3 col-form-label"><strong>Fecha de Inicio:</strong></label>
