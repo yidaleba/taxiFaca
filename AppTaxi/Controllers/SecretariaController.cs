@@ -435,6 +435,47 @@ namespace AppTaxi.Controllers
             return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Reporte.xlsx");
         }
 
+
+        public async Task<IActionResult> Transacciones()
+        {
+            var usuario = GetUsuarioFromSession();
+            if (usuario == null)
+            {
+                ViewBag.Mensaje = "Usuario no autenticado.";
+                return RedirectToAction("Login", "Inicio");
+            }
+
+            var login = CreateLogin(usuario);
+
+            var transacciones = await _transaccion.Lista(login);
+            var usuarios = await _usuario.Lista(login);
+            var empresas = await _empresa.Lista(login);
+
+            if (transacciones.Count() > 0)
+            {
+
+                int i = 0;
+                while (true)
+                {
+                    transacciones[i].Contador = i + 1;
+                    if (i == transacciones.Count() - 1)
+                    {
+                        break;
+                    }
+                    else
+                    {
+                        i++;
+                    }
+                }
+            }
+
+            ModeloVista modelo = new ModeloVista();
+            modelo.Transacciones = transacciones;
+            modelo.Usuarios = usuarios;
+            modelo.Empresas = empresas;
+            return View(modelo);
+        }
+
         private async Task ProcesarModelo<T>(ExcelPackage excelPackage, ReporteSeleccion campos, Models.Login login, string nombreModelo) where T : class
         {
             var propiedadesSeleccionadas = ObtenerPropiedadesSeleccionadas(campos, nombreModelo);

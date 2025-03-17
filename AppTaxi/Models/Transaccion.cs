@@ -2,6 +2,7 @@
 {
     public class Transaccion
     {
+        public int Contador { get; set; }
         public int IdTransaccion { get; set; }
         public int IdUsuario { get; set; }
         public string Accion { get; set; }

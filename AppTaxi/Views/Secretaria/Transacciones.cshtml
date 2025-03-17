@@ -1,0 +1,124 @@
+﻿@model ModeloVista
+@{
+    ViewData["Title"] = "Transacciones";
+    Layout = "~/Views/Shared/_LayoutSecretaria.cshtml";
+}
+
+@if (TempData["Mensaje"] != null)
+{
+    <div class="alert alert-info text-center">@TempData["Mensaje"]</div>
+}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <div class="d-flex align-items-center w-50 gap-2">
+        <div class="input-group">
+            <span class="input-group-text bg-transparent border-end-0 pe-1">Desde</span>
+            <input type="date" class="form-control" id="fechaInicio" onchange="filtrarTransacciones()">
+        </div>
+
+        <div class="input-group">
+            <span class="input-group-text bg-transparent border-end-0 pe-1">Hasta</span>
+            <input type="date" class="form-control" id="fechaFin" onchange="filtrarTransacciones()">
+        </div>
+    </div>
+
+    <input type="text"
+           id="buscarTransaccion"
+           class="form-control w-25"
+           placeholder="🔍 Buscar por usuario..."
+           onkeyup="filtrarTransacciones()">
+</div>
+@if (Model.Transacciones != null && Model.Transacciones.Any())
+{
+    <div class="table-responsive">
+        <table class="table table-hover text-center">
+            <thead class="table-dark">
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Empresa</th>
+                    <th scope="col">Usuario</th>
+                    <th scope="col">Correo</th>
+                    <th scope="col">Accion</th>
+                    <th scope="col">Fecha</th>
+                    <th scope="col">Hora</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Transacciones)
+                {
+                    <tr class="fila-transaccion">
+                        <td>@item.Contador</td>
+                        <!-- Empresa -->
+                        @if(Model.Empresas.Where(e => e.IdUsuario == item.IdUsuario).FirstOrDefault() != null)
+                        {
+                            <td>@Model.Empresas.Where(e => e.IdUsuario == item.IdUsuario).FirstOrDefault().Nombre</td>
+                        }else
+                        {
+                            <td>Vacío</td>
+                        }
+                        <!-- Usuario -->
+                        @if (Model.Usuarios.Where(u => u.IdUsuario == item.IdUsuario).FirstOrDefault() != null)
+                        {
+                            <td class="col-Nombre">@Model.Usuarios.Where(u => u.IdUsuario == item.IdUsuario).FirstOrDefault().Nombre</td>
+                        }
+                        else
+                        {
+                            <td class="col-Nombre">Vacío</td>
+                        }
+                        <!-- Correo -->
+                        @if (Model.Usuarios.Where(u => u.IdUsuario == item.IdUsuario).FirstOrDefault() != null)
+                        {
+                            <td>@Model.Usuarios.Where(u => u.IdUsuario == item.IdUsuario).FirstOrDefault().Correo</td>
+                        }
+                        else
+                        {
+                            <td>Vacío</td>
+                        }
+                        <td>@item.Accion</td>
+                        <td>@item.Fecha.ToString("dd-MM-yyyy")</td>
+                        <td>@item.Hora</td>
+                        
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+else
+{
+    <div class="alert alert-warning text-center mt-4">
+        <strong>⚠ No se encontraron Conductores registrados.</strong>
+    </div>
+}
+
+<p class="text-danger text-center">@ViewBag.Mensaje</p>
+
+<script>
+    function filtrarTransacciones() {
+        let inputNombre = document.getElementById("buscarTransaccion").value.toLowerCase();
+        let fechaInicio = document.getElementById("fechaInicio").value;
+        let fechaFin = document.getElementById("fechaFin").value;
+        let filas = document.getElementsByClassName("fila-transaccion");
+
+        for (let i = 0; i < filas.length; i++) {
+            let nombre = filas[i].getElementsByClassName("col-Nombre")[0].innerText.toLowerCase();
+            let fechaTexto = filas[i].getElementsByTagName("td")[5].innerText; // Índice de la columna de fecha
+            let fechaTransaccion = new Date(fechaTexto.split("-").reverse().join("-"));
+
+            let cumpleNombre = nombre.includes(inputNombre);
+            let cumpleFecha = true;
+
+            if (fechaInicio) {
+                let inicio = new Date(fechaInicio);
+                cumpleFecha = cumpleFecha && fechaTransaccion >= inicio;
+            }
+
+            if (fechaFin) {
+                let fin = new Date(fechaFin);
+                fin.setHours(23, 59, 59); // Incluir todo el día
+                cumpleFecha = cumpleFecha && fechaTransaccion <= fin;
+            }
+
+            filas[i].style.display = (cumpleNombre && cumpleFecha) ? "" : "none";
+        }
+    }
+</script>
