@@ -374,9 +374,8 @@ namespace AppTaxi.Controllers
 
             var login = CreateLogin(usuario);
             
-            
             ModeloVista modelo = new ModeloVista();
-
+            
             var usuariosTotales = await _usuario.Lista(login);
             var empresasRegistradas = await _empresa.Lista(login);
             var empresa = await _empresa.Obtener(IdEmpresa, login);
@@ -398,7 +397,7 @@ namespace AppTaxi.Controllers
 
 
         [HttpPost]
-        public async Task<IActionResult> Guardar_Empresa(Empresa empresa)
+        public async Task<IActionResult> Guardar_Empresa(ModeloVista modelo)
         {
             var usuario = GetUsuarioFromSession();
             if (usuario == null)
@@ -408,8 +407,7 @@ namespace AppTaxi.Controllers
             }
 
             var login = CreateLogin(usuario);
-
-            bool respuesta = await _empresa.Editar(empresa, login);
+            bool respuesta = await _empresa.Editar(modelo.Empresa, login);
 
             if (respuesta)
             {
@@ -421,7 +419,7 @@ namespace AppTaxi.Controllers
             {
                 ViewBag.Mensaje = "No se pudo guardar";
                 TempData["Mensaje"] = "No se pudo guardar";
-                return RedirectToAction("Editar_Empresa", new { IdEmpresa = empresa.IdEmpresa });
+                return RedirectToAction("Editar_Empresa", new { IdEmpresa = modelo.Empresa.IdEmpresa });
             }
 
             

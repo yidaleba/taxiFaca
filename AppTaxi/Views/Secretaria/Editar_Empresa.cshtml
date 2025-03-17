@@ -4,17 +4,18 @@
     Layout = "~/Views/Shared/_LayoutSecretaria.cshtml";
 }
 
-
 @if (TempData["Mensaje"] != null)
 {
-        <div class="alert alert-info text-center">@TempData["Mensaje"]</div>
+    <div class="alert alert-info text-center">@TempData["Mensaje"]</div>
 }
+
 @if (!string.IsNullOrEmpty(ViewBag.Mensaje))
 {
     <div class="alert alert-info mt-3" role="alert">
         @ViewBag.Mensaje
     </div>
 }
+
 @if (Model != null)
 {
     <div class="container mt-4">
@@ -26,6 +27,8 @@
                     </div>
                     <div class="card-body">
                         <form asp-action="Guardar_Empresa" asp-controller="Secretaria" method="post">
+                            <input type="hidden" asp-for="Empresa.IdEmpresa" />
+                            
                             <div class="mb-3">
                                 <label class="form-label"><strong>Nombre de la Empresa:</strong></label>
                                 <input type="text" class="form-control" placeholder="@Model.Empresa.Nombre" asp-for="Empresa.Nombre">
@@ -57,22 +60,26 @@
 
                             <div class="mb-3">
                                 <label class="form-label"><strong>Usuario Encargado:</strong></label>
-                                @if (Model.Usuarios.Count() > 0)
-                                {
-                                    <select class="form-select" asp-for="Empresa.IdUsuario" required>
-                                        <option value="">Seleccione un Usuario</option>
-                                        @foreach (var u in Model.Usuarios)
-                                        {
-                                            <option value="@u.IdUsuario">@u.Nombre</option>
-                                        }
-                                    </select>
-                                }
-                                else
-                                {
-                                    <select class="form-select" asp-for="Empresa.IdUsuario">
-                                        <option value="@Model.Empresa.IdUsuario">@Model.Usuario.Nombre</option>
-                                    </select>
-                                }
+                                <div class="mb-3">
+                                    <label class="form-label"><strong>Usuario Encargado:</strong></label>
+                                    @if (Model.Usuarios.Count() > 0)
+                                    {
+                                        <select class="form-select" asp-for="Empresa.IdUsuario" required>
+                                            <option value="">Seleccione un Usuario</option>
+                                            @foreach (var u in Model.Usuarios)
+                                            {
+                                                <option value="@u.IdUsuario">@u.Nombre</option>
+                                            }
+                                        </select>
+                                    }
+                                    else
+                                    {
+                                        <select class="form-select" asp-for="Empresa.IdUsuario">
+                                            <option value="@Model.Empresa.IdUsuario">@Model.Usuario.Nombre</option>
+                                        </select>
+                                    }
+
+                                </div>
 
                             </div>
 
