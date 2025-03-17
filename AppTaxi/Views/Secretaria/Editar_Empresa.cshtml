@@ -1,0 +1,98 @@
+﻿@model ModeloVista
+@{
+    ViewData["Title"] = "Editar_Empresa";
+    Layout = "~/Views/Shared/_LayoutSecretaria.cshtml";
+}
+
+
+@if (TempData["Mensaje"] != null)
+{
+        <div class="alert alert-info text-center">@TempData["Mensaje"]</div>
+}
+@if (!string.IsNullOrEmpty(ViewBag.Mensaje))
+{
+    <div class="alert alert-info mt-3" role="alert">
+        @ViewBag.Mensaje
+    </div>
+}
+@if (Model != null)
+{
+    <div class="container mt-4">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-primary text-white">
+                        <h4 class="mb-0 text-center"><strong>Editar Empresa</strong></h4>
+                    </div>
+                    <div class="card-body">
+                        <form asp-action="Guardar_Empresa" asp-controller="Secretaria" method="post">
+                            <div class="mb-3">
+                                <label class="form-label"><strong>Nombre de la Empresa:</strong></label>
+                                <input type="text" class="form-control" placeholder="@Model.Empresa.Nombre" asp-for="Empresa.Nombre">
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label"><strong>NIT:</strong></label>
+                                <input type="text" class="form-control" placeholder="@Model.Empresa.Nit" asp-for="Empresa.Nit">
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label"><strong>Encargado o Representante:</strong></label>
+                                <input type="text" class="form-control" placeholder="@Model.Empresa.Representante" asp-for="Empresa.Representante">
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label"><strong>Información de Contacto 1:</strong></label>
+                                <input type="text" class="form-control" placeholder="@Model.Empresa.RedPrincipal" asp-for="Empresa.RedPrincipal" required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label"><strong>Información de Contacto 2:</strong></label>
+                                <input type="text" class="form-control" placeholder="@Model.Empresa.RedSecundaria" asp-for="Empresa.RedSecundaria">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label"><strong>Capacidad de Transporte:</strong></label>
+                                <input type="number" class="form-control" placeholder="@Model.Empresa.Cupos" asp-for="Empresa.Cupos">
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label"><strong>Usuario Encargado:</strong></label>
+                                @if (Model.Usuarios.Count() > 0)
+                                {
+                                    <select class="form-select" asp-for="Empresa.IdUsuario" required>
+                                        <option value="">Seleccione un Usuario</option>
+                                        @foreach (var u in Model.Usuarios)
+                                        {
+                                            <option value="@u.IdUsuario">@u.Nombre</option>
+                                        }
+                                    </select>
+                                }
+                                else
+                                {
+                                    <select class="form-select" asp-for="Empresa.IdUsuario">
+                                        <option value="@Model.Empresa.IdUsuario">@Model.Usuario.Nombre</option>
+                                    </select>
+                                }
+
+                            </div>
+
+                            <div class="d-grid gap-2">
+                                <button type="submit" class="btn btn-outline-success">Modificar</button>
+                                <a href="javascript:history.back()" class="btn btn-outline-danger">Volver</a>
+                            </div>
+                        </form>
+
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+}
+else
+{
+    <div class="alert alert-warning text-center mt-4" role="alert">
+        <p>No se encontró el dato.</p>
+    </div>
+}

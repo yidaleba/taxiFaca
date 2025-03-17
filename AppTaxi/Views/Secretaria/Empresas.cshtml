@@ -50,10 +50,11 @@
                         <td>@Model.Usuarios.Where(u => u.IdUsuario == item.IdUsuario).FirstOrDefault().Nombre</td>
                         
                         <td>
-                                    <a asp-action="Detalle_Empresa" asp-controller="Secretaria" asp-route-IdEmpresa="@item.IdEmpresa" class="btn btn-primary btn-sm">
-                                
+                            <a asp-action="Detalle_Empresa" asp-controller="Secretaria" asp-route-IdEmpresa="@item.IdEmpresa" class="btn btn-outline-primary btn-sm">
                                 Detalle
-                                
+                            </a>
+                            <a asp-action="Editar_Empresa" asp-controller="Secretaria" asp-route-IdEmpresa="@item.IdEmpresa" class="btn btn-outline-warning btn-sm">
+                                Editar
                             </a>
 
                         </td>

@@ -363,6 +363,71 @@ namespace AppTaxi.Controllers
             return View(modelo);
         }
 
+        public async Task<IActionResult> Editar_Empresa(int IdEmpresa)
+        {
+            var usuario = GetUsuarioFromSession();
+            if (usuario == null)
+            {
+                ViewBag.Mensaje = "Usuario no autenticado.";
+                return RedirectToAction("Login", "Inicio");
+            }
+
+            var login = CreateLogin(usuario);
+            
+            
+            ModeloVista modelo = new ModeloVista();
+
+            var usuariosTotales = await _usuario.Lista(login);
+            var empresasRegistradas = await _empresa.Lista(login);
+            var empresa = await _empresa.Obtener(IdEmpresa, login);
+            var usuarioEmp = await _usuario.Obtener(empresa.IdUsuario, login);
+
+            // Filtrar usuarios que no están en empresasRegistradas y que tengan IdRol = 1
+           
+            modelo.Usuario = usuarioEmp;
+            modelo.Empresa = empresa;
+            modelo.Empresas = empresasRegistradas;
+            modelo.Usuarios = usuariosTotales
+                .Where(u => u.IdRol == 1 && !empresasRegistradas.Any(e => e.IdUsuario == u.IdUsuario))
+                .ToList();
+
+
+
+            return View(modelo);
+        }
+
+
+        [HttpPost]
+        public async Task<IActionResult> Guardar_Empresa(Empresa empresa)
+        {
+            var usuario = GetUsuarioFromSession();
+            if (usuario == null)
+            {
+                ViewBag.Mensaje = "Usuario no autenticado.";
+                return RedirectToAction("Login", "Inicio");
+            }
+
+            var login = CreateLogin(usuario);
+
+            bool respuesta = await _empresa.Editar(empresa, login);
+
+            if (respuesta)
+            {
+                Transaccion t = Crear_Transaccion("Editar", "Empresa");
+                bool guardar = await _transaccion.Guardar(t, login);
+                return RedirectToAction("Empresas");
+            }
+            else
+            {
+                ViewBag.Mensaje = "No se pudo guardar";
+                TempData["Mensaje"] = "No se pudo guardar";
+                return RedirectToAction("Editar_Empresa", new { IdEmpresa = empresa.IdEmpresa });
+            }
+
+            
+        }
+
+
         [HttpPost]
         public async Task<IActionResult> Agregar_Empresa(ModeloVista modelo)
         {
@@ -383,6 +448,7 @@ namespace AppTaxi.Controllers
             {
                 Transaccion t = Crear_Transaccion("Guardar", "Empresa");
                 bool guardar = await _transaccion.Guardar(t, login);
+                TempData["Mensaje"] = "Editado Correctamente";
                 return RedirectToAction("Empresas","Secretaria");
             }
             else
