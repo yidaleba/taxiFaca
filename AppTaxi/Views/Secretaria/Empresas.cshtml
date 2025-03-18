@@ -4,89 +4,89 @@
     Layout = "~/Views/Shared/_LayoutSecretaria.cshtml";
 }
 
-<h1 class="mb-4 text-center text-primary">Empresas Actuales:</h1>
+<div class="container">
+    <h1 class="mb-4 text-center text-primary">Empresas Actuales</h1>
 
-<div class="d-flex justify-content-between align-items-center mb-3">
-    <a asp-action="Vista_Agregar_Empresa" asp-controller="Secretaria" class="btn btn-outline-success">
-        <strong>➕ Agregar Empresa</strong>
-    </a>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <a asp-action="Vista_Agregar_Empresa" asp-controller="Secretaria" class="btn btn-success">
+            <i class="bi bi-plus-lg"></i> Agregar Empresa
+        </a>
 
-    <input type="text" id="buscarEmpresa" class="form-control w-25" placeholder="🔍 Buscar por Nombre..." onkeyup="filtrarEmpresas()">
+        <div class="w-25">
+            <input type="text" id="buscarEmpresa" class="form-control"
+                   placeholder="🔎Buscar por nombre..." onkeyup="filtrarEmpresas()">
+        </div>
+    </div>
+
+    @if (Model != null && Model.Empresas.Any())
+    {
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4" id="contenedor-empresas">
+            @foreach (var item in Model.Empresas)
+            {
+                <div class="col fila-empresa" data-empresa-nombre="@item.Nombre.ToLower()">
+                    <div class="card h-100 shadow-sm">
+                        <div class="card-header bg-primary text-white">
+                            <h5 class="card-title mb-0 text-center"><strong>@item.Nombre</strong></h5>
+                        </div>
+
+                        <div class="card-body">
+                            <dl class="row mb-0">
+                                <dt class="col-sm-5">NIT:</dt>
+                                <dd class="col-sm-7">@item.Nit</dd>
+
+                                <dt class="col-sm-5">ID Empresa:</dt>
+                                <dd class="col-sm-7">@item.IdEmpresa</dd>
+
+                                <dt class="col-sm-5">Representante:</dt>
+                                <dd class="col-sm-7">@item.Representante</dd>
+
+                                <dt class="col-sm-5">Cupos:</dt>
+                                <dd class="col-sm-7">@item.Cupos</dd>
+
+                                <dt class="col-sm-5">Usuario:</dt>
+                                <dd class="col-sm-7">
+                                    @Model.Usuarios.FirstOrDefault(u => u.IdUsuario == item.IdUsuario)?.Nombre
+                                </dd>
+                            </dl>
+                        </div>
+
+                        <div class="card-footer bg-transparent">
+                            <div class="d-grid gap-2 d-md-flex justify-content-between">
+                                <a asp-action="Detalle_Empresa" asp-controller="Secretaria"
+                                   asp-route-IdEmpresa="@item.IdEmpresa"
+                                   class="btn btn-outline-primary btn-sm">
+                                    <i class="bi bi-info-circle"></i> Detalle
+                                </a>
+                                <a asp-action="Editar_Empresa" asp-controller="Secretaria"
+                                   asp-route-IdEmpresa="@item.IdEmpresa"
+                                   class="btn btn-outline-warning btn-sm">
+                                    <i class="bi bi-pencil-square"></i> Editar
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-warning text-center mt-4">
+            <strong><i class="bi bi-exclamation-triangle"></i> No se encontraron empresas registradas</strong>
+        </div>
+    }
+
+    <p class="text-danger text-center mt-3">@ViewBag.Mensaje</p>
 </div>
-
-@if (Model != null && Model.Empresas.Any())
-{
-    <div class="table-responsive">
-        <table class="table table-hover text-center">
-            <thead class="table-dark">
-                <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Nombre</th>
-                    <th scope="col">NIT</th>
-                    <th scope="col">ID</th>
-                    <th scope="col">Representante</th>
-                    <th scope="col">Cupos</th>
-                    <th scope="col">Usuario</th>
-                    <th scope="col">Acciones</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var item in Model.Empresas)
-                {
-                    <tr class="fila-empresa">
-                        
-                        <td>@item.Contador</td>
-
-                        <td class="col-Empresa">@item.Nombre</td>
-                        
-                        <td>@item.Nit</td>
-
-                        <td>@item.IdEmpresa</td>
-                        
-                        <td>@item.Representante</td>
-                        
-                        <td>@item.Cupos</td>
-                        
-                        <td>@Model.Usuarios.Where(u => u.IdUsuario == item.IdUsuario).FirstOrDefault().Nombre</td>
-                        
-                        <td>
-                            <a asp-action="Detalle_Empresa" asp-controller="Secretaria" asp-route-IdEmpresa="@item.IdEmpresa" class="btn btn-outline-primary btn-sm">
-                                Detalle
-                            </a>
-                            <a asp-action="Editar_Empresa" asp-controller="Secretaria" asp-route-IdEmpresa="@item.IdEmpresa" class="btn btn-outline-warning btn-sm">
-                                Editar 
-                            </a>
-
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-    </div>
-}
-else
-{
-    <div class="alert alert-warning text-center mt-4">
-        <strong>⚠ No se encontraron empresas registradas.</strong>
-    </div>
-}
-
-<p class="text-danger text-center">@ViewBag.Mensaje</p>
 
 <script>
     function filtrarEmpresas() {
-        let input = document.getElementById("buscarEmpresa").value.toLowerCase();
-        let filas = document.getElementsByClassName("fila-empresa");
+        const input = document.getElementById('buscarEmpresa').value.toLowerCase();
+        const cards = document.querySelectorAll('.fila-empresa');
 
-        for (let i = 0; i < filas.length; i++) {
-            let empresa = filas[i].getElementsByClassName("col-Empresa")[0].innerText.toLowerCase();
-            filas[i].style.display = empresa.includes(input) ? "" : "none";
-        }
+        cards.forEach(card => {
+            const nombreEmpresa = card.dataset.empresaNombre;
+            card.style.display = nombreEmpresa.includes(input) ? 'block' : 'none';
+        });
     }
 </script>
-
-
-
-
-
-
