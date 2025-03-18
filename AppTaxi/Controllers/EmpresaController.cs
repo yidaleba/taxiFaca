@@ -7,6 +7,7 @@ using Newtonsoft.Json;
 using NPOI.OpenXmlFormats.Spreadsheet;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Threading.Tasks;
 
 namespace AppTaxi.Controllers
@@ -35,7 +36,8 @@ namespace AppTaxi.Controllers
         }
 
 
-
+        // En tu servicio de usuarios
+        
         private async Task<int> Cupos()
         {
             var usuario = GetUsuarioFromSession();
@@ -94,6 +96,9 @@ namespace AppTaxi.Controllers
             return transaccion;
 
         }
+
+        
+
         //------------ Acciones principales ------------
 
         // Muestra la página de inicio con los datos de la empresa, vehículos, horarios y conductores asociados.
@@ -107,7 +112,7 @@ namespace AppTaxi.Controllers
             }
 
             var login = CreateLogin(usuario);
-
+            
             // Ejecutar todas las llamadas API en paralelo para reducir el tiempo de espera
             var empresasTask = _empresa.Lista(login);
             var vehiculosTask = _vehiculo.Lista(login);
@@ -239,6 +244,7 @@ namespace AppTaxi.Controllers
 
             var empresa = empresas.Where(e => e.IdUsuario == usuario.IdUsuario).FirstOrDefault();
             ViewBag.Cupos = empresa.Cupos - await Cupos();
+
 
             return View(dato);
         }
@@ -667,6 +673,7 @@ namespace AppTaxi.Controllers
 
             var conductor = await _conductor.Obtener(modelo.Conductor.IdConductor, login);
             var usuarios = await _usuario.Lista(login);
+
             var usuarioConductor = usuarios.Where(u => u.Correo == conductor.Correo && enc.DesencriptarSimple(u.Contrasena) == enc.DesencriptarSimple(conductor.Contrasena)).FirstOrDefault();
 
             // Convertir archivos PDF a Base64
@@ -743,12 +750,12 @@ namespace AppTaxi.Controllers
             }
 
             
-            bool respuesta = await _conductor.Editar(modelo.Conductor, login);
+            
 
-            if (respuesta)
+            if (usuarioConductor != null)
             {
-                 
-                if (usuarioConductor != null)
+                bool respuesta = await _conductor.Editar(modelo.Conductor, login);
+                if (respuesta)
                 {
                     usuarioConductor.Correo = modelo.Conductor.Correo;
                     usuarioConductor.Contrasena = modelo.Conductor.Contrasena;
@@ -777,14 +784,14 @@ namespace AppTaxi.Controllers
                 }
                 else
                 {
-                    TempData["Mensaje"] = $"No se encontró usuario asignado {modelo.Conductor.Contrasena}";
+                    TempData["Mensaje"] = $"Respuesta Negativa al Guardar";
                     return RedirectToAction("Editar_Conductor", new { IdConductor = modelo.Conductor.IdConductor });
                 }
 
             }
             else
             {
-                TempData["Mensaje"] = "Respuesta Negativa al Guardar";
+                TempData["Mensaje"] = $"No se encontró usuario asignado {modelo.Conductor.Contrasena}";
                 
                 return RedirectToAction("Editar_Conductor", new { IdConductor = modelo.Conductor.IdConductor });
             }
@@ -1538,9 +1545,7 @@ namespace AppTaxi.Controllers
                 if (existeConflicto)
                 {
                     TempData["Mensaje"] = "Ya hay un horario asignado en el rango de fechas y horas asignadas";
-
                     ViewBag.Mensaje = "Ya hay un horario asignado en el rango de fechas y horas asignadas";
-
                     return RedirectToAction("Asignar_Horario", new { IdConductor = modelo.Conductor.IdConductor });
                 }
             }

@@ -18,7 +18,7 @@ builder.Services.AddScoped<I_Transaccion, API_Transaccion>();
 
 builder.Services.AddSession(options =>
 {
-    options.IdleTimeout = TimeSpan.FromMinutes(30); // Tiempo de expiración de la sesión
+    options.IdleTimeout = TimeSpan.FromMinutes(50); // Tiempo de expiración de la sesión
     options.Cookie.HttpOnly = true;
     options.Cookie.IsEssential = true;
 });

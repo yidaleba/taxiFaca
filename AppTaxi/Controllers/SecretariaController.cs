@@ -1,4 +1,5 @@
-﻿using AppTaxi.Models;
+﻿using AppTaxi.Funciones;
+using AppTaxi.Models;
 using AppTaxi.Servicios;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ActionConstraints;
@@ -74,6 +75,8 @@ namespace AppTaxi.Controllers
 
         }
 
+        
+
         //------------ Acciones principales ------------
         public async Task<IActionResult> Inicio()
         {
@@ -85,6 +88,7 @@ namespace AppTaxi.Controllers
             }
 
             var login = CreateLogin(usuario);
+            
             var usuarios = await _usuario.Lista(login);
             
             return View(usuario);
