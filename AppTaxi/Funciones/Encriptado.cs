@@ -7,20 +7,10 @@ namespace AppTaxi.Funciones
 {
     public class Encriptado
     {
-        // Encriptación segura con BCrypt
-        public string EncriptarContraseña(string contraseña)
-        {
-            return BCrypt.Net.BCrypt.HashPassword(contraseña);
-        }
-
-        public bool VerificarContraseña(string contraseña, string hash)
-        {
-            return BCrypt.Net.BCrypt.Verify(contraseña, hash);
-        }
+        
 
         // Encriptación y desencriptación más simple con AES
         
-
         public string EncriptarSimple(string contraseña)
         {
             byte[] bytes = Encoding.UTF8.GetBytes(contraseña);

@@ -20,9 +20,10 @@ namespace AppTaxi.Controllers
         private readonly I_Empresa _empresa;
         private readonly I_Conductor _conductor;
         private readonly I_Transaccion _transaccion;
+        private readonly I_Usuario _usuario;
         
         // Constructor que recibe las dependencias inyectadas.
-        public EmpresaController(I_Vehiculo vehiculo, I_Horario horario, I_Propietario propietario, I_Empresa empresa, I_Conductor conductor, I_Transaccion transaccion)
+        public EmpresaController(I_Vehiculo vehiculo, I_Horario horario, I_Propietario propietario, I_Empresa empresa, I_Conductor conductor, I_Transaccion transaccion, I_Usuario usuario)
         {
             _vehiculo = vehiculo;
             _horario = horario;
@@ -30,6 +31,7 @@ namespace AppTaxi.Controllers
             _empresa = empresa;
             _conductor = conductor;
             _transaccion = transaccion;
+            _usuario = usuario;
         }
 
 
@@ -162,6 +164,7 @@ namespace AppTaxi.Controllers
 
             var empresa = empresas.Where(e => e.IdUsuario == usuario.IdUsuario).FirstOrDefault();
             ViewBag.Cupos = empresa.Cupos - await Cupos();
+
 
             return View(DatosIniciales);
         }
@@ -630,8 +633,8 @@ namespace AppTaxi.Controllers
             ModeloVista modelo = new ModeloVista();
             var login = CreateLogin(usuario);
             var conductor = await _conductor.Obtener(IdConductor, login);
-            //string Contrasena = enc.DesencriptarSimple(conductor.Contrasena);
-            //conductor.Contrasena = Contrasena;
+            string Contrasena = enc.DesencriptarSimple(conductor.Contrasena);
+            conductor.Contrasena = Contrasena;
             modelo.Conductor = conductor;
 
             List<Empresa> empresasTot = await _empresa.Lista(login);
@@ -646,10 +649,11 @@ namespace AppTaxi.Controllers
         [HttpPost]
         public async Task<IActionResult> Guardar_Conductor(ModeloVista modelo)
         {
+            Encriptado enc = new Encriptado();
             var usuario = GetUsuarioFromSession();
             if (usuario == null)
             {
-                ViewBag.Mensaje = "Usuario no autenticado.";
+                TempData["Mensaje"] = "Usuario no autenticado.";
                 return RedirectToAction("Login", "Inicio");
             }
 
@@ -672,7 +676,7 @@ namespace AppTaxi.Controllers
                     string textoExtraido = sistema.ProcesarPdfConOCR(modelo.Archivo_1);
 
                     // Validar si el documento es una cédula
-                    bool esDocumento = sistema.Contiene(textoExtraido.ToUpper(), new string[] { "REPÚBLICA", "COLOMBIA" },'Y');
+                    bool esDocumento = sistema.Contiene(textoExtraido.ToUpper(), new string[] { "REPÚBLICA", "COLOMBIA" }, 'Y');
 
                     if (esDocumento)
                     {
@@ -686,20 +690,20 @@ namespace AppTaxi.Controllers
                     {
                         //TempData["Mensaje"] = textoExtraido;
                         TempData["Mensaje"] = $"El documento ingresado no es una Cédula o no es legible";
-                        return RedirectToAction("Editar_Conductor", new {IdConductor = modelo.Conductor.IdConductor});
+                        return RedirectToAction("Editar_Conductor", new { IdConductor = modelo.Conductor.IdConductor });
                     }
                 }
                 catch (Exception ex)
                 {
-                    ViewBag.Mensaje = $"Error al procesar el documento: {ex.Message}";
+                    TempData["Mensaje"] = $"Error al procesar el documento: {ex.Message}";
                     return RedirectToAction("Editar_Conductor", new { IdConductor = modelo.Conductor.IdConductor });
                 }
             }
-            else
+            /*else
             {
-                ViewBag.Mensaje = "No se ha subido ningún archivo.";
+                TempData["Mensaje"] = "No se ha subido ningún archivo.";
                 return RedirectToAction("Editar_Conductor", new { IdConductor = modelo.Conductor.IdConductor });
-            }
+            }*/
 
             if (modelo.Archivo_2 != null)
             {
@@ -729,24 +733,54 @@ namespace AppTaxi.Controllers
             }
             if (modelo.Conductor.Contrasena != null)
             {
-                Encriptado enc = new Encriptado();
+
                 string Contrasena = enc.EncriptarSimple(modelo.Conductor.Contrasena);
                 modelo.Conductor.Contrasena = Contrasena;
             }
 
-
+            var usuarios = await _usuario.Lista(login);
+            var usuarioConductor = usuarios.Where(u => u.Correo == modelo.Conductor.Correo && enc.DesencriptarSimple(u.Contrasena) == enc.DesencriptarSimple(modelo.Conductor.Contrasena)).FirstOrDefault();
             bool respuesta = await _conductor.Editar(modelo.Conductor, login);
 
             if (respuesta)
             {
-                Transaccion t = Crear_Transaccion("Editar", "Conductor");
-                bool guardar = await _transaccion.Guardar(t, login);
-                return RedirectToAction("Conductores");
+                 
+                if (usuarioConductor != null)
+                {
+                    usuarioConductor.Correo = modelo.Conductor.Correo;
+                    usuarioConductor.Contrasena = modelo.Conductor.Contrasena;
+                    usuarioConductor.Foto = modelo.Conductor.Foto;
+                    usuarioConductor.Nombre = modelo.Conductor.Nombre;
+                    usuarioConductor.Telefono = modelo.Conductor.Telefono;
+                    usuarioConductor.Direccion = modelo.Conductor.Direccion;
+                    usuarioConductor.Ciudad = modelo.Conductor.Ciudad;
+                    usuarioConductor.Celular = modelo.Conductor.Celular;
+                    usuarioConductor.Estado = true;
+                    bool respuestaUsuario = await _usuario.Editar(usuarioConductor, login);
+                    if (respuestaUsuario)
+                    {
+                        Transaccion t = Crear_Transaccion("Editar", "Conductor");
+                        bool guardar = await _transaccion.Guardar(t, login);
+                        return RedirectToAction("Conductores");
+                    }
+                    else
+                    {
+                        TempData["Mensaje"] = "No se pudo Guardar el Usuario";
+                        return RedirectToAction("Editar_Conductor", new { IdConductor = modelo.Conductor.IdConductor });
+                    }
+
+                }
+                else
+                {
+                    TempData["Mensaje"] = $"No se encontró usuario asignado {modelo.Conductor.Contrasena}";
+                    return RedirectToAction("Editar_Conductor", new { IdConductor = modelo.Conductor.IdConductor });
+                }
+
             }
             else
             {
-                ViewBag.Mensaje = "No se pudo Guardar";
-                TempData["Mensaje"] = "No se pudo Guardar";
+                TempData["Mensaje"] = "Respuesta Negativa al Guardar";
+                
                 return RedirectToAction("Editar_Conductor", new { IdConductor = modelo.Conductor.IdConductor });
             }
         }
@@ -831,7 +865,7 @@ namespace AppTaxi.Controllers
             // Valida si el conductor ya está registrado.
             if (conductores.Any(c => c.NumeroCedula == modelo.Conductor.NumeroCedula))
             {
-                ViewBag.Mensaje = "El conductor ya está registrado";
+                TempData["Mensaje"] = "El conductor ya está registrado";
                 return View("Agregar_Conductor");
             }
 
@@ -928,17 +962,44 @@ namespace AppTaxi.Controllers
 
             if (respuesta)
             {
-                var conductoresGuardados = await _conductor.Lista(login);
-                var conductorGuardado = conductoresGuardados.FirstOrDefault(c => c.NumeroCedula == modelo.Conductor.NumeroCedula);
-                ViewBag.IdConductor = conductorGuardado?.IdConductor;
-                ViewBag.Exito = true;
-                Transaccion t = Crear_Transaccion("Guardar", "Conductor");
-                bool guardar = await _transaccion.Guardar(t, login);
-                return RedirectToAction("Conductores");
+                Usuario usuarioConductor = new Usuario();
+
+                usuarioConductor.Correo =modelo.Conductor.Correo;
+                usuarioConductor.Contrasena = modelo.Conductor.Contrasena;
+                usuarioConductor.Foto = modelo.Conductor.Foto;
+                usuarioConductor.Nombre = modelo.Conductor.Nombre;
+                usuarioConductor.Telefono = modelo.Conductor.Telefono;
+                usuarioConductor.Direccion = modelo.Conductor.Direccion;
+                usuarioConductor.Ciudad = modelo.Conductor.Ciudad;
+                usuarioConductor.Celular = modelo.Conductor.Celular;
+                usuarioConductor.Estado = true;
+                usuarioConductor.IdRol = 1006;
+
+                bool crearUsuario = await _usuario.Guardar(usuarioConductor, login);
+                if(crearUsuario)
+                {
+                    var conductoresGuardados = await _conductor.Lista(login);
+                    var conductorGuardado = conductoresGuardados.FirstOrDefault(c => c.NumeroCedula == modelo.Conductor.NumeroCedula);
+                    ViewBag.IdConductor = conductorGuardado?.IdConductor;
+                    ViewBag.Exito = true;
+
+
+                    Transaccion t = Crear_Transaccion("Guardar", "Conductor");
+                    bool guardar = await _transaccion.Guardar(t, login);
+
+                    TempData["Mensaje"] = "Guardado Exitosamente";
+                    return RedirectToAction("Conductores");
+                }
+                else
+                {
+                    TempData["Mensaje"] = $"No se pudo Crear el Usuario";
+                    return View("Agregar_Conductor");
+                }
+                
             }
             else
             {
-                ViewBag.Mensaje = $"No se pudo Guardar {modelo.Conductor.Eps}";
+                TempData["Mensaje"] = $"No se pudo Guardar {modelo.Conductor.Eps}";
                 return View("Agregar_Conductor");
             }
         }
