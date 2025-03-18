@@ -54,6 +54,11 @@ namespace AppTaxi.Controllers
 
         public IActionResult Login()
         {
+            /*Encriptado enc = new Encriptado();
+            string texto = "hola123";
+            string encriptado = enc.EncriptarSimple(texto);
+            string desencriptado = enc.DesencriptarSimple(encriptado);
+            TempData["Mensaje"] = $"E {encriptado} y D {desencriptado}";*/
             return View();
         }
 
@@ -90,6 +95,8 @@ namespace AppTaxi.Controllers
                         return RedirectToAction("Inicio", "Secretaria");
                     case 1004:
                         return RedirectToAction("Inicio", "Admin");
+                    case 1006:
+                        return RedirectToAction("Inicio", "Conductor");
                     default:
                         return View("Login");
                 }
