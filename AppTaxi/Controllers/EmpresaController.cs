@@ -665,6 +665,10 @@ namespace AppTaxi.Controllers
             ViewBag.Cupos = empresa.Cupos - await Cupos();
             modelo.Conductor.Estado = true;
 
+            var conductor = await _conductor.Obtener(modelo.Conductor.IdConductor, login);
+            var usuarios = await _usuario.Lista(login);
+            var usuarioConductor = usuarios.Where(u => u.Correo == conductor.Correo && enc.DesencriptarSimple(u.Contrasena) == enc.DesencriptarSimple(conductor.Contrasena)).FirstOrDefault();
+
             // Convertir archivos PDF a Base64
             if (modelo.Archivo_1 != null && modelo.Archivo_1.Length > 0)
             {
@@ -738,8 +742,7 @@ namespace AppTaxi.Controllers
                 modelo.Conductor.Contrasena = Contrasena;
             }
 
-            var usuarios = await _usuario.Lista(login);
-            var usuarioConductor = usuarios.Where(u => u.Correo == modelo.Conductor.Correo && enc.DesencriptarSimple(u.Contrasena) == enc.DesencriptarSimple(modelo.Conductor.Contrasena)).FirstOrDefault();
+            
             bool respuesta = await _conductor.Editar(modelo.Conductor, login);
 
             if (respuesta)
@@ -759,8 +762,10 @@ namespace AppTaxi.Controllers
                     bool respuestaUsuario = await _usuario.Editar(usuarioConductor, login);
                     if (respuestaUsuario)
                     {
-                        Transaccion t = Crear_Transaccion("Editar", "Conductor");
-                        bool guardar = await _transaccion.Guardar(t, login);
+                        Transaccion t1 = Crear_Transaccion("Editar", "Conductor");
+                        bool guardar1 = await _transaccion.Guardar(t1, login);
+                        Transaccion t2 = Crear_Transaccion("Editar", "Usuario");
+                        bool guardar2 = await _transaccion.Guardar(t2, login);
                         return RedirectToAction("Conductores");
                     }
                     else
@@ -984,8 +989,10 @@ namespace AppTaxi.Controllers
                     ViewBag.Exito = true;
 
 
-                    Transaccion t = Crear_Transaccion("Guardar", "Conductor");
-                    bool guardar = await _transaccion.Guardar(t, login);
+                    Transaccion t1 = Crear_Transaccion("Guardar", "Conductor");
+                    bool guardar1 = await _transaccion.Guardar(t1, login);
+                    Transaccion t2 = Crear_Transaccion("Guardar", "Usuario");
+                    bool guardar2 = await _transaccion.Guardar(t2, login);
 
                     TempData["Mensaje"] = "Guardado Exitosamente";
                     return RedirectToAction("Conductores");
