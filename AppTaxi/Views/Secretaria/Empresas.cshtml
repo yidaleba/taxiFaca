@@ -9,7 +9,7 @@
 
     <div class="d-flex justify-content-between align-items-center mb-4">
         <a asp-action="Vista_Agregar_Empresa" asp-controller="Secretaria" class="btn btn-success">
-            <i class="bi bi-plus-lg"></i> Agregar Empresa
+            <i class="bi bi-plus-lg"></i> <strong>Agregar Empresa</strong>
         </a>
 
         <div class="w-25">
@@ -55,12 +55,12 @@
                                 <a asp-action="Detalle_Empresa" asp-controller="Secretaria"
                                    asp-route-IdEmpresa="@item.IdEmpresa"
                                    class="btn btn-outline-primary btn-sm">
-                                    <i class="bi bi-info-circle"></i> Detalle
+                                    <i class="bi bi-info-circle"></i> <strong>Detalle</strong>
                                 </a>
                                 <a asp-action="Editar_Empresa" asp-controller="Secretaria"
                                    asp-route-IdEmpresa="@item.IdEmpresa"
                                    class="btn btn-outline-warning btn-sm">
-                                    <i class="bi bi-pencil-square"></i> Editar
+                                    <i class="bi bi-pencil-square"></i> <strong>Editar</strong>
                                 </a>
                             </div>
                         </div>
