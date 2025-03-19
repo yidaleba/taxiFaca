@@ -1,0 +1,32 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"] - Secretaría</title>
+
+    <!-- Bootstrap y Google Fonts -->
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true">
+    <link rel="stylesheet" href="~/AppTaxi.styles.css" asp-append-version="true">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Big+Shoulders:wght@100..900&display=swap" rel="stylesheet">
+</head>
+<body>
+    
+    <div>
+        <a asp-controller="Conductor" asp-action="Inicio">Taxis Faca</a>
+        <ul>
+            <li><a asp-controller="Conductor" asp-action="Horarios">Empresas</a></li>
+            <li><a asp-controller="Conductor" asp-action="Perfil">Transacciones</a></li>
+            <li><a asp-controller="Inicio" asp-action="CerrarSesion">Cerrar Sesión</a></li>
+        </ul>
+    </div>
+    <h4>@ViewData["Title"]</h4>
+    <main>
+        @RenderBody()
+    </main>
+    
+</body>
+</html>
