@@ -1,0 +1,105 @@
+﻿@model ModeloVista
+@{
+    ViewData["Title"] = "Editar_Usuario";
+    Layout = "~/Views/Shared/_LayoutSecretaria.cshtml";
+}
+@if (TempData["Mensaje"] != null)
+{
+    <div class="alert alert-warning text-center">@TempData["Mensaje"]</div>
+}
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0 text-center"><strong>Agregar Nuevo Usuario</strong></h4>
+                </div>
+                <div class="card-body">
+                    <form asp-action="Guardar_Usuario" asp-controller="Secretaria" method="post" enctype="multipart/form-data">
+                        <input type="hidden" asp-for="Usuario.IdUsuario" />
+                        <div class="mb-3">
+                            <label class="form-label"><strong>Foto:</strong></label>
+                            <input type="file" class="form-control" asp-for="Archivo_4" placeholder="Foto" accept=".png, .jpg, .jpeg">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label"><strong>Nombre:</strong></label>
+                            <input type="text" class="form-control" placeholder="@Model.Usuario.Nombre" asp-for="Usuario.Nombre">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label"><strong>Correo:</strong></label>
+                            <input type="email" class="form-control" placeholder="@Model.Usuario.Correo" asp-for="Usuario.Correo">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label"><strong>Contraseña:</strong></label>
+                            <input type="password" class="form-control" id="password" asp-for="Usuario.Contrasena" >
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label"><strong>Confirmar Contraseña:</strong></label>
+                            <input type="password" class="form-control" id="confirmPassword">
+                            <small id="passwordError" class="text-danger d-none">Las contraseñas no coinciden</small>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label"><strong>Celular 1:</strong></label>
+                            <input type="number" class="form-control" placeholder="@Model.Usuario.Celular" asp-for="Usuario.Celular">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label"><strong>Celular 2:</strong></label>
+                            <input type="number" class="form-control" placeholder="@Model.Usuario.Telefono" asp-for="Usuario.Telefono">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label"><strong>Dirección:</strong></label>
+                            <input type="text" class="form-control" placeholder="@Model.Usuario.Direccion" asp-for="Usuario.Direccion">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label"><strong>Ciudad:</strong></label>
+                            <input type="text" class="form-control" placeholder="@Model.Usuario.Ciudad" asp-for="Usuario.Ciudad">
+                        </div>
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-warning">Editar</button>
+                            <a href="javascript:history.back()" class="btn btn-danger">Volver</a>
+                        </div>
+                    </form>
+                    @if (!string.IsNullOrEmpty(ViewBag.Mensaje))
+                    {
+                        <div class="alert alert-info mt-3" role="alert">
+                            @ViewBag.Mensaje
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const password = document.getElementById("password");
+        const confirmPassword = document.getElementById("confirmPassword");
+        const passwordError = document.getElementById("passwordError");
+        const submitButton = document.querySelector("button[type='submit']");
+
+        function validatePassword() {
+            if (confirmPassword.value !== password.value || confirmPassword.value === "") {
+                passwordError.classList.remove("d-none");
+                submitButton.disabled = true; // Deshabilita el botón
+            } else {
+                passwordError.classList.add("d-none");
+                submitButton.disabled = false; // Habilita el botón
+            }
+        }
+
+        password.addEventListener("input", validatePassword);
+        confirmPassword.addEventListener("input", validatePassword);
+
+        // Evitar el envío del formulario si las contraseñas no coinciden
+        document.querySelector("form").addEventListener("submit", function (event) {
+            if (confirmPassword.value !== password.value) {
+                event.preventDefault(); // Bloquea el envío del formulario
+            }
+        });
+    });
+</script>
+
+
+

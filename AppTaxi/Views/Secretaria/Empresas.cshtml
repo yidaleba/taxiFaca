@@ -44,9 +44,19 @@
                                 <dd class="col-sm-7">@item.Cupos</dd>
 
                                 <dt class="col-sm-5">Usuario:</dt>
-                                <dd class="col-sm-7">
-                                    @Model.Usuarios.FirstOrDefault(u => u.IdUsuario == item.IdUsuario)?.Nombre
-                                </dd>
+                                @if (Model.Usuarios.FirstOrDefault(u => u.IdUsuario == item.IdUsuario) != null)
+                                {
+                                    <dd class="col-sm-7">
+                                        @Model.Usuarios.FirstOrDefault(u => u.IdUsuario == item.IdUsuario)?.Nombre
+                                    </dd>
+                                }
+                                else
+                                {
+                                    <dd class="col-sm-7">
+                                        <i>Vacío</i>
+                                    </dd>
+                                }
+                                
                             </dl>
                         </div>
 

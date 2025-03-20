@@ -503,7 +503,207 @@ namespace AppTaxi.Controllers
             return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Reporte.xlsx");
         }
 
+        
 
+        public async Task<IActionResult> Usuarios()
+        {
+            var usuario = GetUsuarioFromSession();
+            if (usuario == null)
+            {
+                ViewBag.Mensaje = "Usuario no autenticado.";
+                return RedirectToAction("Login", "Inicio");
+            }
+
+            var login = CreateLogin(usuario);
+            ModeloVista modelo = new ModeloVista();
+
+            var usuarios = await _usuario.Lista(login);
+            var empresas = await _empresa.Lista(login);
+            modelo.Usuarios = usuarios.Where(u => u.IdRol == 1).ToList();
+
+            modelo.Empresas = empresas;
+            if (modelo.Usuarios.Count() > 0)
+            {
+
+                int i = 0;
+                while (true)
+                {
+                    modelo.Usuarios[i].Contador = i + 1;
+                    if (i == modelo.Usuarios.Count() - 1)
+                    {
+                        break;
+                    }
+                    else
+                    {
+                        i++;
+                    }
+                }
+            }
+            return View(modelo);
+
+        }
+
+        public IActionResult Agregar_Usuario()
+        {
+            var usuario = GetUsuarioFromSession();
+            if (usuario == null)
+            {
+                ViewBag.Mensaje = "Usuario no autenticado.";
+                return RedirectToAction("Login", "Inicio");
+            }
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Crear_Usuario(ModeloVista modelo)
+        {
+            var usuario = GetUsuarioFromSession();
+            if (usuario == null)
+            {
+                ViewBag.Mensaje = "Usuario no autenticado.";
+                return RedirectToAction("Login", "Inicio");
+            }
+            var login = CreateLogin(usuario);
+
+            modelo.Usuario.IdRol = 1;
+            if (modelo.Archivo_4 != null)
+            {
+                using (var ms = new MemoryStream())
+                {
+                    await modelo.Archivo_4.CopyToAsync(ms);
+                    modelo.Usuario.Foto = Convert.ToBase64String(ms.ToArray());
+                }
+            }
+            else
+            {
+                modelo.Usuario.Foto = "N/F";
+            }
+
+            modelo.Usuario.Estado = true;
+            bool respuesta = await _usuario.Guardar(modelo.Usuario, login);
+
+            if (respuesta)
+            {
+                Transaccion t = Crear_Transaccion("Guardar", "Usuario");
+                bool guardar = await _transaccion.Guardar(t, login);
+                TempData["Mensaje"] = "Guardado Correctamente";
+                return RedirectToAction("Usuarios", "Secretaria");
+            }
+            else
+            {
+                ViewBag.Mensaje = "No se Pudo Guardar";
+                return View("Agregar_Usuario");
+            }
+
+        }
+        [HttpPost]
+        public async Task<IActionResult> Deshabilitar_Usuario(int IdUsuario)
+        {
+            var usuario = GetUsuarioFromSession();
+            if (usuario == null)
+            {
+                TempData["Mensaje"] = "Usuario no autenticado.";
+                return RedirectToAction("Login", "Inicio");
+            }
+
+            var login = CreateLogin(usuario);
+            Usuario user = await _usuario.Obtener(IdUsuario, login);
+            user.Estado = false;
+            bool respuesta = await _usuario.Editar(user, login);
+            if(respuesta)
+            {
+                Transaccion t = Crear_Transaccion("Editar", "Usuario");
+                bool guardar = await _transaccion.Guardar(t, login);
+                TempData["Mensaje"] = "Editado Correctamente";
+                return RedirectToAction("Usuarios", "Secretaria");
+            }
+            else
+            {
+                TempData["Mensaje"] = "No se Pudo Guardar";
+                return View("Agregar_Usuario");
+            }
+        }
+        [HttpPost]
+        public async Task<IActionResult> Habilitar_Usuario(int IdUsuario)
+        {
+            var usuario = GetUsuarioFromSession();
+            if (usuario == null)
+            {
+                TempData["Mensaje"] = "Usuario no autenticado.";
+                return RedirectToAction("Login", "Inicio");
+            }
+
+            var login = CreateLogin(usuario);
+            Usuario user = await _usuario.Obtener(IdUsuario, login);
+            user.Estado = true;
+            bool respuesta = await _usuario.Editar(user, login);
+            if (respuesta)
+            {
+                Transaccion t = Crear_Transaccion("Editar", "Usuario");
+                bool guardar = await _transaccion.Guardar(t, login);
+                TempData["Mensaje"] = "Editado Correctamente";
+                return RedirectToAction("Usuarios", "Secretaria");
+            }
+            else
+            {
+                TempData["Mensaje"] = "No se Pudo Guardar";
+                return View("Agregar_Usuario");
+            }
+        }
+
+        public async Task<IActionResult> Editar_Usuario(int IdUsuario)
+        {
+            var usuario = GetUsuarioFromSession();
+            if (usuario == null)
+            {
+                ViewBag.Mensaje = "Usuario no autenticado.";
+                return RedirectToAction("Login", "Inicio");
+            }
+
+            var login = CreateLogin(usuario);
+            var usuarioEditar = await _usuario.Obtener(IdUsuario, login);
+            ModeloVista modelo = new ModeloVista();
+            modelo.Usuario = usuarioEditar;
+            return View(modelo);
+        }
+        [HttpPost]
+        public async Task<IActionResult> Guardar_Usuario(ModeloVista modelo)
+        {
+            var usuario = GetUsuarioFromSession();
+            if (usuario == null)
+            {
+                ViewBag.Mensaje = "Usuario no autenticado.";
+                return RedirectToAction("Login", "Inicio");
+            }
+
+            var login = CreateLogin(usuario);
+
+            if (modelo.Archivo_4 != null)
+            {
+                using (var ms = new MemoryStream())
+                {
+                    await modelo.Archivo_4.CopyToAsync(ms);
+                    modelo.Usuario.Foto = Convert.ToBase64String(ms.ToArray());
+                }
+            }
+            
+
+            modelo.Usuario.Estado = true;
+            bool respuesta = await _usuario.Editar(modelo.Usuario, login);
+
+            if (respuesta)
+            {
+                Transaccion t = Crear_Transaccion("Editar", "Usuario");
+                bool guardar = await _transaccion.Guardar(t, login);
+                TempData["Mensaje"] = "Editado Correctamente";
+                return RedirectToAction("Usuarios", "Secretaria");
+            }
+            else
+            {
+                ViewBag.Mensaje = "No se Pudo Editar";
+                return View("Agregar_Usuario");
+            }
+        }
         public async Task<IActionResult> Transacciones()
         {
             var usuario = GetUsuarioFromSession();
@@ -638,6 +838,6 @@ namespace AppTaxi.Controllers
             }
         }
 
-
+        
     }
 }

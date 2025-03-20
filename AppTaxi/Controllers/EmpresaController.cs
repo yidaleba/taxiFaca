@@ -794,7 +794,7 @@ namespace AppTaxi.Controllers
             }
             else
             {
-                TempData["Mensaje"] = $"No se encontró usuario asignado {modelo.Conductor.Contrasena}";
+                TempData["Mensaje"] = "No se encontró usuario asignado";
                 
                 return RedirectToAction("Editar_Conductor", new { IdConductor = modelo.Conductor.IdConductor });
             }
@@ -1813,6 +1813,46 @@ namespace AppTaxi.Controllers
             ViewBag.Cupos = empresa.Cupos - await Cupos();
 
             return View(modelo);
+        }
+
+        public async Task<IActionResult> Crear_Usuario(int IdConductor)
+        {
+            var usuario = GetUsuarioFromSession();
+            if (usuario == null)
+            {
+                ViewBag.Mensaje = "Usuario no autenticado.";
+                return RedirectToAction("Login", "Inicio");
+            }
+
+            var login = CreateLogin(usuario);
+
+            var conductor = await _conductor.Obtener(IdConductor,login);
+            Usuario usuarioConductor = new Usuario();
+            usuarioConductor.Correo = conductor.Correo;
+            usuarioConductor.Contrasena = conductor.Contrasena;
+            usuarioConductor.Foto = conductor.Foto;
+            usuarioConductor.Nombre = conductor.Nombre;
+            usuarioConductor.Telefono = conductor.Telefono;
+            usuarioConductor.Direccion = conductor.Direccion;
+            usuarioConductor.Ciudad = conductor.Ciudad;
+            usuarioConductor.Celular = conductor.Celular;
+            usuarioConductor.Estado = true;
+            usuarioConductor.IdRol = 1006;
+
+            bool respuesta = await _usuario.Guardar(usuarioConductor,login);
+            if(respuesta)
+            {
+                TempData["Mensaje"] = "Usuario Creado";
+                
+
+            }
+            else
+            {
+                TempData["Mensaje"] = "Error al Crear Usuario";
+                
+            }
+            return RedirectToAction("Detalle_Conductor", new { IdConductor = IdConductor });
+
         }
 
     }

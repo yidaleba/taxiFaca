@@ -5,10 +5,17 @@
 }
 <p class="text-sm-center"><strong>Cupos Disponibles : </strong>@ViewBag.Cupos</p>
 <br />
+
 @if (TempData["Mensaje"] != null)
 {
     <div class="alert alert-info text-center">@TempData["Mensaje"]</div>
+    @if(TempData["Mensaje"].ToString() == "No se encontró usuario asignado")
+    {
+        <a asp-action="Crear_Usuario" asp-controller="Empresa" asp-route-IdConductor="@Model.Conductor.IdConductor" class="btn btn-outline-success"><strong>Crear</strong></a>
+    }
+    
 }
+
 @if (Model != null)
 {
     <p class="text-muted text-center">Llene los campos que desea editar.</p>

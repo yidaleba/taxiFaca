@@ -103,8 +103,8 @@ else
 
         for (let i = 0; i < filas.length; i++) {
             let nombre = filas[i].getElementsByClassName("col-Nombre")[0].innerText.toLowerCase();
-            let fechaTexto = filas[i].getElementsByTagName("td")[5].innerText; // Índice de la columna de fecha
-            let fechaTransaccion = new Date(fechaTexto.split("-").reverse().join("-"));
+            let fechaTexto = filas[i].getElementsByTagName("td")[6].innerText; // Índice correcto de la fecha
+            let fechaTransaccion = new Date(fechaTexto.split("-").reverse().join("-")); // Convertir a formato de fecha
 
             let cumpleNombre = nombre.includes(inputNombre);
             let cumpleFecha = true;
@@ -124,3 +124,4 @@ else
         }
     }
 </script>
+

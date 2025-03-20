@@ -12,11 +12,13 @@ namespace AppTaxi.Controllers
     {
         private readonly I_Invitado _invitado;
         private readonly I_Usuario _usuario;
+        private readonly I_Empresa _empresa;
 
-        public InicioController(I_Invitado invitado, I_Usuario usuario) //Como en Windows Forms de Controlador
+        public InicioController(I_Invitado invitado, I_Usuario usuario, I_Empresa empresa) //Como en Windows Forms de Controlador
         {
             _invitado = invitado;
             _usuario = usuario;
+            _empresa = empresa;
         }
 
         public IActionResult Index()
@@ -81,28 +83,52 @@ namespace AppTaxi.Controllers
             }
             
             lista = await _usuario.Lista(login);
-            
+
             if (lista != null && lista.Any())
             {
-                
-                
-                usuario = lista.Where(item => item.Correo == login.Correo && item.Contrasena == item.Contrasena).FirstOrDefault();
-                ViewBag.Mensaje = $"Bienvenido {usuario.Nombre}";
-                HttpContext.Session.SetString("Usuario", JsonConvert.SerializeObject(usuario));
 
-                switch (usuario.IdRol)
+
+                usuario = lista.Where(item => item.Correo == login.Correo && item.Contrasena == item.Contrasena).FirstOrDefault();
+                if (usuario.Estado == true)
                 {
-                    case 1:
-                        return RedirectToAction("Inicio", "Empresa");
-                    case 2:
-                        return RedirectToAction("Inicio", "Secretaria");
-                    case 1004:
-                        return RedirectToAction("Inicio", "Admin");
-                    case 1006:
-                        return RedirectToAction("Inicio", "Conductor");
-                    default:
-                        return View("Login");
+                    
+                    switch (usuario.IdRol)
+                    {
+                        case 1:
+                            var empresas = await _empresa.Lista(login);
+                            var empresa = empresas.FirstOrDefault(e => e.IdUsuario == usuario.IdUsuario);
+                            if (empresa != null)
+                            {
+                                
+                                ViewBag.Mensaje = $"Bienvenido {usuario.Nombre}";
+                                HttpContext.Session.SetString("Usuario", JsonConvert.SerializeObject(usuario));
+                                return RedirectToAction("Inicio", "Empresa");
+                            }
+                            else
+                            {
+                                ViewBag.Mensaje = "¡Error! No tienes empresa Asignada";
+                                return View("Login");
+                            }
+                            
+                        case 2:
+                            ViewBag.Mensaje = $"Bienvenido {usuario.Nombre}";
+                            HttpContext.Session.SetString("Usuario", JsonConvert.SerializeObject(usuario));
+                            return RedirectToAction("Inicio", "Secretaria");
+                        
+                        case 1006:
+                            ViewBag.Mensaje = $"Bienvenido {usuario.Nombre}";
+                            HttpContext.Session.SetString("Usuario", JsonConvert.SerializeObject(usuario));
+                            return RedirectToAction("Inicio", "Conductor");
+                        default:
+                            return View("Login");
+                    }
                 }
+                else
+                {
+                    ViewBag.Mensaje = "¡Error! Usuario Deshabilitado";
+                    return View("Login");
+                }
+                
             }
             else
             {

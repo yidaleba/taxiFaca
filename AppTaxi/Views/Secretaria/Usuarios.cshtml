@@ -1,0 +1,114 @@
+﻿@model ModeloVista
+@{
+    ViewData["Title"] = "Usuarios";
+    Layout = "~/Views/Shared/_LayoutSecretaria.cshtml";
+}
+
+@if (TempData["Mensaje"] != null)
+{
+    <div class="alert alert-info text-center">@TempData["Mensaje"]</div>
+}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <a asp-action="Agregar_Usuario" asp-controller="Secretaria" class="btn btn-outline-success">
+        <strong>Agregar Usuario</strong>
+    </a>
+
+    <input type="text" id="buscarUsuario" class="form-control w-25" placeholder="🔍 Buscar por usuario..." onkeyup="filtrarUsuarios()">
+</div>
+
+@if (Model.Usuarios != null && Model.Usuarios.Any())
+{
+    <div class="table-responsive">
+        <table class="table table-hover text-center">
+            <thead class="table-dark">
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Foto</th>
+                    <th scope="col">Nombre</th>
+                    <th scope="col">Estado</th>
+                    <th scope="col">Correo</th>
+                    <th scope="col">Celular</th>
+                    <th scope="col">Empresa</th>
+                    <th scope="col">NIT</th>
+                    <th scope="col">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Usuarios)
+                {
+                    <tr class="fila-usuario">
+                        <td>@item.Contador</td>
+                        <td>
+                            <img src="@(string.IsNullOrEmpty(item.Foto) ? "/imagenes/noimage.png" : "data:image/png;base64," + item.Foto)"
+                             class="img-fluid rounded-circle border shadow-sm p-2"
+                             alt="Usuario"
+                             style="max-width: 70px;"
+                             onerror="this.onerror=null; this.src='/imagenes/noimage.png';">
+                        </td>
+                        <td class="col-Nombre">@item.Nombre</td>
+                        <td>
+                            <span class="badge @(item.Estado ? "bg-success" : "bg-danger")">
+                                @(item.Estado ? "Activo" : "Inactivo")
+                            </span>
+                        </td>
+                        <td>@item.Correo</td>
+                        <td>@item.Celular</td>
+                        @if(Model.Empresas.Where(e => e.IdUsuario == item.IdUsuario).FirstOrDefault() != null)
+                        {
+                            <td>@Model.Empresas.Where(e => e.IdUsuario == item.IdUsuario).FirstOrDefault().Nombre</td>
+                            <td>@Model.Empresas.Where(e => e.IdUsuario == item.IdUsuario).FirstOrDefault().Nit</td>
+                        }
+                        else
+                        {
+                            <td><i>Vacío</i></td>
+                            <td><i>Vacío</i></td>
+                        }
+                        <td>
+                            <div class="d-grid gap-2 d-md-block">
+                                <a asp-action="Editar_Usuario" asp-controller="Secretaria" asp-route-IdUsuario="@item.IdUsuario" class="btn btn-warning">🖋️</a>
+                                @if (item.Estado == true)
+                                {
+                                    <form asp-action="Deshabilitar_Usuario" asp-controller="Secretaria" method="post">
+                                        <input type="hidden" name="IdUsuario" value="@item.IdUsuario" />
+                                        <button type="submit" class="btn btn-danger btn-sm">❌</button>
+                                    </form>
+                                }
+                                else
+                                { 
+                                    <form asp-action="Habilitar_Usuario" asp-controller="Secretaria" method="post">
+                                        <input type="hidden" name="IdUsuario" value="@item.IdUsuario" />
+                                        <button type="submit" class="btn btn-success btn-sm">✔️</button>
+                                    </form>
+                            
+                                }
+                            </div>
+                        </td>
+
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+else
+{
+    <div class="alert alert-warning text-center mt-4">
+        <strong>⚠ No se encontraron vehículos registrados.</strong>
+    </div>
+}
+
+<p class="text-danger text-center">@ViewBag.Mensaje</p>
+
+<script>
+    function filtrarUsuarios() {
+        let input = document.getElementById("buscarUsuario").value.toLowerCase();
+        let filas = document.getElementsByClassName("fila-usuario");
+
+        for (let i = 0; i < filas.length; i++) {
+            let placa = filas[i].getElementsByClassName("col-Nombre")[0].innerText.toLowerCase();
+            filas[i].style.display = placa.includes(input) ? "" : "none";
+        }
+    }
+</script>
+
+
