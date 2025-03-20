@@ -64,6 +64,7 @@ namespace AppTaxi.Controllers
 
         public async Task<IActionResult> Autenticar(Login login)
         {
+            
             List<Usuario> lista = new List<Usuario>();
             Usuario usuario = new Usuario();
             ViewBag.Mensaje = "";
@@ -80,9 +81,11 @@ namespace AppTaxi.Controllers
             }
             
             lista = await _usuario.Lista(login);
-
+            
             if (lista != null && lista.Any())
             {
+                
+                
                 usuario = lista.Where(item => item.Correo == login.Correo && item.Contrasena == item.Contrasena).FirstOrDefault();
                 ViewBag.Mensaje = $"Bienvenido {usuario.Nombre}";
                 HttpContext.Session.SetString("Usuario", JsonConvert.SerializeObject(usuario));
@@ -103,7 +106,7 @@ namespace AppTaxi.Controllers
             }
             else
             {
-                string msg = "Usuario o Contraseña incorrecta";
+                string msg = "Usuario o Contraseña incorrecta ";
                 ViewBag.Mensaje = msg;
                 return View("Login");
             }

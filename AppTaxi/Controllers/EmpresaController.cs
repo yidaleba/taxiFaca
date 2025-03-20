@@ -616,8 +616,9 @@ namespace AppTaxi.Controllers
             var login = CreateLogin(usuario);
             var conductor = await _conductor.Obtener(IdConductor, login);
             Encriptado enc = new Encriptado();
-            string Contrasena = enc.DesencriptarSimple(conductor.Contrasena);
-            conductor.Contrasena = Contrasena;
+            //------------------------------------ Encriptado ----------------------------
+            //string Contrasena = enc.DesencriptarSimple(conductor.Contrasena);
+            //conductor.Contrasena = Contrasena;
 
             List<Empresa> empresasTot = await _empresa.Lista(login);
 
@@ -639,8 +640,9 @@ namespace AppTaxi.Controllers
             ModeloVista modelo = new ModeloVista();
             var login = CreateLogin(usuario);
             var conductor = await _conductor.Obtener(IdConductor, login);
-            string Contrasena = enc.DesencriptarSimple(conductor.Contrasena);
-            conductor.Contrasena = Contrasena;
+            //string Contrasena = enc.DesencriptarSimple(conductor.Contrasena);
+            //conductor.Contrasena = Contrasena;
+
             modelo.Conductor = conductor;
 
             List<Empresa> empresasTot = await _empresa.Lista(login);
@@ -744,9 +746,10 @@ namespace AppTaxi.Controllers
             }
             if (modelo.Conductor.Contrasena != null)
             {
+                //--------------------------------------------- Encriptado
 
-                string Contrasena = enc.EncriptarSimple(modelo.Conductor.Contrasena);
-                modelo.Conductor.Contrasena = Contrasena;
+                //string Contrasena = enc.EncriptarSimple(modelo.Conductor.Contrasena);
+                //modelo.Conductor.Contrasena = Contrasena;
             }
 
             
@@ -966,9 +969,12 @@ namespace AppTaxi.Controllers
                 contrasenaBase = "Password123";
             }
 
+            //---------------------------------------------- Encriptado
+            //string Contrasena = enc.EncriptarSimple(contrasenaBase);
+            //modelo.Conductor.Contrasena = Contrasena;
+            modelo.Conductor.Contrasena = contrasenaBase;
 
-            string Contrasena = enc.EncriptarSimple(contrasenaBase);
-            modelo.Conductor.Contrasena = Contrasena;
+
             // Guarda el conductor.
             bool respuesta = await _conductor.Guardar(modelo.Conductor, login);
 

@@ -67,9 +67,21 @@ namespace AppTaxi.Controllers
             return transaccion;
 
         }
-        public IActionResult Index()
+        public async Task<IActionResult> Inicio()
         {
-            return View();
+            var usuario = GetUsuarioFromSession();
+            if (usuario == null)
+            {
+                ViewBag.Mensaje = "Usuario no autenticado.";
+                return View();
+            }
+
+            var login = CreateLogin(usuario);
+
+            var usuarios = await _usuario.Lista(login);
+
+            return View(usuario);
+            
         }
     }
 }
