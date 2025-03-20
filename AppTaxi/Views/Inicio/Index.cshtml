@@ -1,43 +1,62 @@
 ﻿@model Consulta
 @{
-    ViewData["Title"] = "Consultar";
+    ViewData["Title"] = "Consultar Vehículos";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-
-<div class="d-flex justify-content-center align-items-center vh-100">
-    <div class="card shadow-lg rounded-4 p-4 w-50">
-        <div class="card-header text-center fw-bold">
-            Datos de Vehiculos Autorizados
+<div class="container py-5">
+    <div class="card shadow-lg mx-auto" style="max-width: 600px;">
+        <div class="card-header bg-primary text-white">
+            <h2 class="h4 mb-0">Consulta de Vehículos Autorizados</h2>
         </div>
+
         <div class="card-body">
             <form asp-action="Consultar" asp-controller="Inicio" method="post">
-                <h5 class="text-center">Digite alguno de los dos datos:</h5>
-
-                <div class="mb-3">
-                    <label class="form-label">Documento del Conductor:</label>
-                    <input type="text" placeholder="1234567890" class="form-control form-control-sm" asp-for="Documento" />
+                <div class="alert alert-info mb-4">
+                    <i class="bi bi-info-circle-fill me-2"></i>Ingrese uno de los siguientes datos:
                 </div>
 
-                <hr />
+                <!-- Sección Documento -->
+                <div class="mb-4">
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Documento del Conductor</label>
+                        <input type="text"
+                               asp-for="Documento"
+                               class="form-control form-control-lg"
+                               placeholder="Ej: 1234567890">
+                    </div>
 
-                <div class="mb-3">
-                    <label class="form-label">Placa del Vehículo:</label>
-                    <input type="text" placeholder="AAA123" class="form-control form-control-sm" asp-for="Placa" />
+                    <div class="text-center my-3">
+                        <span class="text-muted">ó</span>
+                    </div>
                 </div>
 
-                <div class="text-center text-danger">
-                    @ViewBag.Mensaje
+                <!-- Sección Placa -->
+                <div class="mb-4">
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Placa del Vehículo</label>
+                        <input type="text"
+                               asp-for="Placa"
+                               class="form-control form-control-lg"
+                               placeholder="Ej: ABC123">
+                    </div>
                 </div>
 
-                <div class="d-flex justify-content-center">
-                    <button type="submit" class="btn btn-success btn-lg px-4">Consultar</button>
+                <!-- Mensaje de error/confirmación -->
+                @if (!string.IsNullOrEmpty(ViewBag.Mensaje))
+                {
+                    <div class="alert alert-danger mt-3">
+                        <i class="bi bi-exclamation-triangle-fill me-2"></i>@ViewBag.Mensaje
+                    </div>
+                }
+
+                <!-- Botón de envío -->
+                <div class="d-grid mt-4">
+                    <button type="submit" class="btn btn-primary btn-lg">
+                        <i class="bi bi-search me-2"></i>Consultar
+                    </button>
                 </div>
             </form>
         </div>
     </div>
 </div>
-
-
-
-

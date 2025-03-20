@@ -4,80 +4,98 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-@if (Model != null)
-{
-    <div class="d-flex justify-content-center mt-4">
-        <div class="card shadow-lg rounded-4 p-4 w-75">
-            <div class="row g-3 align-items-center">
+<div class="container my-5">
+    @if (Model != null)
+    {
+        <div class="card shadow-lg">
+            <div class="row g-0">
                 <!-- Imagen -->
-                <div class="col-md-4 text-center">
-
-
+                <div class="col-md-4 d-flex align-items-center p-3 bg-light">
                     <img src="@(string.IsNullOrEmpty(Model.Foto) ? "/imagenes/noimage.png" : "data:image/png;base64," + Model.Foto)"
-                         class="img-fluid rounded-circle border shadow-sm p-2"
-                         alt="Usuario"
-                         style="max-width: 150px;"
+                         alt="Foto de usuario"
+                         class="img-fluid rounded-3"
                          onerror="this.onerror=null; this.src='/imagenes/noimage.png';">
-
                 </div>
 
                 <!-- Información -->
                 <div class="col-md-8">
                     <div class="card-body">
-                        <h4 class="card-title text-center fw-bold">Información del Usuario</h4>
-                        <hr />
+                        <h3 class="card-title mb-4 text-primary">Información del Usuario</h3>
 
                         <div class="row">
+                            <!-- Columna Izquierda -->
                             <div class="col-md-6">
-                                <p class="card-text"><strong>Nombre:</strong> <span class="text-muted">@Model.Nombre</span></p>
-                                <p class="card-text"><strong>Cédula:</strong> <span class="text-muted">@Model.NumeroCedula</span></p>
-                                <p class="card-text"><strong>RH:</strong> <span class="text-muted">@Model.GrupoSanguineo</span></p>
-                                <p class="card-text"><strong>EPS:</strong> <span class="text-muted">@Model.Eps</span></p>
-                                <p class="card-text"><strong>ARL:</strong> <span class="text-muted">@Model.Arl</span></p>
-                                <p class="card-text">
-                                    <strong>Estado:</strong>
-                                    <span class="badge @(Model.EstadoConductor ? "bg-success" : "bg-danger")">
-                                        @(Model.EstadoConductor ? "Activo" : "Inactivo")
-                                    </span>
-                                </p>
+                                <dl class="mb-4">
+                                    <dt class="fw-bold">Nombre:</dt>
+                                    <dd class="mb-3">@Model.Nombre</dd>
+
+                                    <dt class="fw-bold">Cédula:</dt>
+                                    <dd class="mb-3">@Model.NumeroCedula</dd>
+
+                                    <dt class="fw-bold">RH:</dt>
+                                    <dd class="mb-3">@Model.GrupoSanguineo</dd>
+
+                                    <dt class="fw-bold">EPS:</dt>
+                                    <dd class="mb-3">@Model.Eps</dd>
+
+                                    <dt class="fw-bold">ARL:</dt>
+                                    <dd class="mb-3">@Model.Arl</dd>
+
+                                    <dt class="fw-bold">Estado:</dt>
+                                    <dd>
+                                        <span class="badge @(Model.EstadoConductor ? "bg-success" : "bg-danger")">
+                                            @(Model.EstadoConductor ? "Activo" : "Inactivo")
+                                        </span>
+                                    </dd>
+                                </dl>
                             </div>
 
+                            <!-- Columna Derecha -->
                             <div class="col-md-6">
-                                <p class="card-text"><strong>Empresa:</strong> <span class="text-muted">@Model.NombreEmpresa</span></p>
-                                <p class="card-text"><strong>NIT:</strong> <span class="text-muted">@Model.Nit</span></p>
-                                <p class="card-text"><strong>Placa:</strong> <span class="text-muted">@Model.Placa</span></p>
-                                <p class="card-text">
-                                    <strong>Estado Vehículo:</strong>
-                                    <span class="badge @(Model.EstadoVehiculo ? "bg-primary" : "bg-warning")">
-                                        @(Model.EstadoVehiculo ? "Habilitado" : "No Habilitado")
-                                    </span>
-                                </p>
-                                <p class="card-text"><strong>SOAT:</strong> <span class="text-muted">@(string.IsNullOrEmpty(Model.Soat) ? "No" : "Sí")</span></p>
-                                <p class="card-text"><strong>Tecno Mecánica:</strong> <span class="text-muted">@(string.IsNullOrEmpty(Model.TecnicoMecanica) ? "No" : "Sí")</span></p>
+                                <dl>
+                                    <dt class="fw-bold">Empresa:</dt>
+                                    <dd class="mb-3">@Model.NombreEmpresa</dd>
+
+                                    <dt class="fw-bold">NIT:</dt>
+                                    <dd class="mb-3">@Model.Nit</dd>
+
+                                    <dt class="fw-bold">Placa:</dt>
+                                    <dd class="mb-3">@Model.Placa</dd>
+
+                                    <dt class="fw-bold">Estado Vehículo:</dt>
+                                    <dd class="mb-3">
+                                        <span class="badge @(Model.EstadoVehiculo ? "bg-success" : "bg-danger")">
+                                            @(Model.EstadoVehiculo ? "Habilitado" : "No Habilitado")
+                                        </span>
+                                    </dd>
+
+                                    <dt class="fw-bold">SOAT:</dt>
+                                    <dd class="mb-3">@(string.IsNullOrEmpty(Model.Soat) ? "No" : "Sí")</dd>
+
+                                    <dt class="fw-bold">Tecno Mecánica:</dt>
+                                    <dd>@(string.IsNullOrEmpty(Model.TecnicoMecanica) ? "No" : "Sí")</dd>
+                                </dl>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-}
-else
-{
-    <div class="d-flex justify-content-center mt-4">
-        <div class="card text-dark bg-warning shadow-lg rounded-4 p-4 w-50 text-center">
-            <div class="card-header fw-bold">Error al Buscar</div>
-            <div class="card-body">
-                <h5 class="card-title">No se encontraron registros</h5>
-                <p class="card-text">Prueba a revisar tus datos ingresados</p>
-            </div>
+    }
+    else
+    {
+        <div class="alert alert-danger text-center py-4">
+            <h2 class="alert-heading mb-3">⚠️ Error en la búsqueda</h2>
+            <p class="lead mb-4">No se encontraron registros asociados a los datos ingresados</p>
+            <hr>
+            <p class="mb-0">Por favor verifica la información e intenta nuevamente</p>
         </div>
+    }
+
+    <!-- Botón de regreso -->
+    <div class="text-center mt-4">
+        <a asp-action="Index" asp-controller="Inicio" class="btn btn-primary btn-lg">
+            <i class="bi bi-arrow-left-circle"></i> Volver al inicio
+        </a>
     </div>
-}
-
-<!-- Botón de regreso centrado -->
-<div class="d-flex justify-content-center mt-4">
-    <a asp-action="Index" asp-controller="Inicio" class="btn btn-success px-4 py-2">Volver</a>
 </div>
-
-

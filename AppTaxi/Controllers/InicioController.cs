@@ -125,8 +125,10 @@ namespace AppTaxi.Controllers
                 }
                 else
                 {
+
                     ViewBag.Mensaje = "¡Error! Usuario Deshabilitado";
                     return View("Login");
+
                 }
                 
             }
@@ -148,11 +150,6 @@ namespace AppTaxi.Controllers
             return RedirectToAction("Login");
         }
 
-        public IActionResult Ejemplo()
-        {
-
-            return View();
-        }
 
 
 

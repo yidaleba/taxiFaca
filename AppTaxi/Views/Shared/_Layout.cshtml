@@ -1,35 +1,73 @@
 ﻿<!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewData["Title"] - Movilidad Urbana</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap">
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <style>
+        :root {
+            --bs-primary: #00447C;
+            --bs-secondary: #6C757D;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            font-size: 1.1rem;
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .nav-link {
+            font-size: 1.2rem;
+            padding: 0.75rem 1.5rem !important;
+        }
+
+        .footer-link {
+            font-size: 1.1rem;
+            text-decoration: none;
+        }
+
+        .btn-lg {
+            font-size: 1.25rem;
+            padding: 1rem 2rem;
+        }
+    </style>
     @RenderSection("Styles", required: false)
 </head>
-<body class="d-flex flex-column min-vh-100">
-    <header class="border-bottom">
-        <nav class="navbar navbar-expand-lg navbar-dark bg-primary py-3">
+<body class="d-flex flex-column">
+    <!-- Header -->
+    <header class="bg-primary text-white shadow-sm">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
             <div class="container">
                 <a class="navbar-brand d-flex align-items-center" asp-controller="Home" asp-action="Index">
-                    <img src="/Imagenes/Escudo.png" alt="Escudo Municipal" width="40" height="40" class="d-inline-block align-top me-2">
-                    <span class="h5 mb-0">Secretaría de Transito - Facatativá</span>
+                    <img src="/Imagenes/Escudo.png" alt="Escudo de Facatativá" width="50" height="50"
+                         class="d-inline-block me-3">
+                    <div>
+                        <span class="h4 d-block mb-0">Secretaría de Tránsito</span>
+                        <span class="h6 d-block">Alcaldía de Facatativá</span>
+                    </div>
                 </a>
 
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav">
                     <span class="navbar-toggler-icon"></span>
                 </button>
 
-                <div class="collapse navbar-collapse" id="navbarNav">
+                <div class="collapse navbar-collapse" id="mainNav">
                     <ul class="navbar-nav ms-auto">
-                        <li class="nav-item">
-                            <a class="nav-link text-white" asp-controller="Inicio" asp-action="Index">Consulta Ciudadana</a>
+                        <li class="nav-item mx-2">
+                            <a class="nav-link btn btn-outline-light"
+                               asp-controller="Inicio" asp-action="Index">
+                                <i class="bi bi-search me-2"></i>Consultar Vehículos
+                            </a>
                         </li>
-                        <li class="nav-item ms-3">
-                            <a class="btn btn-light text-primary fw-medium" asp-controller="Inicio" asp-action="Login">
-                                Acceso Funcionarios
+                        <li class="nav-item mx-2">
+                            <a class="nav-link btn btn-light text-primary"
+                               asp-controller="Inicio" asp-action="Login">
+                                <i class="bi bi-person-circle me-2"></i>Iniciar Sesión
                             </a>
                         </li>
                     </ul>
@@ -38,59 +76,72 @@
         </nav>
     </header>
 
+    <!-- Contenido Principal -->
     <main class="flex-grow-1 py-5">
         <div class="container">
-            <div class="card border-0 shadow-lg rounded-3">
-                <div class="card-body p-4">
+            <div class="card shadow-lg rounded-3 border-0">
+                <div class="card-body p-4 p-lg-5">
                     @RenderBody()
                 </div>
             </div>
         </div>
     </main>
 
-    <footer class="bg-dark text-white mt-auto py-4">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-4 mb-4">
-                    <h5 class="mb-3">Contacto</h5>
+    <!-- Footer -->
+    <footer class="bg-dark text-white mt-auto">
+        <div class="container py-5">
+            <div class="row g-4">
+                <!-- Contacto -->
+                <div class="col-md-4">
+                    <h4 class="h5 mb-3"><i class="bi bi-geo-alt me-2"></i>Contacto</h4>
+                    <ul class="list-unstyled">
+                        <li class="mb-2">Carrera 5 #10-20</li>
+                        <li class="mb-2">(601) 123 4567</li>
+                        <li>movilidad@facatativa.gov.co</li>
+                    </ul>
+                </div>
+
+                <!-- Enlaces -->
+                <div class="col-md-4">
+                    <h4 class="h5 mb-3"><i class="bi bi-link-45deg me-2"></i>Enlaces</h4>
                     <ul class="list-unstyled">
                         <li class="mb-2">
-                            <i class="bi bi-geo-alt me-2"></i>Alcaldía Municipal - Carrera 5 #10-20
+                            <a href="#" class="text-white footer-link">
+                                <i class="bi bi-file-earmark-text me-2"></i>Trámites en línea
+                            </a>
                         </li>
                         <li class="mb-2">
-                            <i class="bi bi-telephone me-2"></i>(601) 123 4567
+                            <a href="#" class="text-white footer-link">
+                                <i class="bi bi-question-circle me-2"></i>Preguntas frecuentes
+                            </a>
                         </li>
                         <li>
-                            <i class="bi bi-envelope me-2"></i>movilidad@ciudad.gov.co
+                            <a href="#" class="text-white footer-link">
+                                <i class="bi bi-graph-up me-2"></i>Transparencia
+                            </a>
                         </li>
                     </ul>
                 </div>
 
-                <div class="col-md-4 mb-4">
-                    <h5 class="mb-3">Enlaces de interés</h5>
-                    <ul class="list-unstyled">
-                        <li class="mb-2"><a href="#" class="text-white text-decoration-none">Trámites en línea</a></li>
-                        <li class="mb-2"><a href="#" class="text-white text-decoration-none">Preguntas frecuentes</a></li>
-                        <li><a href="#" class="text-white text-decoration-none">Transparencia institucional</a></li>
-                    </ul>
-                </div>
-
-                <div class="col-md-4 mb-4">
-                    <h5 class="mb-3">Horario de atención</h5>
-                    <p class="mb-2">Lunes a Viernes: 7:30 AM - 5:00 PM</p>
+                <!-- Horarios -->
+                <div class="col-md-4">
+                    <h4 class="h5 mb-3"><i class="bi bi-clock me-2"></i>Horario</h4>
+                    <p class="mb-1">Lunes a Viernes</p>
+                    <p class="mb-0">7:30 AM - 5:00 PM</p>
                     <p>Jornada continua</p>
                 </div>
             </div>
 
-            <div class="border-top pt-4 text-center">
+            <div class="border-top pt-4 mt-4 text-center">
                 <p class="mb-0">
-                    &copy; @DateTime.Now.Year - Alcaldía Municipal. Todos los derechos reservados.
-                    <br>Desarrollado por la Secretaría de Movilidad
+                    &copy; @DateTime.Now.Year - Alcaldía de Facatativá<br>
+                    <small>Desarrollado por la Secretaría de Movilidad</small>
                 </p>
             </div>
         </div>
     </footer>
 
+    <!-- Scripts -->
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
