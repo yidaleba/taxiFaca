@@ -1,127 +1,201 @@
 ﻿@model Conductor
 @{
-    ViewData["Title"] = "Detalle_Conductor";
+    ViewData["Title"] = "Detalle del Conductor";
     Layout = "~/Views/Shared/_LayoutSecretaria.cshtml";
 }
 
-@if (TempData["Mensaje"] != null)
-{
-    <div class="alert alert-info text-center">@TempData["Mensaje"]</div>
-}
-@if (Model != null)
-{
-    <div class="d-flex justify-content-center mt-4">
-        <div class="card shadow-lg rounded-4 p-4 w-75">
-            <div class="row g-3 align-items-center">
-                <!-- Imagen -->
-                <div class="col-md-4 text-center">
-                    <img src="@(string.IsNullOrEmpty(Model.Foto) ? "/imagenes/noimage.png" : "data:image/png;base64," + Model.Foto)"
-                         class="img-fluid rounded-circle border shadow-sm p-2"
-                         alt="Usuario"
-                         style="max-width: 150px;"
-                         onerror="this.onerror=null; this.src='/imagenes/noimage.png';">
-                </div>
+<div class="container-fluid">
+    <!-- Encabezado -->
+    <div class="d-flex justify-content-between align-items-center mb-5">
+        <h1 class="display-5 fw-bold text-primary">Detalle del Conductor</h1>
+    </div>
 
+    <!-- Mensajes -->
+    @if (TempData["Mensaje"] != null)
+    {
+        <div class="alert alert-success fs-5 text-center" role="alert">
+            @TempData["Mensaje"]
+        </div>
+    }
 
-                <!-- Información -->
-                <div class="col-md-8">
-                    <div class="card-body">
-                        <h4 class="card-title text-center fw-bold">Detalles del Conductor</h4>
-                        <hr />
+    <!-- Contenido Principal -->
+    @if (Model != null)
+    {
+        <div class="card shadow-lg mx-auto" style="max-width: 900px;">
+            <div class="card-header bg-primary text-white">
+                <h3 class="card-title mb-0 text-center">
+                    <i class="fas fa-user-shield me-2"></i>Información del Conductor
+                </h3>
+            </div>
 
+            <div class="card-body">
+                <div class="row g-0">
+                    <!-- Imagen -->
+                    <div class="col-md-4 text-center p-4">
+                        <img src="@(string.IsNullOrEmpty(Model.Foto) ? "/imagenes/noimage.png" : "data:image/png;base64," + Model.Foto)"
+                             class="img-fluid rounded-circle border shadow-sm p-2"
+                             alt="Foto del Conductor"
+                             style="max-width: 200px;"
+                             onerror="this.onerror=null; this.src='/imagenes/noimage.png';">
+                    </div>
+
+                    <!-- Información -->
+                    <div class="col-md-8">
                         <div class="row">
+                            <!-- Columna Izquierda -->
                             <div class="col-md-6">
-                                <p class="card-text"><strong>Nombre:</strong> <span class="text-muted">@Model.Nombre</span></p>
-                                <p class="card-text"><strong>Cédula:</strong> <span class="text-muted">@Model.NumeroCedula</span></p>
-                                <p class="card-text"><strong>Teléfono:</strong> <span class="text-muted">@Model.Telefono</span></p>
-                                <p class="card-text"><strong>Correo:</strong> <span class="text-muted">@Model.Correo</span></p>
-                                <p class="card-text">
-                                    <strong>Contraseña:</strong>
-                                    <div class="input-group w-65">
-                                        <input type="password" id="passwordField" class="form-control text-muted" value="@Model.Contrasena" readonly>
-                                        <button type="button" class="btn btn-outline-secondary" onclick="togglePassword()">
-                                            <strong>Ver</strong>
+                                <div class="mb-3">
+                                    <p class="fs-5">
+                                        <strong><i class="fas fa-user me-2"></i>Nombre:</strong>
+                                        <span class="text-muted">@Model.Nombre</span>
+                                    </p>
+                                </div>
+                                <div class="mb-3">
+                                    <p class="fs-5">
+                                        <strong><i class="fas fa-id-card me-2"></i>Cédula:</strong>
+                                        <span class="text-muted">@Model.NumeroCedula</span>
+                                    </p>
+                                </div>
+                                <div class="mb-3">
+                                    <p class="fs-5">
+                                        <strong><i class="fas fa-phone me-2"></i>Teléfono:</strong>
+                                        <span class="text-muted">@Model.Telefono</span>
+                                    </p>
+                                </div>
+                                <div class="mb-3">
+                                    <p class="fs-5">
+                                        <strong><i class="fas fa-envelope me-2"></i>Correo:</strong>
+                                        <span class="text-muted">@Model.Correo</span>
+                                    </p>
+                                </div>
+                                <div class="mb-3">
+                                    <p class="fs-5"><strong><i class="fas fa-key me-2"></i>Contraseña:</strong></p>
+                                    <div class="input-group">
+                                        <input type="password" id="passwordField" class="form-control text-muted"
+                                               value="@Model.Contrasena" readonly>
+                                        <button type="button" class="btn btn-outline-secondary"
+                                                onclick="togglePassword()">
+                                            <i class="fas fa-eye"></i>
                                         </button>
                                     </div>
-                                </p>
-                                <p class="card-text"><strong>Dirección:</strong> <span class="text-muted">@Model.Direccion</span></p>
-                                <p class="card-text"><strong>Ciudad:</strong> <span class="text-muted">@Model.Ciudad</span></p>
-                                <p class="card-text">
-                                    <strong>Estado:</strong>
-                                    <span class="badge @(Model.Estado ? "bg-success" : "bg-danger")">
-                                        @(Model.Estado ? "Activo" : "Inactivo")
-                                    </span>
-                                </p>
+                                </div>
                             </div>
 
+                            <!-- Columna Derecha -->
                             <div class="col-md-6">
-                                <p class="card-text"><strong>RH:</strong> <span class="text-muted">@Model.GrupoSanguineo</span></p>
-                                <p class="card-text"><strong>EPS:</strong> <span class="text-muted">@Model.Eps</span></p>
-                                <p class="card-text"><strong>ARL:</strong> <span class="text-muted">@Model.Arl</span></p>
-                                <p class="card-text">
-                                    <strong>Documento Cédula:</strong>
-                                    <button class="btn btn-outline-primary btn-sm" onclick="abrirDocumento('@Model.DocumentoCedula')">
-                                        <i class="fas fa-file-pdf"></i><strong>Ver Cedula</strong>
-                                    </button>
-                                </p>
+                                <div class="mb-3">
+                                    <p class="fs-5">
+                                        <strong><i class="fas fa-map-marker-alt me-2"></i>Dirección:</strong>
+                                        <span class="text-muted">@Model.Direccion</span>
+                                    </p>
+                                </div>
+                                <div class="mb-3">
+                                    <p class="fs-5">
+                                        <strong><i class="fas fa-city me-2"></i>Ciudad:</strong>
+                                        <span class="text-muted">@Model.Ciudad</span>
+                                    </p>
+                                </div>
+                                <div class="mb-3">
+                                    <p class="fs-5">
+                                        <strong><i class="fas fa-circle me-2"></i>Estado:</strong>
+                                        <span class="badge rounded-pill @(Model.Estado ? "bg-success" : "bg-danger") fs-6 py-2">
+                                            @(Model.Estado ? "Activo" : "Inactivo")
+                                        </span>
+                                    </p>
+                                </div>
+                                <div class="mb-3">
+                                    <p class="fs-5">
+                                        <strong><i class="fas fa-tint me-2"></i>RH:</strong>
+                                        <span class="text-muted">@Model.GrupoSanguineo</span>
+                                    </p>
+                                </div>
+                                <div class="mb-3">
+                                    <p class="fs-5">
+                                        <strong><i class="fas fa-hospital me-2"></i>EPS:</strong>
+                                        <span class="text-muted">@Model.Eps</span>
+                                    </p>
+                                </div>
+                                <div class="mb-3">
+                                    <p class="fs-5">
+                                        <strong><i class="fas fa-shield-alt me-2"></i>ARL:</strong>
+                                        <span class="text-muted">@Model.Arl</span>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
 
-                                <p class="card-text">
-                                    <strong>Documento EPS:</strong>
-                                    <button class="btn btn-outline-primary btn-sm" onclick="abrirDocumento('@Model.DocumentoEps')">
-                                        <i class="fas fa-file-pdf"></i><strong>Ver Eps</strong>
-                                    </button>
-                                </p>
-
-                                <p class="card-text">
-                                    <strong>Documento ARL:</strong>
-                                    <button class="btn btn-outline-primary btn-sm" onclick="abrirDocumento('@Model.DocumentoArl')">
-                                        <i class="fas fa-file-pdf"></i> <strong>Ver Arl</strong>
-                                    </button>
-                                </p>
+                        <!-- Documentos -->
+                        <div class="row mt-4">
+                            <div class="col-md-4 mb-3">
+                                <button class="btn btn-outline-primary btn-lg w-100"
+                                        onclick="abrirDocumento('@Model.DocumentoCedula')">
+                                    <i class="fas fa-file-pdf me-2"></i>Cédula
+                                </button>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <button class="btn btn-outline-primary btn-lg w-100"
+                                        onclick="abrirDocumento('@Model.DocumentoEps')">
+                                    <i class="fas fa-file-pdf me-2"></i>EPS
+                                </button>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <button class="btn btn-outline-primary btn-lg w-100"
+                                        onclick="abrirDocumento('@Model.DocumentoArl')">
+                                    <i class="fas fa-file-pdf me-2"></i>ARL
+                                </button>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Botones de acción -->
-            <div class="d-flex justify-content-center mt-4 gap-2">
-                <a asp-action="Ver_Horario" asp-controller="Secretaria" asp-route-IdConductor="@Model.IdConductor" class="btn btn-secondary">Consultar Horarios</a>
-                
-                <a href="javascript:history.back()" class="btn btn-success">Volver</a>
+            <!-- Botones de Acción -->
+            <div class="card-footer bg-transparent py-4">
+                <div class="d-flex justify-content-center gap-3">
+                    <a asp-action="Ver_Horario" asp-controller="Secretaria" asp-route-IdConductor="@Model.IdConductor"
+                       class="btn btn-primary px-5">
+                        <i class="fas fa-calendar-alt me-2"></i>Horarios
+                    </a>
+                    <a href="javascript:history.back()" class="btn btn-secondary px-5">
+                        <i class="fas fa-arrow-left me-2"></i>Volver
+                    </a>
+                </div>
             </div>
         </div>
-    </div>
-
-}
-else
-{
-    <div class="d-flex justify-content-center mt-4">
-        <div class="card text-dark bg-warning shadow-lg rounded-4 p-4 w-50 text-center">
-            <div class="card-header fw-bold">Error al Buscar</div>
-            <div class="card-body">
-                <h5 class="card-title">No se encontraron registros</h5>
-                <p class="card-text">Prueba a revisar tus datos ingresados</p>
+    }
+    else
+    {
+        <div class="card shadow-lg">
+            <div class="card-body text-center py-5">
+                <i class="fas fa-exclamation-triangle fa-3x text-muted mb-4"></i>
+                <h3 class="text-secondary mb-3">Conductor no encontrado</h3>
+                <p class="fs-5 text-muted">Verifica los datos ingresados</p>
+                <a href="javascript:history.back()" class="btn btn-secondary px-5">
+                    <i class="fas fa-arrow-left me-2"></i>Volver
+                </a>
             </div>
         </div>
-    </div>
-}
+    }
+</div>
 
-<script>
-    function abrirDocumento(base64) {
-        if (base64 && base64.trim() !== "") {
-            var nuevaVentana = window.open();
-            nuevaVentana.document.write('<iframe width="100%" height="100%" src="data:application/pdf;base64,' + base64 + '"></iframe>');
-        } else {
-            alert("No hay documento disponible.");
+@section Scripts {
+    <script>
+        function abrirDocumento(base64) {
+            if (base64 && base64.trim() !== "") {
+                var nuevaVentana = window.open();
+                nuevaVentana.document.write('<iframe width="100%" height="100%" src="data:application/pdf;base64,' + base64 + '"></iframe>');
+            } else {
+                alert("No hay documento disponible.");
+            }
         }
-    }
-    function togglePassword() {
-        var passwordField = document.getElementById("passwordField");
-        if (passwordField.type === "password") {
-            passwordField.type = "text";
-        } else {
-            passwordField.type = "password";
+
+        function togglePassword() {
+            var passwordField = document.getElementById("passwordField");
+            if (passwordField.type === "password") {
+                passwordField.type = "text";
+            } else {
+                passwordField.type = "password";
+            }
         }
-    }
-</script>
+    </script>
+}

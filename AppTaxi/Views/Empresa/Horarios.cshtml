@@ -4,134 +4,185 @@
     Layout = "~/Views/Shared/_LayoutEmpresa.cshtml";
 }
 
-<p class="text-sm-center"><strong>Cupos Disponibles : </strong>@ViewBag.Cupos</p>
-<br />
-@if (TempData["Mensaje"] != null)
-{
-    <div class="alert alert-info text-center">@TempData["Mensaje"]</div>
+<div class="container-fluid">
+    <!-- Encabezado -->
+    <div class="d-flex justify-content-between align-items-center mb-5">
+        <h1 class="display-5 fw-bold text-primary">Gestión de Horarios</h1>
+        <div class="bg-info rounded-pill px-4 py-2">
+            <span class="fs-5 text-white"><strong>Cupos Disponibles:</strong> @ViewBag.Cupos</span>
+        </div>
+    </div>
+
+    <!-- Mensajes -->
+    @if (TempData["Mensaje"] != null)
+    {
+        <div class="alert alert-success fs-5 text-center" role="alert">
+            @TempData["Mensaje"]
+        </div>
+    }
+
+    <!-- Controles Superiores -->
+    <div class="card shadow-sm mb-5">
+        <div class="card-body py-3">
+            <div class="d-flex justify-content-between align-items-center">
+                <a asp-action="Asignar_Horario" asp-controller="Empresa"
+                   class="btn btn-primary px-5">
+                    <i class="fas fa-calendar-plus me-2"></i>Nuevo Horario
+                </a>
+
+                
+            </div>
+        </div>
+    </div>
+
+    <!-- Sección Conductores -->
+    <div class="card shadow-lg mb-5">
+        <div class="card-header bg-primary text-white py-3">
+            <h2 class="h4 mb-0"><i class="fas fa-users me-2"></i>Conductores Registrados</h2>
+        </div>
+        <div class="card-body">
+            <div class="input-group mb-4 w-50 ms-auto">
+                <span class="input-group-text bg-primary text-white">
+                    <i class="fas fa-search"></i>
+                </span>
+                <input type="text" id="buscarConductor" class="form-control form-control-sm"
+                       placeholder="Buscar conductor..." onkeyup="filtrarTabla('buscarConductor', 'tablaConductores')">
+            </div>
+
+            @if (Model != null && Model.Conductores.Any())
+            {
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0" id="tablaConductores">
+                        <thead class="bg-light">
+                            <tr>
+                                <th class="text-primary fs-5 text-center"><i class="fas fa-hashtag me-2"></i>ID</th>
+                                <th class="text-primary fs-5 text-center">Estado</th>
+                                <th class="text-primary fs-5 text-center"><i class="fas fa-user me-2"></i>Nombre</th>
+                                <th class="text-primary fs-5 text-center"><i class="fas fa-id-card me-2"></i>Cédula</th>
+                                <th class="text-primary fs-5 text-center"><i class="fas fa-phone me-2"></i>Teléfono</th>
+                                <th class="text-primary fs-5 text-center"><i class="fas fa-envelope me-2"></i>Correo</th>
+                                <th class="text-primary fs-5 text-center"><i class="fas fa-city me-2"></i>Ciudad</th>
+                                <th class="text-primary fs-5 text-center">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.Conductores)
+                            {
+                                <tr data-search="@item.Nombre">
+                                    <td class="fw-bold text-info">@item.IdConductor</td>
+                                    <td class="text-center">
+                                        <span class="badge rounded-pill @(item.Estado ? "bg-success" : "bg-danger") fs-6 py-2">
+                                            @(item.Estado ? "Activo" : "Inactivo")
+                                        </span>
+                                    </td>
+                                    <td>@item.Nombre</td>
+                                    <td>@item.NumeroCedula</td>
+                                    <td>@item.Telefono</td>
+                                    <td>@item.Correo</td>
+                                    <td>@item.Ciudad</td>
+                                    <td>
+                                        <a asp-action="Ver_Horario_Conductor" asp-route-IdConductor="@item.IdConductor"
+                                           class="btn btn-sm btn-primary px-3">
+                                            <i class="fas fa-calendar-days me-1"></i>Horarios
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+            else
+            {
+                <div class="text-center py-5">
+                    <i class="fas fa-users-slash fa-3x text-muted mb-4"></i>
+                    <h3 class="text-secondary mb-3">No hay conductores registrados</h3>
+                </div>
+            }
+        </div>
+    </div>
+
+    <!-- Separador -->
+    <div class="d-flex align-items-center my-5">
+        <hr class="flex-grow-1">
+        <span class="mx-3 fs-5 fw-bold text-primary"><i class="fas fa-car-side"></i></span>
+        <hr class="flex-grow-1">
+    </div>
+
+    <!-- Sección Vehículos -->
+    <div class="card shadow-lg">
+        <div class="card-header bg-primary text-white py-3">
+            <h2 class="h4 mb-0"><i class="fas fa-car me-2"></i>Vehículos Registrados</h2>
+        </div>
+        <div class="card-body">
+            <div class="input-group mb-4 w-50 ms-auto">
+                <span class="input-group-text bg-primary text-white">
+                    <i class="fas fa-search"></i>
+                </span>
+                <input type="text" id="buscarVehiculo" class="form-control form-control-sm"
+                       placeholder="Buscar por placa..." onkeyup="filtrarTabla('buscarVehiculo', 'tablaVehiculos')">
+            </div>
+
+            @if (Model != null && Model.Vehiculos.Any())
+            {
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0" id="tablaVehiculos">
+                        <thead class="bg-light">
+                            <tr>
+                                <th class="text-primary fs-5"><i class="fas fa-hashtag me-2"></i>ID</th>
+                                <th class="text-primary fs-5">Estado</th>
+                                <th class="text-primary fs-5"><i class="fas fa-car me-2"></i>Placa</th>
+                                <th class="text-primary fs-5"><i class="fas fa-file-contract me-2"></i>SOAT</th>
+                                <th class="text-primary fs-5"><i class="fas fa-wrench me-2"></i>Técnico Mecánica</th>
+                                <th class="text-primary fs-5">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.Vehiculos)
+                            {
+                                <tr data-search="@item.Placa">
+                                    <td class="fw-bold text-info">@item.IdVehiculo</td>
+                                    <td>
+                                        <span class="badge rounded-pill @(item.Estado ? "bg-success" : "bg-danger") fs-6 py-2">
+                                            @(item.Estado ? "Habilitado" : "No Habilitado")
+                                        </span>
+                                    </td>
+                                    <td class="fw-bold">@item.Placa</td>
+                                    <td>@Html.Raw(item.ObtenerEstadoDocumento(item.VenceSoat))</td>
+                                    <td>@Html.Raw(item.ObtenerEstadoDocumento(item.VenceTecnicoMecanica))</td>
+                                    <td>
+                                        <a asp-action="Ver_Horario_Vehiculo" asp-route-IdVehiculo="@item.IdVehiculo"
+                                           class="btn btn-sm btn-primary px-3">
+                                            <i class="fas fa-calendar-days me-1"></i>Horarios
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+            else
+            {
+                <div class="text-center py-5">
+                    <i class="fas fa-car-side fa-3x text-muted mb-4"></i>
+                    <h3 class="text-secondary mb-3">No hay vehículos registrados</h3>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function filtrarTabla(inputId, tableId) {
+            let input = document.getElementById(inputId).value.toLowerCase();
+            let filas = document.querySelectorAll(`#${tableId} tbody tr`);
+
+            filas.forEach(fila => {
+                let contenido = fila.getAttribute("data-search").toLowerCase();
+                fila.style.display = contenido.includes(input) ? "" : "none";
+            });
+        }
+    </script>
 }
-
-<div class="d-flex justify-content-between align-items-center mb-3">
-    <a asp-action="Asignar_Horario" asp-controller="Empresa" class="btn btn-outline-success">
-        <strong>➕ Agregar Horario</strong>
-    </a>
-
-    <input type="text" id="buscarHorario" class="form-control w-25" placeholder="🔍 Buscar por conductor..." onkeyup="filtrarHorarios()">
-</div>
-<div class="container">
-    <!-- Conductores -->
-    <h3 class="mb-4 text-center text-primary">Conductores</h3>
-    <div class="d-flex justify-content-between align-items-center mb-3">
-
-        <input type="text" id="buscarConductor" class="form-control w-25" placeholder="🔍 Buscar por nombre..." onkeyup="filtrarTabla('buscarConductor', 'tablaConductores')">
-    </div>
-
-    @if (Model != null && Model.Conductores.Any())
-    {
-        <div class="table-responsive">
-            <table class="table table-hover table-striped text-center" id="tablaConductores">
-                <thead class="table-dark">
-                    <tr>
-                        <th>ID</th>
-                        <th>Estado</th>
-                        <th>Nombre</th>
-
-                        <th>Cédula</th>
-                        <th>Teléfono</th>
-                        <th>Correo</th>
-                        <th>Ciudad</th>
-                        <th>Detalles</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var item in Model.Conductores)
-                    {
-                        <tr data-search="@item.Nombre">
-                            <td>@item.IdConductor</td>
-                            <td><span class="badge @(item.Estado ? "bg-success" : "bg-danger")">@(item.Estado ? "Activo" : "Inactivo")</span></td>
-                            <td>@item.Nombre</td>
-
-                            <td>@item.NumeroCedula</td>
-                            <td>@item.Telefono</td>
-                            <td>@item.Correo</td>
-                            <td>@item.Ciudad</td>
-                            <td>
-                                <a asp-action="Ver_Horario_Conductor" asp-route-IdConductor="@item.IdConductor" class="btn btn-outline-primary btn-sm">Horarios</a>
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
-    }
-    else
-    {
-        <div class="alert alert-warning text-center mt-4">
-            <strong>⚠ No se encontraron conductores.</strong>
-        </div>
-    }
-
-    <hr class="my-5">
-
-    <!-- Vehículos -->
-    <h3 class="mb-4 text-center text-primary">Vehículos</h3>
-    <div class="d-flex justify-content-between align-items-center mb-3">
-
-        <input type="text" id="buscarVehiculo" class="form-control w-25" placeholder="🔍 Buscar por placa..." onkeyup="filtrarTabla('buscarVehiculo', 'tablaVehiculos')">
-    </div>
-
-    @if (Model != null && Model.Vehiculos.Any())
-    {
-        <div class="table-responsive">
-            <table class="table table-hover table-striped text-center" id="tablaVehiculos">
-                <thead class="table-dark">
-                    <tr>
-                        <th>ID</th>
-                        <th>Estado</th>
-                        <th>Placa</th>
-                        <th>SOAT</th>
-                        <th>Técnico Mecánica</th>
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var item in Model.Vehiculos)
-                    {
-                        <tr data-search="@item.Placa">
-                            <td>@item.IdVehiculo</td>
-                            <td><span class="badge @(item.Estado ? "bg-success" : "bg-danger")">@(item.Estado ? "Habilitado" : "No Habilitado")</span></td>
-                            <td>@item.Placa</td>
-                            <td>@Html.Raw(item.ObtenerEstadoDocumento(item.VenceSoat))</td>
-                            <td>@Html.Raw(item.ObtenerEstadoDocumento(item.VenceTecnicoMecanica))</td>
-                            <td>
-                                <a asp-action="Ver_Horario_Vehiculo" asp-route-IdVehiculo="@item.IdVehiculo" class="btn btn-outline-primary btn-sm">Horarios</a>
-                               
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
-    }
-    else
-    {
-        <div class="alert alert-warning text-center mt-4">
-            <strong>⚠ No se encontraron vehículos eliminados.</strong>
-        </div>
-    }
-
-    <hr class="my-5">
-</div>
-
-
-<script>
-    function filtrarTabla(inputId, tableId) {
-        let input = document.getElementById(inputId).value.toLowerCase();
-        let filas = document.querySelectorAll(`#${tableId} tbody tr`);
-
-        filas.forEach(fila => {
-            let contenido = fila.getAttribute("data-search").toLowerCase();
-            fila.style.display = contenido.includes(input) ? "" : "none";
-        });
-    }
-</script>

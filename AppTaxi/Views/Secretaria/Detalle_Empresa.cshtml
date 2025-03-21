@@ -4,122 +4,191 @@
     Layout = "~/Views/Shared/_LayoutSecretaria.cshtml";
 }
 
-<div class="container mt-4">
-    <div class="row">
-        <!-- Card de Empresa -->
-        <div class="col-md-6">
-            <div class="card shadow-sm h-100">
+<div class="container-fluid">
+    <!-- Encabezado -->
+    <div class="d-flex justify-content-between align-items-center mb-5">
+        <h1 class="display-5 fw-bold text-primary"><i class="fas fa-building me-2"></i>Detalle de Empresa</h1>
+    </div>
+
+    <div class="row g-4">
+        <!-- Tarjeta de Empresa -->
+        <div class="col-lg-6">
+            <div class="card shadow-lg h-100">
                 <div class="card-header bg-primary text-white">
-                    <h4 class="mb-0"><strong>Detalle de la Empresa</strong></h4>
+                    <h3 class="card-title mb-0">
+                        <i class="fas fa-info-circle me-2"></i>Información General
+                    </h3>
                 </div>
                 <div class="card-body">
                     @if (Model != null)
                     {
-                        <table class="table table-borderless">
-                            <tr>
-                                <th>Nombre:</th>
-                                <td>@Model.Empresa.Nombre</td>
-                            </tr>
-                            <tr>
-                                <th>NIT:</th>
-                                <td>@Model.Empresa.Nit</td>
-                            </tr>
-                            <tr>
-                                <th>Representante:</th>
-                                <td>@Model.Empresa.Representante</td>
-                            </tr>
-                        </table>
+                        <div class="row g-4">
+                            <!-- Información Básica -->
+                            <div class="col-12">
+                                <h5 class="text-primary mb-3"><i class="fas fa-database me-2"></i>Datos Principales</h5>
+                                <div class="row g-3">
+                                    <div class="col-md-6">
+                                        <p class="fs-5">
+                                            <strong><i class="fas fa-signature me-2"></i>Nombre:</strong>
+                                            <span class="text-muted">@Model.Empresa.Nombre</span>
+                                        </p>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <p class="fs-5">
+                                            <strong><i class="fas fa-id-card me-2"></i>NIT:</strong>
+                                            <span class="text-muted">@Model.Empresa.Nit</span>
+                                        </p>
+                                    </div>
+                                    <div class="col-12">
+                                        <p class="fs-5">
+                                            <strong><i class="fas fa-user-tie me-2"></i>Representante:</strong>
+                                            <span class="text-muted">@Model.Empresa.Representante</span>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
 
-                        <h5 class="mt-3 text-muted">📞 Contactos de la Empresa</h5>
-                        <table class="table table-borderless">
-                            <tr>
-                                <th><i class="fas fa-envelope"></i> Correo:</th>
-                                <td>
-                                    @Model.Empresa.RedPrincipal
-                                    <button class="btn btn-sm btn-outline-warning" onclick="copyToClipboard('@Model.Empresa.RedPrincipal')">
-                                        📋 Copiar
-                                    </button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <th><i class="fas fa-at"></i> Alternativa:</th>
-                                <td>
-                                    @Model.Empresa.RedSecundaria
-                                    <button class="btn btn-sm btn-outline-warning" onclick="copyToClipboard('@Model.Empresa.RedSecundaria')">
-                                        📋 Copiar
-                                    </button>
-                                </td>
-                            </tr>
-                        </table>
+                            <!-- Contactos -->
+                            <div class="col-12">
+                                <h5 class="text-primary mb-3"><i class="fas fa-address-book me-2"></i>Contactos</h5>
+                                <div class="list-group">
+                                    <div class="list-group-item border-0">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <i class="fas fa-envelope me-2"></i>
+                                                <strong>Correo Principal:</strong> @Model.Empresa.RedPrincipal
+                                            </div>
+                                            <button class="btn btn-outline-secondary btn-sm"
+                                                    onclick="copyToClipboard('@Model.Empresa.RedPrincipal')">
+                                                <i class="fas fa-copy me-2"></i>Copiar
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="list-group-item border-0">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <i class="fas fa-at me-2"></i>
+                                                <strong>Correo Alternativo:</strong> @Model.Empresa.RedSecundaria
+                                            </div>
+                                            <button class="btn btn-outline-secondary btn-sm"
+                                                    onclick="copyToClipboard('@Model.Empresa.RedSecundaria')">
+                                                <i class="fas fa-copy me-2"></i>Copiar
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     }
                     else
                     {
-                        <p class="text-danger">⚠ Error: El modelo está vacío.</p>
+                        <div class="alert alert-danger text-center fs-5">
+                            <i class="fas fa-exclamation-triangle me-2"></i>Error: El modelo está vacío
+                        </div>
                     }
                 </div>
             </div>
         </div>
 
-        <!-- Card de Usuario Encargado + Botones -->
-        <div class="col-md-6 d-flex flex-column">
-            <div class="card shadow-sm flex-grow-1">
-                <div class="card-header bg-secondary text-white">
-                    <h4 class="mb-0"><strong>Usuario Encargado</strong></h4>
+        <!-- Tarjeta de Usuario + Acciones -->
+        <div class="col-lg-6">
+            <div class="card shadow-lg h-100">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="card-title mb-0">
+                        <i class="fas fa-user-shield me-2"></i>Encargado Empresarial
+                    </h3>
                 </div>
                 <div class="card-body">
-                    <div class="d-flex align-items-center">
-                        <img src="@(string.IsNullOrEmpty(Model.Usuario.Foto) ? "/imagenes/noimage.png" : "data:image/png;base64," + Model.Usuario.Foto)"
-                             class="img-fluid rounded-circle border shadow-sm p-2 me-3"
-                             alt="Usuario"
-                             style="max-width: 130px;"
-                             onerror="this.onerror=null; this.src='/imagenes/noimage.png';">
-                        <div>
-                            <h5>@Model.Usuario.Nombre</h5>
-                            <p><i class="fas fa-envelope"></i> <strong>Correo:</strong> @Model.Usuario.Correo</p>
-                            <p><i class="fas fa-mobile-alt"></i> <strong>Teléfono Principal:</strong> @Model.Usuario.Celular</p>
-                            <p><i class="fas fa-phone"></i> <strong>Teléfono Secundario:</strong> @Model.Usuario.Telefono</p>
+                    <div class="row g-4 align-items-center">
+                        <!-- Imagen -->
+                        <div class="col-md-4 text-center">
+                            <img src="@(string.IsNullOrEmpty(Model.Usuario.Foto) ? "/imagenes/noimage.png" : "data:image/png;base64," + Model.Usuario.Foto)"
+                                 class="img-fluid rounded-circle border shadow-sm p-2"
+                                 alt="Foto Encargado"
+                                 style="max-width: 150px;"
+                                 onerror="this.onerror=null; this.src='/imagenes/noimage.png';">
+                        </div>
+
+                        <!-- Información -->
+                        <div class="col-md-8">
+                            <div class="row g-3">
+                                <div class="col-12">
+                                    <h5 class="text-primary">@Model.Usuario.Nombre</h5>
+                                </div>
+                                <div class="col-12">
+                                    <p class="fs-5"><i class="fas fa-envelope me-2"></i>@Model.Usuario.Correo</p>
+                                </div>
+                                <div class="col-md-6">
+                                    <p class="fs-5"><i class="fas fa-mobile-alt me-2"></i>@Model.Usuario.Celular</p>
+                                </div>
+                                <div class="col-md-6">
+                                    <p class="fs-5"><i class="fas fa-phone me-2"></i>@Model.Usuario.Telefono</p>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- Botones que llenan el espacio sobrante -->
-            <div class="d-flex flex-column mt-2">
-                <a class="btn btn-outline-primary flex-fill mb-2" asp-action="Conductores" asp-route-IdEmpresa="@Model.Empresa.IdEmpresa" asp-controller="Secretaria">Conductores</a>
-                <a class="btn btn-outline-secondary flex-fill mb-2" asp-action="Vehiculos" asp-route-IdEmpresa="@Model.Empresa.IdEmpresa" asp-controller="Secretaria">Vehiculos</a>
-                <a class="btn btn-outline-success flex-fill" asp-action="Propietarios" asp-route-IdEmpresa="@Model.Empresa.IdEmpresa" asp-controller="Secretaria">Propietarios</a>
+                <!-- Botones de Acción -->
+                <div class="card-footer bg-transparent">
+                    <div class="d-grid gap-3">
+                        <a asp-action="Conductores" asp-route-IdEmpresa="@Model.Empresa.IdEmpresa"
+                           class="btn btn-primary btn-lg">
+                            <i class="fas fa-users me-2"></i>Conductores
+                        </a>
+                        <a asp-action="Vehiculos" asp-route-IdEmpresa="@Model.Empresa.IdEmpresa"
+                           class="btn btn-secondary btn-lg">
+                            <i class="fas fa-car me-2"></i>Vehículos
+                        </a>
+                        <a asp-action="Propietarios" asp-route-IdEmpresa="@Model.Empresa.IdEmpresa"
+                           class="btn btn-success btn-lg">
+                            <i class="fas fa-user-tag me-2"></i>Propietarios
+                        </a>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- Modal para mensajes -->
-    <div class="modal fade" id="mensajeModal" tabindex="-1" aria-labelledby="mensajeModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header bg-info text-white">
-                    <h5 class="modal-title" id="mensajeModalLabel">Información</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-                </div>
-                <div class="modal-body text-center" id="modalMensajeTexto">
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                </div>
-            </div>
-        </div>
-    </div>
-    <br />
-    <div class="text-center mt-4">
-        <a href="javascript:history.back()" class="btn btn-danger btn-lg">Volver</a>
+    <!-- Botón Volver -->
+    <div class="text-center mt-5">
+        <a href="javascript:history.back()" class="btn btn-secondary px-5">
+            <i class="fas fa-arrow-left me-2"></i>Volver
+        </a>
     </div>
 </div>
 
-<script>
-    function copyToClipboard(text) {
-        navigator.clipboard.writeText(text).then(() => {
-            document.getElementById('modalMensajeTexto').innerText = "Copiado al portapapeles: " + text;
-            var mensajeModal = new bootstrap.Modal(document.getElementById('mensajeModal'));
-            mensajeModal.show();
-        });
+<!-- Modal -->
+<div class="modal fade" id="mensajeModal" tabindex="-1" aria-labelledby="mensajeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title" id="mensajeModalLabel">
+                    <i class="fas fa-clipboard-check me-2"></i>Portapapeles
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body text-center fs-5 py-4" id="modalMensajeTexto">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <i class="fas fa-times me-2"></i>Cerrar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                document.getElementById('modalMensajeTexto').innerHTML = `
+                            <i class="fas fa-check-circle text-success me-2"></i>
+                            <strong>Texto copiado:</strong><br>${text}
+                        `;
+                new bootstrap.Modal(document.getElementById('mensajeModal')).show();
+            });
         }
-</script>
+    </script>
+}

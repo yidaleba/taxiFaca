@@ -1,151 +1,179 @@
-﻿@model ModeloVista 
+﻿@model ModeloVista
 @{
     ViewData["Title"] = "Editar Conductor";
     Layout = "~/Views/Shared/_LayoutEmpresa.cshtml";
 }
-<p class="text-sm-center"><strong>Cupos Disponibles : </strong>@ViewBag.Cupos</p>
-<br />
 
-@if (TempData["Mensaje"] != null)
-{
-    <div class="alert alert-info d-flex align-items-center justify-content-between mb-4">
-        <div class="d-flex align-items-center">
-            <i class="bi bi-info-circle-fill me-3 fs-5"></i>
-            <div>@TempData["Mensaje"]</div>
-        </div>
-        @if (TempData["Mensaje"].ToString() == "No se encontró usuario asignado")
-        {
-            <a asp-action="Crear_Usuario"
-               asp-controller="Empresa"
-               asp-route-IdConductor="@Model.Conductor.IdConductor"
-               class="btn btn-success d-flex align-items-center">
-                <i class="bi bi-plus-circle me-2"></i>Crear Usuario
-            </a>
-        }
-    </div>
-}
-@if (Model != null)
-{
-    <p class="text-muted text-center">Llene los campos que desea editar.</p>
-    <p class="text-muted text-center">Los campos que no se deseen editar pueden quedar vacíos.</p>
-
-    <div class="card shadow-lg">
-        <div class="card-header bg-primary text-white">
-            <h5 class="mb-0">Información del Conductor: @Model.Conductor.Nombre</h5>
-        </div>
-        <div class="card-body">
-            <form asp-action="Guardar_Conductor" asp-controller="Empresa" method="post" enctype="multipart/form-data">
-
-                <!-- Foto -->
-                <div class="mb-3">
-                    <label class="form-label"><strong>Foto:</strong></label>
-                    <input type="file" class="form-control" asp-for="Archivo_4" accept=".png, .jpg, .jpeg">
-                </div>
-
-                <!-- Documento y ID -->
-                <div class="row">
-                    <div class="col-md-6">
-                        <label class="form-label"><strong>Documento:</strong></label>
-                        <input type="text"  class="form-control" asp-for="Conductor.NumeroCedula">
-                    </div>
-                    <div class="col-md-6">
-                        <label class="form-label"><strong>ID:</strong></label>
-                        <input type="number" readonly class="form-control" asp-for="Conductor.IdConductor">
-                    </div>
-                </div>
-
-                <!-- Teléfono y Celular -->
-                <div class="row mt-3">
-                    <div class="col-md-6">
-                        <label class="form-label"><strong>Teléfono:</strong></label>
-                        <input type="number" class="form-control" asp-for="Conductor.Telefono" placeholder="@Model.Conductor.Telefono">
-                    </div>
-                    <div class="col-md-6">
-                        <label class="form-label"><strong>Celular:</strong></label>
-                        <input type="number" class="form-control" asp-for="Conductor.Celular" placeholder="@Model.Conductor.Celular">
-                    </div>
-                </div>
-
-                <!-- Correo, Dirección y Contraseña-->
-                <div class="row mt-3">
-                    <div class="col-md-6">
-                        <label class="form-label"><strong>Correo:</strong></label>
-                        <input type="email" class="form-control" asp-for="Conductor.Correo" placeholder="@Model.Conductor.Correo">
-                    </div>
-                    <div class="col-md-6">
-                        <label class="form-label"><strong>Contraseña:</strong></label>
-                        <input type="password" class="form-control" asp-for="Conductor.Contrasena" placeholder="@Model.Conductor.Contrasena">
-                    </div>
-                    <div class="col-md-6">
-                        <label class="form-label"><strong>Dirección:</strong></label>
-                        <input type="text" class="form-control" asp-for="Conductor.Direccion" placeholder="@Model.Conductor.Direccion">
-                    </div>
-                </div>
-
-                <!-- Ciudad y Estado -->
-                <div class="row mt-3">
-                    <div class="col-md-6">
-                        <label class="form-label"><strong>Ciudad:</strong></label>
-                        <input type="text" class="form-control" asp-for="Conductor.Ciudad" placeholder="@Model.Conductor.Ciudad">
-                    </div>
-                    <div class="col-md-6">
-                        <label class="form-label"><strong>Estado Actual:</strong></label>
-                        <input type="text" readonly class="form-control" asp-for="Conductor.Estado" value="@(Model.Conductor.Estado ? "Activo" : "Inactivo")">
-                    </div>
-                </div>
-
-                <!-- Grupo Sanguíneo, EPS y ARL -->
-                <div class="row mt-3">
-                    <div class="col-md-4">
-                        <label class="form-label"><strong>RH:</strong></label>
-                        <input type="text" readonly class="form-control" asp-for="Conductor.GrupoSanguineo">
-                    </div>
-                    <div class="col-md-4">
-                        <label class="form-label"><strong>EPS:</strong></label>
-                        <input type="text" readonly class="form-control" asp-for="Conductor.Eps">
-                    </div>
-                    <div class="col-md-4">
-                        <label class="form-label"><strong>ARL:</strong></label>
-                        <input type="text" readonly class="form-control" asp-for="Conductor.Arl">
-                    </div>
-                </div>
-
-                <!-- Documentos -->
-                <div class="row mt-3">
-                    <div class="col-md-4">
-                        <label class="form-label"><strong>Documento Cédula:</strong></label>
-                        <input type="file"  class="form-control" asp-for="Conductor.DocumentoCedula">
-                        <small class="text-muted">¿Hay archivo cargado?: @(string.IsNullOrEmpty(Model.Conductor.DocumentoCedula) ? "No" : "Sí")</small>
-                    </div>
-                    <div class="col-md-4">
-                        <label class="form-label"><strong>Documento EPS:</strong></label>
-                        <input type="file"  class="form-control" asp-for="Conductor.DocumentoEps">
-                        <small class="text-muted">¿Hay archivo cargado?: @(string.IsNullOrEmpty(Model.Conductor.DocumentoEps) ? "No" : "Sí")</small>
-                    </div>
-                    <div class="col-md-4">
-                        <label class="form-label"><strong>Documento ARL:</strong></label>
-                        <input type="file"  class="form-control" asp-for="Conductor.DocumentoArl">
-                        <small class="text-muted">¿Hay archivo cargado?: @(string.IsNullOrEmpty(Model.Conductor.DocumentoArl) ? "No" : "Sí")</small>
-                    </div>
-                </div>
-
-                <!-- Botones -->
-                <div class="mt-4 text-center">
-                    <button type="submit" class="btn btn-success px-4">Guardar Cambios</button>
-                    <a href="javascript:history.back()" class="btn btn-danger px-4">Cancelar</a>
-                </div>
-
-            </form>
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-5">
+        <h1 class="display-5 fw-bold text-primary">Editar Conductor</h1>
+        <div class="bg-info rounded-pill px-4 py-2">
+            <span class="fs-5 text-white"><strong>Cupos Disponibles:</strong> @ViewBag.Cupos</span>
         </div>
     </div>
 
-    <p class="text-center mt-3 text-danger">@ViewBag.Mensaje</p>
-}
-else
-{
-    <div class="alert alert-warning text-center mt-4" role="alert">
-        <p>No se encontró el dato.</p>
-        <a href="javascript:history.back()" class="btn btn-success">Volver</a>
-    </div>
-}
+    <!-- Mensajes -->
+    @if (TempData["Mensaje"] != null)
+    {
+        <div class="alert alert-success fs-5 text-center" role="alert">
+            @TempData["Mensaje"]
+        </div>
+    }
 
+    <!-- Contenido Principal -->
+    @if (Model != null)
+    {
+        <div class="card shadow-lg mx-auto" style="max-width: 1000px;">
+            <div class="card-header bg-primary text-white">
+                <h3 class="card-title mb-0">
+                    <i class="fas fa-id-card me-2"></i>@Model.Conductor.Nombre
+                </h3>
+            </div>
+
+            <div class="card-body p-4">
+                <form asp-action="Guardar_Conductor" asp-controller="Empresa" method="post" enctype="multipart/form-data">
+                    <div class="row g-4">
+                        <!-- Sección Izquierda -->
+                        <div class="col-md-6">
+                            <!-- Foto -->
+                            <div class="mb-4">
+                                <label class="form-label fs-5"><i class="fas fa-camera me-2"></i>Actualizar Foto</label>
+                                <input type="file" class="form-control form-control-lg"
+                                       asp-for="Archivo_4" accept=".png, .jpg, .jpeg">
+                            </div>
+
+                            <!-- Documentación -->
+                            <div class="mb-4">
+                                <h5 class="text-primary mb-3"><i class="fas fa-file-contract me-2"></i>Documentación</h5>
+                                <div class="row g-3">
+                                    <div class="col-12">
+                                        <label class="form-label"><i class="fas fa-id-card me-2"></i>Cédula</label>
+                                        <input type="text" class="form-control form-control-lg"
+                                               asp-for="Conductor.NumeroCedula">
+                                    </div>
+                                    <div class="col-12">
+                                        <label class="form-label"><i class="fas fa-fingerprint me-2"></i>ID Conductor</label>
+                                        <input type="number" class="form-control form-control-lg bg-light"
+                                               asp-for="Conductor.IdConductor" readonly>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Contacto -->
+                            <div class="mb-4">
+                                <h5 class="text-primary mb-3"><i class="fas fa-address-book me-2"></i>Contacto</h5>
+                                <div class="row g-3">
+                                    <div class="col-md-6">
+                                        <label class="form-label"><i class="fas fa-phone me-2"></i>Teléfono</label>
+                                        <input type="number" class="form-control form-control-lg"
+                                               asp-for="Conductor.Telefono" placeholder="@Model.Conductor.Telefono">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label"><i class="fas fa-mobile-alt me-2"></i>Celular</label>
+                                        <input type="number" class="form-control form-control-lg"
+                                               asp-for="Conductor.Celular" placeholder="@Model.Conductor.Celular">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Sección Derecha -->
+                        <div class="col-md-6">
+                            <!-- Información Básica -->
+                            <div class="mb-4">
+                                <h5 class="text-primary mb-3"><i class="fas fa-info-circle me-2"></i>Información Básica</h5>
+                                <div class="row g-3">
+                                    <div class="col-md-6">
+                                        <label class="form-label"><i class="fas fa-envelope me-2"></i>Correo</label>
+                                        <input type="email" class="form-control form-control-lg"
+                                               asp-for="Conductor.Correo" placeholder="@Model.Conductor.Correo">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label"><i class="fas fa-lock me-2"></i>Contraseña</label>
+                                        <input type="password" class="form-control form-control-lg"
+                                               asp-for="Conductor.Contrasena" placeholder="@Model.Conductor.Contrasena">
+                                    </div>
+                                    <div class="col-12">
+                                        <label class="form-label"><i class="fas fa-map-marker-alt me-2"></i>Dirección</label>
+                                        <input type="text" class="form-control form-control-lg"
+                                               asp-for="Conductor.Direccion" placeholder="@Model.Conductor.Direccion">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Ubicación y Estado -->
+                            <div class="mb-4">
+                                <div class="row g-3">
+                                    <div class="col-md-6">
+                                        <label class="form-label"><i class="fas fa-city me-2"></i>Ciudad</label>
+                                        <input type="text" class="form-control form-control-lg"
+                                               asp-for="Conductor.Ciudad" placeholder="@Model.Conductor.Ciudad">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label"><i class="fas fa-power-off me-2"></i>Estado</label>
+                                        <input type="text" class="form-control form-control-lg bg-light"
+                                               value="@(Model.Conductor.Estado ? "Activo" : "Inactivo")" readonly>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Documentos -->
+                            <div class="mb-4">
+                                <h5 class="text-primary mb-3"><i class="fas fa-file-upload me-2"></i>Actualizar Documentos</h5>
+                                <div class="row g-3">
+                                    <div class="col-md-4">
+                                        <label class="form-label"><i class="fas fa-file-pdf me-2"></i>Cédula</label>
+                                        <input type="file" class="form-control" asp-for="Conductor.DocumentoCedula">
+                                        <small class="text-muted">
+                                            <i class="fas fa-check-circle me-2"></i>
+                                            @(string.IsNullOrEmpty(Model.Conductor.DocumentoCedula) ? "No cargado" : "Cargado")
+                                        </small>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label class="form-label"><i class="fas fa-file-medical me-2"></i>EPS</label>
+                                        <input type="file" class="form-control" asp-for="Conductor.DocumentoEps">
+                                        <small class="text-muted">
+                                            <i class="fas fa-check-circle me-2"></i>
+                                            @(string.IsNullOrEmpty(Model.Conductor.DocumentoEps) ? "No cargado" : "Cargado")
+                                        </small>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label class="form-label"><i class="fas fa-shield-alt me-2"></i>ARL</label>
+                                        <input type="file" class="form-control" asp-for="Conductor.DocumentoArl">
+                                        <small class="text-muted">
+                                            <i class="fas fa-check-circle me-2"></i>
+                                            @(string.IsNullOrEmpty(Model.Conductor.DocumentoArl) ? "No cargado" : "Cargado")
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Botones -->
+                    <div class="d-flex justify-content-center gap-3 mt-5">
+                        <button type="submit" class="btn btn-primary btn-lg px-5">
+                            <i class="fas fa-save me-2"></i>Guardar Cambios
+                        </button>
+                        <a asp-controller="Empresa" asp-action="Detalle_Conductor" asp-route-IdConductor="@Model.Conductor.IdConductor" class="btn btn-secondary btn-lg px-5">
+                            <i class="fas fa-times me-2"></i>Cancelar
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="card shadow-lg">
+            <div class="card-body text-center py-5">
+                <i class="fas fa-exclamation-triangle fa-3x text-muted mb-4"></i>
+                <h3 class="text-secondary mb-3">Conductor no encontrado</h3>
+                <p class="fs-5 text-muted">Verifica los datos ingresados</p>
+                <a href="javascript:history.back()" class="btn btn-secondary px-5">
+                    <i class="fas fa-arrow-left me-2"></i>Volver
+                </a>
+            </div>
+        </div>
+    }
+</div>

@@ -4,111 +4,168 @@
     Layout = "~/Views/Shared/_LayoutSecretaria.cshtml";
 }
 
-@if (TempData["Mensaje"] != null)
-{
-    <div class="alert alert-info text-center">@TempData["Mensaje"]</div>
-}
-<div class="d-flex justify-content-between align-items-center mb-3">
-    <a asp-action="Agregar_Usuario" asp-controller="Secretaria" class="btn btn-outline-success">
-        <strong>Agregar Usuario</strong>
-    </a>
+<div class="container-fluid">
+    <!-- Encabezado -->
+    <div class="d-flex justify-content-between align-items-center mb-5">
+        <h1 class="display-5 fw-bold text-primary">Gestión de Usuarios</h1>
+    </div>
 
-    <input type="text" id="buscarUsuario" class="form-control w-25" placeholder="🔍 Buscar por usuario..." onkeyup="filtrarUsuarios()">
+    <!-- Mensajes -->
+    @if (TempData["Mensaje"] != null)
+    {
+        <div class="alert alert-success fs-5 text-center" role="alert">
+            @TempData["Mensaje"]
+        </div>
+    }
+
+    <!-- Controles Superiores -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-body py-3">
+            <div class="d-flex justify-content-between align-items-center">
+                <a asp-action="Agregar_Usuario" asp-controller="Secretaria"
+                   class="btn btn-primary px-5">
+                    <i class="fas fa-user-plus me-2"></i>Nuevo Usuario
+                </a>
+
+                <div class="input-group w-25">
+                    <span class="input-group-text bg-primary text-white">
+                        <i class="fas fa-search"></i>
+                    </span>
+                    <input type="text" id="buscarUsuario" class="form-control form-control-lg"
+                           placeholder="Buscar usuario..." onkeyup="filtrarUsuarios()">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tabla de Usuarios -->
+    @if (Model.Usuarios != null && Model.Usuarios.Any())
+    {
+        <div class="card shadow-lg">
+            <div class="card-header bg-primary text-white py-3">
+                <h2 class="h4 mb-0"><i class="fas fa-users me-2"></i>Registro de Usuarios</h2>
+            </div>
+
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="bg-light">
+                            <tr>
+                                <th class="text-center text-primary fs-5">#</th>
+                                <th class="text-primary fs-5"><i class="fas fa-image me-2"></i>Foto</th>
+                                <th class="text-primary fs-5"><i class="fas fa-user me-2"></i>Nombre</th>
+                                <th class="text-primary fs-5">Estado</th>
+                                <th class="text-primary fs-5"><i class="fas fa-envelope me-2"></i>Correo</th>
+                                <th class="text-primary fs-5"><i class="fas fa-phone me-2"></i>Celular</th>
+                                <th class="text-primary fs-5"><i class="fas fa-building me-2"></i>Empresa</th>
+                                <th class="text-primary fs-5"><i class="fas fa-id-card me-2"></i>NIT</th>
+                                <th class="text-primary fs-5">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.Usuarios)
+                            {
+                                <tr class="fila-usuario">
+                                    <td class="text-center fw-bold">@item.Contador</td>
+                                    <td class="text-center">
+                                        <img src="@(string.IsNullOrEmpty(item.Foto) ? "/imagenes/noimage.png" : "data:image/png;base64," + item.Foto)"
+                                             class="img-fluid rounded-circle border shadow-sm p-2"
+                                             alt="Usuario"
+                                             style="max-width: 70px;"
+                                             onerror="this.onerror=null; this.src='/imagenes/noimage.png';">
+                                    </td>
+                                    <td class="col-Nombre">@item.Nombre</td>
+                                    <td>
+                                        <span class="badge rounded-pill @(item.Estado ? "bg-success" : "bg-danger") fs-6 py-2">
+                                            @(item.Estado ? "Activo" : "Inactivo")
+                                        </span>
+                                    </td>
+                                    <td>@item.Correo</td>
+                                    <td>@item.Celular</td>
+                                    <td>
+                                        @if (Model.Empresas.FirstOrDefault(e => e.IdUsuario == item.IdUsuario) != null)
+                                        {
+                                            @Model.Empresas.FirstOrDefault(e => e.IdUsuario == item.IdUsuario).Nombre
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted">Vacío</span>
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (Model.Empresas.FirstOrDefault(e => e.IdUsuario == item.IdUsuario) != null)
+                                        {
+                                            @Model.Empresas.FirstOrDefault(e => e.IdUsuario == item.IdUsuario).Nit
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted">Vacío</span>
+                                        }
+                                    </td>
+                                    <td class="text-center">
+                                        <div class="d-flex gap-2 justify-content-center">
+                                            <a asp-action="Editar_Usuario" asp-controller="Secretaria"
+                                               asp-route-IdUsuario="@item.IdUsuario"
+                                               class="btn btn-sm btn-warning px-3">
+                                                <i class="fas fa-edit me-1"></i>Editar
+                                            </a>
+                                            @if (item.Estado)
+                                            {
+                                                <form asp-action="Deshabilitar_Usuario" asp-controller="Secretaria" method="post">
+                                                    <input type="hidden" name="IdUsuario" value="@item.IdUsuario" />
+                                                    <button type="submit" class="btn btn-sm btn-danger px-3">
+                                                        <i class="fas fa-times me-1"></i>Deshabilitar
+                                                    </button>
+                                                </form>
+                                            }
+                                            else
+                                            {
+                                                <form asp-action="Habilitar_Usuario" asp-controller="Secretaria" method="post">
+                                                    <input type="hidden" name="IdUsuario" value="@item.IdUsuario" />
+                                                    <button type="submit" class="btn btn-sm btn-success px-3">
+                                                        <i class="fas fa-check me-1"></i>Habilitar
+                                                    </button>
+                                                </form>
+                                            }
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="card shadow-lg">
+            <div class="card-body text-center py-5">
+                <i class="fas fa-users-slash fa-3x text-muted mb-4"></i>
+                <h3 class="text-secondary mb-3">No hay usuarios registrados</h3>
+            </div>
+        </div>
+    }
+
+    <!-- Mensaje de Error -->
+    @if (!string.IsNullOrEmpty(ViewBag.Mensaje))
+    {
+        <div class="alert alert-danger mt-4 fs-5 text-center" role="alert">
+            @ViewBag.Mensaje
+        </div>
+    }
 </div>
 
-@if (Model.Usuarios != null && Model.Usuarios.Any())
-{
-    <div class="table-responsive">
-        <table class="table table-hover text-center">
-            <thead class="table-dark">
-                <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Foto</th>
-                    <th scope="col">Nombre</th>
-                    <th scope="col">Estado</th>
-                    <th scope="col">Correo</th>
-                    <th scope="col">Celular</th>
-                    <th scope="col">Empresa</th>
-                    <th scope="col">NIT</th>
-                    <th scope="col">Acciones</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var item in Model.Usuarios)
-                {
-                    <tr class="fila-usuario">
-                        <td>@item.Contador</td>
-                        <td>
-                            <img src="@(string.IsNullOrEmpty(item.Foto) ? "/imagenes/noimage.png" : "data:image/png;base64," + item.Foto)"
-                             class="img-fluid rounded-circle border shadow-sm p-2"
-                             alt="Usuario"
-                             style="max-width: 70px;"
-                             onerror="this.onerror=null; this.src='/imagenes/noimage.png';">
-                        </td>
-                        <td class="col-Nombre">@item.Nombre</td>
-                        <td>
-                            <span class="badge @(item.Estado ? "bg-success" : "bg-danger")">
-                                @(item.Estado ? "Activo" : "Inactivo")
-                            </span>
-                        </td>
-                        <td>@item.Correo</td>
-                        <td>@item.Celular</td>
-                        @if(Model.Empresas.Where(e => e.IdUsuario == item.IdUsuario).FirstOrDefault() != null)
-                        {
-                            <td>@Model.Empresas.Where(e => e.IdUsuario == item.IdUsuario).FirstOrDefault().Nombre</td>
-                            <td>@Model.Empresas.Where(e => e.IdUsuario == item.IdUsuario).FirstOrDefault().Nit</td>
-                        }
-                        else
-                        {
-                            <td><i>Vacío</i></td>
-                            <td><i>Vacío</i></td>
-                        }
-                        <td>
-                            <div class="d-grid gap-2 d-md-block">
-                                <a asp-action="Editar_Usuario" asp-controller="Secretaria" asp-route-IdUsuario="@item.IdUsuario" class="btn btn-warning">🖋️</a>
-                                @if (item.Estado == true)
-                                {
-                                    <form asp-action="Deshabilitar_Usuario" asp-controller="Secretaria" method="post">
-                                        <input type="hidden" name="IdUsuario" value="@item.IdUsuario" />
-                                        <button type="submit" class="btn btn-danger btn-sm">❌</button>
-                                    </form>
-                                }
-                                else
-                                { 
-                                    <form asp-action="Habilitar_Usuario" asp-controller="Secretaria" method="post">
-                                        <input type="hidden" name="IdUsuario" value="@item.IdUsuario" />
-                                        <button type="submit" class="btn btn-success btn-sm">✔️</button>
-                                    </form>
-                            
-                                }
-                            </div>
-                        </td>
+@section Scripts {
+    <script>
+        function filtrarUsuarios() {
+            let input = document.getElementById("buscarUsuario").value.toLowerCase();
+            let filas = document.getElementsByClassName("fila-usuario");
 
-                    </tr>
-                }
-            </tbody>
-        </table>
-    </div>
-}
-else
-{
-    <div class="alert alert-warning text-center mt-4">
-        <strong>⚠ No se encontraron vehículos registrados.</strong>
-    </div>
-}
-
-<p class="text-danger text-center">@ViewBag.Mensaje</p>
-
-<script>
-    function filtrarUsuarios() {
-        let input = document.getElementById("buscarUsuario").value.toLowerCase();
-        let filas = document.getElementsByClassName("fila-usuario");
-
-        for (let i = 0; i < filas.length; i++) {
-            let placa = filas[i].getElementsByClassName("col-Nombre")[0].innerText.toLowerCase();
-            filas[i].style.display = placa.includes(input) ? "" : "none";
+            for (let i = 0; i < filas.length; i++) {
+                let nombre = filas[i].getElementsByClassName("col-Nombre")[0].innerText.toLowerCase();
+                filas[i].style.display = nombre.includes(input) ? "" : "none";
+            }
         }
-    }
-</script>
-
-
+    </script>
+}

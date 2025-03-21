@@ -1,166 +1,238 @@
 ﻿@model ModeloVista
 @{
-    ViewData["Title"] = "Detalle dell Propietario";
+    ViewData["Title"] = "Detalle del Propietario";
     Layout = "~/Views/Shared/_LayoutEmpresa.cshtml";
 }
-<p class="text-sm-center"><strong>Cupos Disponibles : </strong>@ViewBag.Cupos</p>
-<br />
-@if (TempData["Mensaje"] != null)
-{
-    <div class="alert alert-info text-center">@TempData["Mensaje"]</div>
-}
-@if (Model.Propietario != null)
-{
-    <div class="card shadow-lg p-4 rounded">
-        <h5 class="card-header bg-primary text-white text-center">Señor/a @Model.Propietario.Nombre</h5>
-        <div class="card-body">
-            <div class="text-center mb-4">
-                <img src="@(string.IsNullOrEmpty(Model.Propietario.Foto) ? "/imagenes/noimage.png" : "data:image/png;base64," + Model.Propietario.Foto)"
-                     class="img-fluid rounded-circle border shadow-sm p-2"
-                     alt="Usuario"
-                     style="max-width: 150px;"
-                     onerror="this.onerror=null; this.src='/imagenes/noimage.png';">
-            </div>
 
-
-            <div class="row mb-3">
-                <div class="col-md-6">
-                    <label class="fw-bold">Documento:</label>
-                    <p class="form-control-plaintext">@Model.Propietario.NumeroCedula</p>
-                </div>
-                <div class="col-md-6">
-                    <label class="fw-bold">Teléfono:</label>
-                    <p class="form-control-plaintext">@Model.Propietario.Telefono</p>
-                </div>
-            </div>
-
-            <div class="row mb-3">
-                <div class="col-md-6">
-                    <label class="fw-bold">Correo:</label>
-                    <p class="form-control-plaintext">@Model.Propietario.Correo</p>
-                </div>
-                <div class="col-md-6">
-                    <label class="fw-bold">Dirección:</label>
-                    <p class="form-control-plaintext">@Model.Propietario.Direccion</p>
-                </div>
-            </div>
-
-            <div class="row mb-3">
-                <div class="col-md-6">
-                    <label class="fw-bold">Ciudad:</label>
-                    <p class="form-control-plaintext">@Model.Propietario.Ciudad</p>
-                </div>
-                <div class="col-md-6">
-                    <label class="fw-bold">Estado Actual:</label>
-                    <p class="form-control-plaintext @(Model.Propietario.Estado ? "text-success" : "text-danger")">
-                        @(Model.Propietario.Estado ? "Activo" : "Inactivo")
-                    </p>
-                </div>
-            </div>
-
-            <div class="row mb-3">
-                <div class="col-md-12">
-                    <label class="fw-bold">Documento Cédula:</label>
-                    <p class="card-text">
-                        <button class="btn btn-outline-primary btn-sm" onclick="abrirDocumento('@Model.Propietario.DocumentoCedula')">
-                            <i class="fas fa-file-pdf"></i> <strong>Ver Documento</strong>
-                        </button>
-                    </p>
-                </div>
-            </div>
+<div class="container-fluid">
+    <!-- Encabezado -->
+    <div class="d-flex justify-content-between align-items-center mb-5">
+        <h1 class="display-5 fw-bold text-primary">Detalle del Propietario</h1>
+        <div class="bg-info rounded-pill px-4 py-2">
+            <span class="fs-5 text-white"><strong>Cupos Disponibles:</strong> @ViewBag.Cupos</span>
         </div>
     </div>
 
-    <h5 class="mt-5 text-center text-secondary">Vehículos Asociados</h5>
-
-    @if (Model.Vehiculos != null && Model.Vehiculos.Any())
+    <!-- Mensajes -->
+    @if (TempData["Mensaje"] != null)
     {
-        <div class="table-responsive">
-            <table class="table table-hover table-bordered text-center shadow-sm">
-                <thead class="table-dark">
-                    <tr>
-                        <th>ID Vehículo</th>
-                        <th>Placa</th>
-                        <th>Estado</th>
-                        <th>SOAT</th>
-                        <th>Técnico Mecánica</th>
-                        <th>Detalles</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var item in Model.Vehiculos)
+        <div class="alert alert-success fs-5 text-center" role="alert">
+            @TempData["Mensaje"]
+        </div>
+    }
+
+    <!-- Contenido Principal -->
+    @if (Model.Propietario != null)
+    {
+        <div class="card shadow-lg mx-auto" style="max-width: 900px;">
+            <div class="card-header bg-primary text-white">
+                <h3 class="card-title mb-0 text-center">
+                    <i class="fas fa-user-tie me-2"></i>@Model.Propietario.Nombre
+                </h3>
+            </div>
+
+            <div class="card-body">
+                <div class="row g-0">
+                    <!-- Imagen -->
+                    <div class="col-md-4 text-center p-4">
+                        <img src="@(string.IsNullOrEmpty(Model.Propietario.Foto) ? "/imagenes/noimage.png" : "data:image/png;base64," + Model.Propietario.Foto)"
+                             class="img-fluid rounded-circle border shadow-sm p-2"
+                             alt="Foto del Propietario"
+                             style="max-width: 200px;"
+                             onerror="this.onerror=null; this.src='/imagenes/noimage.png';">
+                    </div>
+
+                    <!-- Información -->
+                    <div class="col-md-8">
+                        <div class="row">
+                            <!-- Columna Izquierda -->
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <p class="fs-5">
+                                        <strong><i class="fas fa-id-card me-2"></i>Documento:</strong>
+                                        <span class="text-muted">@Model.Propietario.NumeroCedula</span>
+                                    </p>
+                                </div>
+                                <div class="mb-3">
+                                    <p class="fs-5">
+                                        <strong><i class="fas fa-phone me-2"></i>Teléfono:</strong>
+                                        <span class="text-muted">@Model.Propietario.Telefono</span>
+                                    </p>
+                                </div>
+                                <div class="mb-3">
+                                    <p class="fs-5">
+                                        <strong><i class="fas fa-envelope me-2"></i>Correo:</strong>
+                                        <span class="text-muted">@Model.Propietario.Correo</span>
+                                    </p>
+                                </div>
+                                <div class="mb-3">
+                                    <p class="fs-5">
+                                        <strong><i class="fas fa-map-marker-alt me-2"></i>Dirección:</strong>
+                                        <span class="text-muted">@Model.Propietario.Direccion</span>
+                                    </p>
+                                </div>
+                            </div>
+
+                            <!-- Columna Derecha -->
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <p class="fs-5">
+                                        <strong><i class="fas fa-city me-2"></i>Ciudad:</strong>
+                                        <span class="text-muted">@Model.Propietario.Ciudad</span>
+                                    </p>
+                                </div>
+                                <div class="mb-3">
+                                    <p class="fs-5">
+                                        <strong><i class="fas fa-circle me-2"></i>Estado:</strong>
+                                        <span class="badge rounded-pill @(Model.Propietario.Estado ? "bg-success" : "bg-danger") fs-6 py-2">
+                                            @(Model.Propietario.Estado ? "Activo" : "Inactivo")
+                                        </span>
+                                    </p>
+                                </div>
+                                <div class="mb-4">
+                                    <p class="fs-5"><strong><i class="fas fa-file-pdf me-2"></i>Documentos:</strong></p>
+                                    <div class="d-grid gap-2">
+                                        <button class="btn btn-outline-primary btn-lg"
+                                                onclick="abrirDocumento('@Model.Propietario.DocumentoCedula')">
+                                            <i class="fas fa-file-contract me-2"></i>Cédula
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Vehículos Asociados -->
+                <div class="mt-5">
+                    <h4 class="text-center text-primary mb-4">
+                        <i class="fas fa-car-side me-2"></i>Vehículos Asociados
+                    </h4>
+
+                    @if (Model.Vehiculos != null && Model.Vehiculos.Any())
                     {
-                        <tr>
-                            <td>@item.IdVehiculo</td>
-                            <td class="fw-bold">@item.Placa</td>
-                            <td class="@(item.Estado ? "text-success" : "text-danger")">@(item.Estado ? "Habilitado" : "No Habilitado")</td>
-                            <td class="@(item.Soat != null ? "text-success" : "text-danger")">@(item.Soat != null ? "Sí" : "No")</td>
-                            <td class="@(item.TecnicoMecanica != null ? "text-success" : "text-danger")">@(item.TecnicoMecanica != null ? "Sí" : "No")</td>
-                            <td>
-                                <a asp-action="Detalle_Vehiculo" asp-controller="Empresa" asp-route-IdVehiculo="@item.IdVehiculo" class="btn btn-primary btn-sm">Ver</a>
-                            </td>
-                        </tr>
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle shadow-sm">
+                                <thead class="table-primary">
+                                    <tr>
+                                        <th><i class="fas fa-fingerprint me-2"></i>ID</th>
+                                        <th><i class="fas fa-car me-2"></i>Placa</th>
+                                        <th><i class="fas fa-power-off me-2"></i>Estado</th>
+                                        <th><i class="fas fa-file-contract me-2"></i>SOAT</th>
+                                        <th><i class="fas fa-tools me-2"></i>Revisión</th>
+                                        <th><i class="fas fa-info-circle me-2"></i>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model.Vehiculos)
+                                    {
+                                        <tr>
+                                            <td>@item.IdVehiculo</td>
+                                            <td class="fw-bold">@item.Placa</td>
+                                            <td>
+                                                <span class="badge @(item.Estado ? "bg-success" : "bg-danger")">
+                                                    @(item.Estado ? "Habilitado" : "No Habilitado")
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <span class="badge @(item.Soat != null ? "bg-success" : "bg-danger")">
+                                                    @(item.Soat != null ? "Vigente" : "Pendiente")
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <span class="badge @(item.TecnicoMecanica != null ? "bg-success" : "bg-danger")">
+                                                    @(item.TecnicoMecanica != null ? "Aprobado" : "Pendiente")
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <a asp-action="Detalle_Vehiculo" asp-controller="Secretaria"
+                                                   asp-route-IdVehiculo="@item.IdVehiculo"
+                                                   class="btn btn-sm btn-primary">
+                                                    <i class="fas fa-search"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
                     }
-                </tbody>
-            </table>
+                    else
+                    {
+                        <div class="alert alert-warning text-center fs-5">
+                            <i class="fas fa-exclamation-triangle me-2"></i>No hay vehículos registrados
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <!-- Botones de Acción -->
+            <div class="card-footer bg-transparent py-4">
+                <div class="d-flex justify-content-center gap-3">
+                    <a href="javascript:history.back()" class="btn btn-secondary px-5">
+                        <i class="fas fa-arrow-left me-2"></i>Volver
+                    </a>
+                    <a asp-action="Editar_Propietario" asp-controller="Empresa" asp-route-IdPropietario="@Model.Propietario.IdPropietario"
+                       class="btn btn-warning px-5">
+                        <i class="fas fa-edit me-2"></i>Editar
+                    </a>
+                    <button type="button" class="btn btn-danger px-5" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal">
+                        <i class="fas fa-trash me-2"></i>Eliminar
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header bg-danger text-white">
+                        <h5 class="modal-title" id="confirmDeleteLabel"><i class="fas fa-exclamation-triangle me-2"></i>Confirmar Eliminación</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                    </div>
+                    <div class="modal-body fs-5">
+                        ¿Estás seguro de que deseas eliminar este propietario?
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                            <i class="fas fa-times me-2"></i>Cancelar
+                        </button>
+                        <form asp-action="Eliminar_Propietario" asp-controller="Empresa" method="post">
+                            <input type="hidden" name="IdPropietario" value="@Model.Propietario.IdPropietario" />
+                            <button type="submit" class="btn btn-danger">
+                                <i class="fas fa-trash me-2"></i>Eliminar
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
         </div>
     }
     else
     {
-        <p class="text-center text-danger">No hay vehículos registrados a nombre de este propietario.</p>
-    }
-
-    <div class="d-flex justify-content-center gap-3 mt-4">
-        <a href="javascript:history.back()" class="btn btn-success">Volver</a>
-        <a asp-action="Editar_Propietario" asp-controller="Empresa" asp-route-IdPropietario="@Model.Propietario.IdPropietario" class="btn btn-warning">Editar</a>
-
-        <!-- Botón para abrir el modal de confirmación -->
-        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal">
-            Eliminar
-        </button>
-    </div>
-
-    <!-- Modal de Confirmación -->
-    <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header bg-danger text-white">
-                    <h5 class="modal-title" id="confirmDeleteLabel">Confirmar Eliminación</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-                </div>
-                <div class="modal-body">
-                    ¿Estás seguro de que deseas eliminar este Propietario?
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                    <!-- Formulario para eliminar -->
-                    <form asp-action="Eliminar_Propietario" asp-controller="Empresa" method="post">
-                        <input type="hidden" name="IdPropietario" value="@Model.Propietario.IdPropietario" />
-                        <button type="submit" class="btn btn-danger">Eliminar</button>
-                    </form>
-                </div>
+        <div class="card shadow-lg">
+            <div class="card-body text-center py-5">
+                <i class="fas fa-exclamation-triangle fa-3x text-muted mb-4"></i>
+                <h3 class="text-secondary mb-3">Propietario no encontrado</h3>
+                <p class="fs-5 text-muted">Verifica los datos ingresados</p>
+                <a href="javascript:history.back()" class="btn btn-secondary px-5">
+                    <i class="fas fa-arrow-left me-2"></i>Volver
+                </a>
             </div>
         </div>
-    </div>
-}
-else
-{
-    <p class="text-center text-danger">No se encontró el propietario.</p>
-    <p class="text-center">@ViewBag.Mensaje</p>
-    <div class="text-center">
-        <a href="javascript:history.back()" class="btn btn-success">Volver</a>
-    </div>
-}
-
-
-<script>
-    function abrirDocumento(base64) {
-        if (base64 && base64.trim() !== "") {
-            var nuevaVentana = window.open();
-            nuevaVentana.document.write('<iframe width="100%" height="100%" src="data:application/pdf;base64,' + base64 + '"></iframe>');
-        } else {
-            alert("No hay documento disponible.");
-        }
     }
-</script>
+</div>
 
+
+@section Scripts {
+    <script>
+        function abrirDocumento(base64) {
+            if (base64 && base64.trim() !== "") {
+                var nuevaVentana = window.open();
+                nuevaVentana.document.write('<iframe width="100%" height="100%" src="data:application/pdf;base64,' + base64 + '"></iframe>');
+            } else {
+                alert("No hay documento disponible.");
+            }
+        }
+    </script>
+}

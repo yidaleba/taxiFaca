@@ -1,85 +1,112 @@
 ﻿@model ModeloVista
 @{
-    ViewData["Title"] = "Ver Horario por Vehiculo";
+    ViewData["Title"] = "Horarios por Vehículo";
     Layout = "~/Views/Shared/_LayoutEmpresa.cshtml";
 }
 
-<p class="text-sm-center"><strong>Cupos Disponibles : </strong>@ViewBag.Cupos</p>
-<br />
-@if (TempData["Mensaje"] != null)
-{
-    <div class="alert alert-info text-center">@TempData["Mensaje"]</div>
-}
-
-<div class="container mt-4">
-
-    <div class="d-flex justify-content-center align-items-center mb-3">
-        <h5 class="mb-0 text-center" ><strong><i>Vehiculo :</i> @Model.Vehiculo.Placa</strong></h5>
-        
+<div class="container-fluid">
+    <!-- Encabezado -->
+    <div class="d-flex justify-content-between align-items-center mb-5">
+        <h1 class="display-5 fw-bold text-primary">Horarios del Vehículo</h1>
+        <div class="bg-info rounded-pill px-4 py-2">
+            <span class="fs-5 text-white"><strong>Cupos Disponibles:</strong> @ViewBag.Cupos</span>
+        </div>
     </div>
 
-    @if (Model.Vehiculo != null && Model.Horarios != null && Model.Horarios.Any())
+    <!-- Mensajes -->
+    @if (TempData["Mensaje"] != null)
     {
-        <div class="table-responsive">
-            <table class="table table-hover table-striped text-center shadow">
-                <thead class="table-dark">
-                    <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">Conductor</th>
-                        <th scope="col">Correo</th>
-                        <th scope="col">ID Conductor</th>
-                        <th scope="col">Fecha</th>
-                        <th scope="col">Desde</th>
-                        <th scope="col">Hasta</th>
-                        <th scope="col">Opciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var item in Model.Horarios)
-                    {
-                        
-                        <tr>
-                            <td><strong>@item.IdHorario</strong></td>
-                            <td>@Model.Conductores.Where(c => c.IdConductor == item.IdConductor).FirstOrDefault().Nombre</td>
-                            <td>@Model.Conductores.Where(c => c.IdConductor == item.IdConductor).FirstOrDefault().Correo</td>
-                            <td>@Model.Conductores.Where(c => c.IdConductor == item.IdConductor).FirstOrDefault().IdConductor</td>
-                            <td>@item.Fecha.ToString("yyyy-MM-dd")</td>
-                            <td>@item.HoraInicio</td>
-                            <td>@item.HoraFin</td>
-                            <td>
-                                <a asp-action="Editar_Horario" asp-controller="Empresa" asp-route-IdHorario="@item.IdHorario" class="btn btn-warning btn-sm">
-                                    ✏ Editar
-                                </a>
-                                <a href="javascript:void(0);" class="btn btn-danger btn-sm" onclick="confirmarEliminacion(@item.IdHorario)">
-                                    🗑 Eliminar
-                                </a>
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
-    }
-    else
-    {
-        <div class="alert alert-warning text-center mt-4">
-            <p>⚠ No se encontraron horarios registrados.</p>
+        <div class="alert alert-success fs-5 text-center" role="alert">
+            <i class="fas fa-info-circle me-2"></i>@TempData["Mensaje"]
         </div>
     }
 
-    <p class="text-success text-center">@ViewBag.Mensaje</p>
-    <div class="text-center mt-3">
-        <a href="javascript:history.back()" class="btn btn-success">Volver</a>
+    <!-- Contenido Principal -->
+    <div class="card shadow-lg mx-auto" style="max-width: 1400px;">
+        <div class="card-header bg-primary text-white">
+            <h3 class="card-title mb-0 text-center">
+                <i class="fas fa-car-side me-2"></i>@Model.Vehiculo.Placa
+            </h3>
+        </div>
+
+        <div class="card-body">
+            @if (Model.Vehiculo != null && Model.Horarios != null && Model.Horarios.Any())
+            {
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle shadow-sm">
+                        <thead class="table-primary">
+                            <tr>
+                                <th><i class="fas fa-hashtag me-2"></i>ID</th>
+                                <th><i class="fas fa-user-tie me-2"></i>Conductor</th>
+                                <th><i class="fas fa-envelope me-2"></i>Correo</th>
+                                <th><i class="fas fa-id-card me-2"></i>ID Conductor</th>
+                                <th><i class="fas fa-calendar-day me-2"></i>Fecha</th>
+                                <th><i class="fas fa-clock me-2"></i>Inicio</th>
+                                <th><i class="fas fa-clock me-2"></i>Fin</th>
+                                <th><i class="fas fa-tools me-2"></i>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.Horarios)
+                            {
+                                var conductor = Model.Conductores.FirstOrDefault(c => c.IdConductor == item.IdConductor);
+                                <tr>
+                                    <td class="fw-bold">@item.IdHorario</td>
+                                    <td>@conductor?.Nombre</td>
+                                    <td>@conductor?.Correo</td>
+                                    <td>
+                                        <span class="badge bg-secondary">
+                                            @conductor?.IdConductor
+                                        </span>
+                                    </td>
+                                    <td>@item.Fecha.ToString("dd-MM-yyyy")</td>
+                                    <td>@item.HoraInicio</td>
+                                    <td>@item.HoraFin</td>
+                                    <td>
+                                        <div class="d-flex gap-2 justify-content-center">
+                                            <a asp-action="Editar_Horario" asp-controller="Empresa"
+                                               asp-route-IdHorario="@item.IdHorario"
+                                               class="btn btn-warning btn-sm px-3">
+                                                <i class="fas fa-edit me-2"></i>Editar
+                                            </a>
+                                            <button class="btn btn-danger btn-sm px-3"
+                                                    onclick="confirmarEliminacion(@item.IdHorario)">
+                                                <i class="fas fa-trash me-2"></i>Eliminar
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+            else
+            {
+                <div class="alert alert-warning text-center fs-5 py-4">
+                    <i class="fas fa-calendar-times fa-2x me-2"></i>
+                    No se encontraron horarios registrados
+                </div>
+            }
+        </div>
+
+        <!-- Botones de Acción -->
+        <div class="card-footer bg-transparent py-4">
+            <div class="d-flex justify-content-center gap-3">
+                <a href="javascript:history.back()" class="btn btn-secondary px-5">
+                    <i class="fas fa-arrow-left me-2"></i>Volver
+                </a>
+            </div>
+        </div>
     </div>
 </div>
 
-<script>
-    function confirmarEliminacion(id) {
-        if (confirm("¿Está seguro de que desea eliminar este horario?")) {
-            window.location.href = "/Empresa/Eliminar_Horario?IdHorario=" + id;
+@section Scripts {
+    <script>
+        function confirmarEliminacion(id) {
+            if (confirm("¿Está seguro de que desea eliminar este horario?")) {
+                window.location.href = "/Empresa/Eliminar_Horario?IdHorario=" + id;
+            }
         }
-    }
-</script>
-
-
-
+    </script>
+}

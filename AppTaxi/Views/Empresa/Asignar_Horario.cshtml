@@ -3,201 +3,256 @@
     ViewData["Title"] = "Asignar Horarios";
     Layout = "~/Views/Shared/_LayoutEmpresa.cshtml";
 }
-<p class="text-sm-center"><strong>Cupos Disponibles : </strong>@ViewBag.Cupos</p>
-<br />
 
-@if (!string.IsNullOrEmpty(ViewBag.Mensaje))
-{
-    <br />
-    <p class="text-center">@ViewBag.Mensaje</p>
-}
-@if (TempData["Mensaje"] != null)
-{
-    <div class="alert alert-warning text-center">@TempData["Mensaje"]</div>
-}
+<div class="container-fluid">
+    <!-- Encabezado -->
+    <div class="d-flex justify-content-between align-items-center mb-5">
+        <h1 class="display-5 fw-bold text-primary">Gestión de Horarios</h1>
+        <div class="bg-info rounded-pill px-4 py-2">
+            <span class="fs-5 text-white"><strong>Cupos Disponibles:</strong> @ViewBag.Cupos</span>
+        </div>
+    </div>
 
-<div class="card shadow-lg border-0 rounded-3">
-    <h5 class="card-header bg-primary text-white text-center py-3">Asignar un único horario</h5>
-    <div class="card-body">
-        <form asp-action="Crear_Horario" method="post" class="needs-validation" novalidate>
-            
+    <!-- Mensajes -->
+    @if (!string.IsNullOrEmpty(ViewBag.Mensaje))
+    {
+        <div class="alert alert-info fs-5 text-center" role="alert">
+            @ViewBag.Mensaje
+        </div>
+    }
+    @if (TempData["Mensaje"] != null)
+    {
+        <div class="alert alert-warning fs-5 text-center" role="alert">
+            @TempData["Mensaje"]
+        </div>
+    }
 
-            <div class="row mb-3">
-                <label class="col-sm-3 col-form-label"><strong>Fecha:</strong></label>
-                <div class="col-sm-9">
-                    <input type="date" class="form-control" asp-for="Horario.Fecha" required>
-                </div>
-            </div>
-
-            <div class="row mb-3">
-                <label class="col-sm-3 col-form-label"><strong>Hora de Inicio:</strong></label>
-                <div class="col-sm-9">
-                    <input type="time" class="form-control" asp-for="Horario.HoraInicio" required>
-                </div>
-            </div>
-
-            <div class="row mb-3">
-                <label class="col-sm-3 col-form-label"><strong>Hora de Fin:</strong></label>
-                <div class="col-sm-9">
-                    <input type="time" class="form-control" asp-for="Horario.HoraFin" required>
-                </div>
-            </div>
-
-            <div class="row mb-3">
-                <label class="col-sm-3 col-form-label"><strong>Vehículo:</strong></label>
-                <div class="col-sm-9">
-                    @if(Model.Vehiculos.Count() != 0)
-                    {
-                        <select class="form-select" asp-for="Horario.IdVehiculo" required>
-                            <option value="">Seleccione un vehículo</option>
-                            @foreach (var vehiculo in Model.Vehiculos)
-                            {
-                                <option value="@vehiculo.IdVehiculo">@vehiculo.Placa</option>
-                            }
-                        </select>
-                    }
-                    else
-                    {
-                        <div class="row mb-3">
-                            <label class="text-center"><strong>No hay Vehiculos Registrados</strong></label>
-                            <button asp-action="Agregar_Vehiculo" asp-controller="Empresa" class="btn btn-outline-primary btn-sm"><strong>Agregar</strong></button>
+    <!-- Horario Único -->
+    <div class="card shadow-lg mb-5">
+        <div class="card-header bg-primary text-white py-3">
+            <h2 class="h4 mb-0"><i class="fas fa-calendar-day me-2"></i>Asignar Horario Único</h2>
+        </div>
+        <div class="card-body">
+            <form asp-action="Crear_Horario" method="post" class="needs-validation" novalidate>
+                <div class="row g-4">
+                    <!-- Fecha y Horas -->
+                    <div class="col-md-4">
+                        <div class="form-floating">
+                            <input type="date" class="form-control form-control-lg"
+                                   asp-for="Horario.Fecha" required>
+                            <label>Fecha del Servicio</label>
                         </div>
-                    }
-                    
-                </div>
-            </div>
+                    </div>
 
-            <div class="row mb-3">
-                <label class="col-sm-3 col-form-label"><strong>Conductor:</strong></label>
-                <div class="col-sm-9">
-                    @if(Model.Conductores.Count() != 0)
-                    {
-                        <select class="form-select" asp-for="Horario.IdConductor" required>
-                            <option value="">Seleccione un conductor</option>
-                            @foreach (var conductor in Model.Conductores)
-                            {
-                                <option value="@conductor.IdConductor">@conductor.Nombre</option>
-                            }
-                        </select>
-                    }
-                    else
-                    {
-                        <div class="row mb-3">
-                            <label class="text-center"><strong>No hay Conductores Registrados</strong></label>
-                            <button asp-action="Agregar_Conductor" asp-controller="Empresa" class="btn btn-outline-primary btn-sm"><strong>Agregar</strong></button>
+                    <div class="col-md-4">
+                        <div class="form-floating">
+                            <input type="time" class="form-control form-control-lg"
+                                   asp-for="Horario.HoraInicio" required>
+                            <label>Hora de Inicio</label>
                         </div>
-                    }
-                    
-                </div>
-            </div>
+                    </div>
 
-            <div class="d-flex justify-content-center mt-4">
-                <button type="submit" class="btn btn-success px-4 me-2"><i class="bi bi-check-circle"></i> <strong>Guardar Horario Único</strong></button>
-            </div>
-        </form>
+                    <div class="col-md-4">
+                        <div class="form-floating">
+                            <input type="time" class="form-control form-control-lg"
+                                   asp-for="Horario.HoraFin" required>
+                            <label>Hora de Finalización</label>
+                        </div>
+                    </div>
+
+                    <!-- Vehículo y Conductor -->
+                    <div class="col-md-6">
+                        <div class="mb-4">
+                            <label class="form-label fs-5 fw-bold text-secondary">Vehículo Asignado</label>
+                            @if (Model.Vehiculos.Any())
+                            {
+                                <div class="form-floating">
+                                    <select class="form-select form-select-lg"
+                                            asp-for="Horario.IdVehiculo" required>
+                                        <option value="">Seleccione un vehículo</option>
+                                        @foreach (var vehiculo in Model.Vehiculos)
+                                        {
+                                            <option value="@vehiculo.IdVehiculo">@vehiculo.Placa</option>
+                                        }
+                                    </select>
+                                    <label>Placa del Vehículo</label>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="text-center border rounded-3 p-4 bg-light">
+                                    <p class="fs-5 mb-3">No hay vehículos registrados</p>
+                                    <a asp-action="Agregar_Vehiculo" asp-controller="Empresa"
+                                       class="btn btn-primary btn-lg">
+                                        <i class="fas fa-plus me-2"></i>Agregar Vehículo
+                                    </a>
+                                </div>
+                            }
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="mb-4">
+                            <label class="form-label fs-5 fw-bold text-secondary">Conductor Asignado</label>
+                            @if (Model.Conductores.Any())
+                            {
+                                <div class="form-floating">
+                                    <select class="form-select form-select-lg"
+                                            asp-for="Horario.IdConductor" required>
+                                        <option value="">Seleccione un conductor</option>
+                                        @foreach (var conductor in Model.Conductores)
+                                        {
+                                            <option value="@conductor.IdConductor">@conductor.Nombre</option>
+                                        }
+                                    </select>
+                                    <label>Nombre del Conductor</label>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="text-center border rounded-3 p-4 bg-light">
+                                    <p class="fs-5 mb-3">No hay conductores registrados</p>
+                                    <a asp-action="Agregar_Conductor" asp-controller="Empresa"
+                                       class="btn btn-primary btn-lg">
+                                        <i class="fas fa-user-plus me-2"></i>Agregar Conductor
+                                    </a>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Botones -->
+                <div class="d-grid gap-3 d-md-flex justify-content-md-end mt-5">
+                    <button type="submit" class="btn btn-lg btn-primary px-5">
+                        <i class="fas fa-save me-2"></i>Guardar Horario
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Separador -->
+    <div class="d-flex align-items-center my-5">
+        <hr class="flex-grow-1">
+        <span class="mx-3 fs-5 fw-bold text-secondary">O</span>
+        <hr class="flex-grow-1">
+    </div>
+
+    <!-- Horarios Múltiples -->
+    <div class="card shadow-lg">
+        <div class="card-header bg-primary text-white py-3">
+            <h2 class="h4 mb-0"><i class="fas fa-calendar-week me-2"></i>Asignar Rango de Horarios</h2>
+        </div>
+        <div class="card-body">
+            <form asp-action="Crear_RangoHorarios" method="post" class="needs-validation" novalidate>
+                <div class="row g-4">
+                    <!-- Fechas -->
+                    <div class="col-md-6">
+                        <div class="form-floating">
+                            <input type="date" class="form-control form-control-lg"
+                                   name="FechaInicio" required>
+                            <label>Fecha de Inicio</label>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-floating">
+                            <input type="date" class="form-control form-control-lg"
+                                   name="FechaFin" required>
+                            <label>Fecha de Finalización</label>
+                        </div>
+                    </div>
+
+                    <!-- Horas -->
+                    <div class="col-md-6">
+                        <div class="form-floating">
+                            <input type="time" class="form-control form-control-lg"
+                                   name="HoraInicio" required>
+                            <label>Hora de Inicio Diaria</label>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-floating">
+                            <input type="time" class="form-control form-control-lg"
+                                   name="HoraFin" required>
+                            <label>Hora de Fin Diaria</label>
+                        </div>
+                    </div>
+
+                    <!-- Vehículo y Conductor -->
+                    <div class="col-md-6">
+                        <div class="mb-4">
+                            <label class="form-label fs-5 fw-bold text-secondary">Vehículo Asignado</label>
+                            @if (Model.Vehiculos.Any())
+                            {
+                                <div class="form-floating">
+                                    <select class="form-select form-select-lg"
+                                            asp-for="Horario.IdVehiculo" required>
+                                        <option value="">Seleccione un vehículo</option>
+                                        @foreach (var vehiculo in Model.Vehiculos)
+                                        {
+                                            <option value="@vehiculo.IdVehiculo">@vehiculo.Placa</option>
+                                        }
+                                    </select>
+                                    <label>Placa del Vehículo</label>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="text-center border rounded-3 p-4 bg-light">
+                                    <p class="fs-5 mb-3">No hay vehículos registrados</p>
+                                    <a asp-action="Agregar_Vehiculo" asp-controller="Empresa"
+                                       class="btn btn-primary btn-lg">
+                                        <i class="fas fa-plus me-2"></i>Agregar Vehículo
+                                    </a>
+                                </div>
+                            }
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="mb-4">
+                            <label class="form-label fs-5 fw-bold text-secondary">Conductor Asignado</label>
+                            @if (Model.Conductores.Any())
+                            {
+                                <div class="form-floating">
+                                    <select class="form-select form-select-lg"
+                                            asp-for="Horario.IdConductor" required>
+                                        <option value="">Seleccione un conductor</option>
+                                        @foreach (var conductor in Model.Conductores)
+                                        {
+                                            <option value="@conductor.IdConductor">@conductor.Nombre</option>
+                                        }
+                                    </select>
+                                    <label>Nombre del Conductor</label>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="text-center border rounded-3 p-4 bg-light">
+                                    <p class="fs-5 mb-3">No hay conductores registrados</p>
+                                    <a asp-action="Agregar_Conductor" asp-controller="Empresa"
+                                       class="btn btn-primary btn-lg">
+                                        <i class="fas fa-user-plus me-2"></i>Agregar Conductor
+                                    </a>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Botones -->
+                <div class="d-grid gap-3 d-md-flex justify-content-md-between mt-5">
+                    <a href="javascript:history.back()" class="btn btn-lg btn-secondary px-5">
+                        <i class="fas fa-arrow-left me-2"></i>Volver
+                    </a>
+                    <button type="submit" class="btn btn-lg btn-primary px-5">
+                        <i class="fas fa-save me-2"></i>Guardar Rango
+                    </button>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
-
-<hr class="my-4">
-<p class="text-center fw-bold">O también:</p>
-<hr class="my-4">
-
-<div class="card shadow-lg border-0 rounded-3 mt-4">
-    <h5 class="card-header bg-primary text-white text-center py-3">Asignar múltiples horarios</h5>
-    <div class="card-body">
-        <form asp-action="Crear_RangoHorarios" method="post" class="needs-validation" novalidate>
-            
-
-            <div class="row mb-3">
-                <label class="col-sm-3 col-form-label"><strong>Fecha de Inicio:</strong></label>
-                <div class="col-sm-9">
-                    <input type="date" class="form-control" name="FechaInicio" required>
-                </div>
-            </div>
-
-            <div class="row mb-3">
-                <label class="col-sm-3 col-form-label"><strong>Fecha de Fin:</strong></label>
-                <div class="col-sm-9">
-                    <input type="date" class="form-control" name="FechaFin" required>
-                </div>
-            </div>
-
-            <div class="row mb-3">
-                <label class="col-sm-3 col-form-label"><strong>Hora de Inicio:</strong></label>
-                <div class="col-sm-9">
-                    <input type="time" class="form-control" name="HoraInicio" required>
-                </div>
-            </div>
-
-            <div class="row mb-3">
-                <label class="col-sm-3 col-form-label"><strong>Hora de Fin:</strong></label>
-                <div class="col-sm-9">
-                    <input type="time" class="form-control" name="HoraFin" required>
-                </div>
-            </div>
-
-            <div class="row mb-3">
-                <label class="col-sm-3 col-form-label"><strong>Vehículo:</strong></label>
-                <div class="col-sm-9">
-                    @if (Model.Vehiculos.Count() != 0)
-                    {
-                        <select class="form-select" asp-for="Horario.IdVehiculo" required>
-                            <option value="">Seleccione un vehículo</option>
-                            @foreach (var vehiculo in Model.Vehiculos)
-                            {
-                                <option value="@vehiculo.IdVehiculo">@vehiculo.Placa</option>
-                            }
-                        </select>
-                    }
-                    else
-                    {
-                        <div class="row mb-3">
-                            <label class="text-center"><strong>No hay Vehiculos Registrados</strong></label>
-                            <button asp-action="Agregar_Vehiculo" asp-controller="Empresa" class="btn btn-outline-primary btn-sm"><strong>Agregar</strong></button>
-                        </div>
-                    }
-                </div>
-            </div>
-            <div class="row mb-3">
-                <label class="col-sm-3 col-form-label"><strong>Conductor:</strong></label>
-                <div class="col-sm-9">
-                    @if (Model.Conductores.Count() != 0)
-                    {
-                        <select class="form-select" asp-for="Horario.IdConductor" required>
-                            <option value="">Seleccione un conductor</option>
-                            @foreach (var conductor in Model.Conductores)
-                            {
-                                <option value="@conductor.IdConductor">@conductor.Nombre</option>
-                            }
-                        </select>
-                    }
-                    else
-                    {
-                        <div class="row mb-3">
-                            <label class="text-center"><strong>No hay Conductores Registrados</strong></label>
-                            <button asp-action="Agregar_Conductor" asp-controller="Empresa" class="btn btn-outline-primary btn-sm"><strong>Agregar</strong></button>
-                        </div>
-                    }
-                </div>
-            </div>
-
-            @if (!string.IsNullOrEmpty(ViewBag.Mensaje))
-            {
-                <div class="alert alert-info text-center" role="alert">
-                    @ViewBag.Mensaje
-                </div>
-            }
-
-            <div class="d-flex justify-content-center mt-4">
-                <button type="submit" class="btn btn-success px-4 me-2"><i class="bi bi-calendar-check"></i> <strong>Guardar Rango de Horarios</strong></button>
-                <a href="javascript:history.back()" class="btn btn-primary px-4"><i class="bi bi-arrow-left"></i> Volver</a>
-            </div>
-                
-        </form>
-    </div>
-</div>
-    
-
-
-
-

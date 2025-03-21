@@ -1,104 +1,164 @@
 ﻿@model Vehiculo
 @{
-    ViewData["Title"] = "Detalle del Vehiculo";
+    ViewData["Title"] = "Detalle del Vehículo";
     Layout = "~/Views/Shared/_LayoutEmpresa.cshtml";
 }
 
-<p class="text-sm-center"><strong>Cupos Disponibles : </strong>@ViewBag.Cupos</p>
-<br />
-@if (TempData["Mensaje"] != null)
-{
-        <div class="alert alert-info text-center">@TempData["Mensaje"]</div>
+<div class="container-fluid">
+    <!-- Encabezado -->
+    <div class="d-flex justify-content-between align-items-center mb-5">
+        <h1 class="display-5 fw-bold text-primary">Detalle del Vehículo</h1>
+        <div class="bg-info rounded-pill px-4 py-2">
+            <span class="fs-5 text-white"><strong>Cupos Disponibles:</strong> @ViewBag.Cupos</span>
+        </div>
+    </div>
+
+    <!-- Mensajes -->
+    @if (TempData["Mensaje"] != null)
+    {
+        <div class="alert alert-success fs-5 text-center" role="alert">
+            @TempData["Mensaje"]
+        </div>
+    }
+
+    <!-- Contenido Principal -->
+    @if (Model != null)
+    {
+        <div class="card shadow-lg mx-auto" style="max-width: 900px;">
+            <div class="card-header bg-primary text-white">
+                <h3 class="card-title mb-0 text-center">
+                    <i class="fas fa-car me-2"></i>@Model.Placa
+                </h3>
+            </div>
+
+            <div class="card-body">
+                <div class="row">
+                    <!-- Columna Izquierda -->
+                    <div class="col-md-6">
+                        <div class="mb-4">
+                            <p class="fs-5">
+                                <strong><i class="fas fa-circle me-2"></i>Estado:</strong>
+                                <span class="badge rounded-pill @(Model.Estado ? "bg-success" : "bg-danger") fs-6 py-2">
+                                    @(Model.Estado ? "Habilitado" : "No Habilitado")
+                                </span>
+                            </p>
+                        </div>
+
+                        <div class="mb-4">
+                            <p class="fs-5">
+                                <strong><i class="fas fa-id-card me-2"></i>ID Propietario:</strong>
+                                <span class="text-muted">@Model.IdPropietario</span>
+                            </p>
+                        </div>
+
+                        <div class="mb-4">
+                            <p class="fs-5">
+                                <strong><i class="fas fa-user-tie me-2"></i>Propietario:</strong>
+                                <span class="text-muted">@ViewBag.Propietario</span>
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Columna Derecha -->
+                    <div class="col-md-6">
+                        <div class="mb-4">
+                            <p class="fs-5"><strong><i class="fas fa-file-contract me-2"></i>SOAT:</strong></p>
+                            <button class="btn btn-outline-primary btn-lg w-100 mb-2"
+                                    onclick="abrirDocumento('@Model.Soat')">
+                                <i class="fas fa-file-pdf me-2"></i>Ver SOAT
+                            </button>
+                            <p class="fs-6 @(Model.VenceSoat <= DateTime.Today ? "text-danger fw-bold" : "text-muted")">
+                                <i class="fas fa-calendar-times me-2"></i>
+                                Vence: @Model.VenceSoat.ToString("dd-MM-yyyy")
+                                @(Model.VenceSoat <= DateTime.Today ? "(Vencido)" : "")
+                            </p>
+                        </div>
+
+                        <div class="mb-4">
+                            <p class="fs-5"><strong><i class="fas fa-tools me-2"></i>Técnico Mecánica:</strong></p>
+                            <button class="btn btn-outline-primary btn-lg w-100 mb-2"
+                                    onclick="abrirDocumento('@Model.TecnicoMecanica')">
+                                <i class="fas fa-file-pdf me-2"></i>Ver Revisión
+                            </button>
+                            <p class="fs-6 @(Model.VenceTecnicoMecanica <= DateTime.Today ? "text-danger fw-bold" : "text-muted")">
+                                <i class="fas fa-calendar-times me-2"></i>
+                                Vence: @Model.VenceTecnicoMecanica.ToString("dd-MM-yyyy")
+                                @(Model.VenceTecnicoMecanica <= DateTime.Today ? "(Vencido)" : "")
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Botones de Acción -->
+            <div class="card-footer bg-transparent py-4">
+                <div class="d-flex justify-content-center gap-3">
+                    <a href="javascript:history.back()" class="btn btn-secondary px-5">
+                        <i class="fas fa-arrow-left me-2"></i>Volver
+                    </a>
+                    <a asp-action="Editar_Vehiculo" asp-controller="Empresa" asp-route-IdVehiculo="@Model.IdVehiculo"
+                       class="btn btn-warning px-5">
+                        <i class="fas fa-edit me-2"></i>Editar
+                    </a>
+                    <button type="button" class="btn btn-danger px-5" data-bs-toggle="modal"
+                            data-bs-target="#confirmDeleteModal">
+                        <i class="fas fa-trash me-2"></i>Eliminar
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal de Confirmación -->
+        <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteLabel"
+             aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header bg-danger text-white">
+                        <h5 class="modal-title" id="confirmDeleteLabel">
+                            <i class="fas fa-exclamation-triangle me-2"></i>Confirmar Eliminación
+                        </h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                                aria-label="Cerrar"></button>
+                    </div>
+                    <div class="modal-body fs-5">
+                        ¿Estás seguro de que deseas eliminar este vehículo?
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                            <i class="fas fa-times me-2"></i>Cancelar
+                        </button>
+                        <form asp-action="Eliminar_Vehiculo" asp-controller="Empresa" method="post">
+                            <input type="hidden" name="IdVehiculo" value="@Model.IdVehiculo" />
+                            <button type="submit" class="btn btn-danger">
+                                <i class="fas fa-trash me-2"></i>Eliminar
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="card shadow-lg">
+            <div class="card-body text-center py-5">
+                <i class="fas fa-exclamation-triangle fa-3x text-muted mb-4"></i>
+                <h3 class="text-secondary mb-3">No se encontró el vehículo</h3>
+                <p class="fs-5 text-muted">Verifica los datos ingresados</p>
+            </div>
+        </div>
+    }
+</div>
+
+@section Scripts {
+    <script>
+        function abrirDocumento(base64) {
+            if (base64 && base64.trim() !== "") {
+                var nuevaVentana = window.open();
+                nuevaVentana.document.write('<iframe width="100%" height="100%" src="data:application/pdf;base64,' + base64 + '"></iframe>');
+            } else {
+                alert("No hay documento disponible.");
+            }
+        }
+    </script>
 }
-<div class="container mt-4">
-    <div class="card shadow-lg rounded">
-        <div class="card-header bg-primary text-white">
-            <h5 class="mb-0">Información del Vehículo</h5>
-        </div>
-        <div class="card-body">
-            <h4 class="card-title text-center mb-4">Vehículo @Model.Placa</h4>
-
-            <div class="mb-3 row">
-                <label class="col-sm-3 col-form-label fw-bold">Estado Actual:</label>
-                <div class="col-sm-9">
-                    <span class="badge @(Model.Estado ? "bg-success" : "bg-danger")">@(Model.Estado ? "Habilitado" : "No Habilitado")</span>
-                </div>
-            </div>
-
-            
-            <!-- SOAT -->
-            <div class="mb-3 row">
-                <label class="col-sm-3 col-form-label fw-bold">SOAT:</label>
-                <div class="col-sm-9">
-                    <iframe src="data:application/pdf;base64,@Model.Soat" width="60%" height="300px"></iframe>
-                    <p class="mt-2 @(Model.VenceSoat <= DateTime.Today ? "text-danger fw-bold" : "text-muted")">
-                        <strong>Fecha de vencimiento:</strong> @Model.VenceSoat.ToString("dd-MM-yyyy")
-                        @(Model.VenceSoat <= DateTime.Today ? " - Vencida" : "")
-                    </p>
-                </div>
-            </div>
-
-            <!-- Técnico Mecánica -->
-            <div class="mb-3 row">
-                <label class="col-sm-3 col-form-label fw-bold">Técnico Mecánica:</label>
-                <div class="col-sm-9">
-                    <iframe src="data:application/pdf;base64,@Model.TecnicoMecanica" width="60%" height="300px"></iframe>
-                    <p class="mt-2 @(Model.VenceTecnicoMecanica <= DateTime.Today ? "text-danger fw-bold" : "text-muted")">
-                        <strong>Fecha de vencimiento:</strong> @Model.VenceTecnicoMecanica.ToString("dd-MM-yyyy")
-                        @(Model.VenceTecnicoMecanica <= DateTime.Today ? " - Vencida" : "")
-                    </p>
-                </div>
-            </div>
-
-            <div class="mb-3 row">
-                <label class="col-sm-3 col-form-label fw-bold">ID Propietario:</label>
-                <div class="col-sm-9">
-                    <input type="text" readonly class="form-control" value="@Model.IdPropietario">
-                </div>
-            </div>
-
-            <div class="mb-3 row">
-                <label class="col-sm-3 col-form-label fw-bold">Propietario:</label>
-                <div class="col-sm-9">
-                    <input type="text" readonly class="form-control" value="@ViewBag.Propietario">
-                </div>
-            </div>
-
-            <div class="text-center">
-                <p class="text-muted">@ViewBag.Mensaje</p>
-            </div>
-        </div>
-
-        <div class="card-footer text-center">
-            <a href="javascript:history.back()" class="btn btn-success me-2"><i class="fas fa-arrow-left"></i> Volver</a>
-            <a asp-action="Editar_Vehiculo" asp-controller="Empresa" asp-route-IdVehiculo="@Model.IdVehiculo" class="btn btn-warning me-2"><i class="fas fa-edit"></i> Editar</a>
-
-            <!-- Botón para abrir el modal de confirmación -->
-            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal">
-                <i class="fas fa-trash-alt"></i> Eliminar
-            </button>
-        </div>
-    </div>
-</div>
-
-<!-- Modal de Confirmación -->
-<div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header bg-danger text-white">
-                <h5 class="modal-title" id="confirmDeleteLabel">Confirmar Eliminación</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-            </div>
-            <div class="modal-body">
-                ¿Estás seguro de que deseas eliminar este vehículo?
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                <form asp-action="Eliminar_Vehiculo" asp-controller="Empresa" method="post">
-                    <input type="hidden" name="IdVehiculo" value="@Model.IdVehiculo" />
-                    <button type="submit" class="btn btn-danger">Eliminar</button>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>

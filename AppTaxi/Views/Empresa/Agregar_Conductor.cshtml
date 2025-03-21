@@ -3,149 +3,200 @@
     ViewData["Title"] = "Agregar Conductor";
     Layout = "~/Views/Shared/_LayoutEmpresa.cshtml";
 }
-<p class="text-sm-center"><strong>Cupos Disponibles : </strong>@ViewBag.Cupos</p>
-<br />
-@if (TempData["Mensaje"] != null)
-{
-    <div class="alert alert-info text-center">@TempData["Mensaje"]</div>
-}
-<div class="card shadow">
-    <h5 class="card-header bg-primary text-white">Ingrese los Datos:</h5>
-    <div class="card-body">
-        <form asp-action="Crear_Conductor" asp-controller="Empresa" method="post" enctype="multipart/form-data">
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="mb-3">
-                        <label class="form-label"><strong>Foto:</strong></label>
-                        <input type="file" class="form-control" asp-for="Archivo_4" placeholder="Foto" required accept=".png, .jpg, .jpeg">
+
+<div class="container-fluid">
+    <!-- Encabezado -->
+    <div class="d-flex justify-content-between align-items-center mb-5">
+        <h1 class="display-5 fw-bold text-primary">Agregar Conductor</h1>
+        <div class="bg-info rounded-pill px-4 py-2">
+            <span class="fs-5 text-white"><strong>Cupos Disponibles:</strong> @ViewBag.Cupos</span>
+        </div>
+    </div>
+
+    <!-- Mensajes Temporales -->
+    @if (TempData["Mensaje"] != null)
+    {
+        <div class="alert alert-success fs-5" role="alert">
+            @TempData["Mensaje"]
+        </div>
+    }
+
+    <!-- Formulario -->
+    <div class="card shadow-lg">
+        <div class="card-header bg-primary text-white py-3">
+            <h2 class="h4 mb-0"><i class="fas fa-user-plus me-2"></i>Datos del Conductor</h2>
+        </div>
+
+        <div class="card-body">
+            <form asp-action="Crear_Conductor" asp-controller="Empresa" method="post" enctype="multipart/form-data">
+                <div class="row g-4">
+                    <!-- Columna Izquierda -->
+                    <div class="col-md-6">
+                        <!-- Foto -->
+                        <div class="mb-4">
+                            <label class="form-label fs-5 fw-bold text-secondary">Foto del Conductor</label>
+                            <div class="border rounded-3 p-3 bg-light">
+                                <input type="file" asp-for="Archivo_4" class="form-control form-control-lg"
+                                       required accept=".png, .jpg, .jpeg">
+                                <div class="form-text fs-6">Formatos permitidos: .png, .jpg, .jpeg</div>
+                            </div>
+                        </div>
+
+                        <!-- Datos Personales -->
+                        <div class="mb-4">
+                            <label class="form-label fs-5 fw-bold text-secondary">Información Personal</label>
+                            <div class="form-floating mb-3">
+                                <input type="text" asp-for="Conductor.Nombre" class="form-control form-control-lg"
+                                       placeholder="Nombre Completo" required>
+                                <label>Nombre Completo</label>
+                            </div>
+
+                            <div class="form-floating mb-3">
+                                <input type="number" asp-for="Conductor.NumeroCedula" class="form-control form-control-lg"
+                                       placeholder="Número de Cédula" required>
+                                <label>Número de Cédula</label>
+                            </div>
+
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <div class="form-floating">
+                                        <input type="number" asp-for="Conductor.Telefono" class="form-control form-control-lg"
+                                               placeholder="Teléfono" required>
+                                        <label>Teléfono Principal</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-floating">
+                                        <input type="number" asp-for="Conductor.Celular" class="form-control form-control-lg"
+                                               placeholder="Celular" required>
+                                        <label>Teléfono Secundario</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Contacto -->
+                        <div class="mb-4">
+                            <label class="form-label fs-5 fw-bold text-secondary">Datos de Contacto</label>
+                            <div class="form-floating mb-3">
+                                <input type="email" asp-for="Conductor.Correo" class="form-control form-control-lg"
+                                       placeholder="Correo Electrónico" required>
+                                <label>Correo Electrónico</label>
+                            </div>
+
+                            <div class="form-floating mb-3">
+                                <input type="text" asp-for="Conductor.Direccion" class="form-control form-control-lg"
+                                       placeholder="Dirección" required>
+                                <label>Dirección Residencia</label>
+                            </div>
+
+                            <div class="form-floating">
+                                <input type="text" asp-for="Conductor.Ciudad" class="form-control form-control-lg"
+                                       placeholder="Ciudad" required>
+                                <label>Ciudad/Departamento</label>
+                            </div>
+                        </div>
                     </div>
 
-                    <div class="mb-3">
-                        <label class="form-label"><strong>Nombre:</strong></label>
-                        <input type="text" class="form-control" asp-for="Conductor.Nombre" placeholder="Nombre Completo" required>
-                    </div>
+                    <!-- Columna Derecha -->
+                    <div class="col-md-6">
+                        <!-- Salud -->
+                        <div class="mb-4">
+                            <label class="form-label fs-5 fw-bold text-secondary">Información de Salud</label>
+                            <div class="form-floating mb-3">
+                                <select asp-for="Conductor.GrupoSanguineo" class="form-select form-select-lg" required>
+                                    <option selected disabled>Seleccione...</option>
+                                    <option value="O+">O+</option>
+                                    <option value="O-">O-</option>
+                                    <option value="A+">A+</option>
+                                    <option value="A-">A-</option>
+                                    <option value="B+">B+</option>
+                                    <option value="B-">B-</option>
+                                    <option value="AB+">AB+</option>
+                                    <option value="AB-">AB-</option>
+                                </select>
+                                <label>Grupo Sanguíneo</label>
+                            </div>
 
-                    <div class="mb-3">
-                        <label class="form-label"><strong>Número Cédula:</strong></label>
-                        <input type="number" class="form-control" asp-for="Conductor.NumeroCedula" placeholder="100000000" required>
-                    </div>
+                            <div class="form-floating mb-3">
+                                <input type="text" asp-for="Conductor.Eps" class="form-control form-control-lg"
+                                       placeholder="EPS" required>
+                                <label>EPS Afiliado</label>
+                            </div>
 
-                    <div class="mb-3">
-                        <label class="form-label"><strong>Celular 1:</strong></label>
-                        <input type="number" class="form-control" asp-for="Conductor.Telefono" placeholder="Número de Teléfono" required>
-                    </div>
+                            <div class="form-floating">
+                                <input type="text" asp-for="Conductor.Arl" class="form-control form-control-lg"
+                                       placeholder="ARL" required>
+                                <label>ARL Afiliado</label>
+                            </div>
+                        </div>
 
-                    <div class="mb-3">
-                        <label class="form-label"><strong>Celular 2:</strong></label>
-                        <input type="number" class="form-control" asp-for="Conductor.Celular" placeholder="Número Celular" required>
-                    </div>
+                        <!-- Documentos -->
+                        <div class="mb-4">
+                            <label class="form-label fs-5 fw-bold text-secondary">Documentos Requeridos</label>
+                            <div class="mb-3">
+                                <label class="form-label fs-6">Cédula (PDF)</label>
+                                <input type="file" asp-for="Archivo_1" class="form-control form-control-lg"
+                                       accept=".pdf" required>
+                            </div>
 
-                    <div class="mb-3">
-                        <label class="form-label"><strong>Correo:</strong></label>
-                        <input type="email" class="form-control" asp-for="Conductor.Correo" placeholder="Correo Electrónico" required>
-                    </div>
+                            <div class="mb-3">
+                                <label class="form-label fs-6">Documento EPS (PDF)</label>
+                                <input type="file" asp-for="Archivo_2" class="form-control form-control-lg"
+                                       accept=".pdf" required>
+                            </div>
 
-                    <div class="mb-3">
-                        <label class="form-label"><strong>Dirección:</strong></label>
-                        <input type="text" class="form-control" asp-for="Conductor.Direccion" placeholder="Cra/Clle X # xx - xx" required>
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-label"><strong>Ciudad:</strong></label>
-                        <input type="text" class="form-control" asp-for="Conductor.Ciudad" placeholder="Ciudad o Departamento" required>
+                            <div class="mb-3">
+                                <label class="form-label fs-6">Documento ARL (PDF)</label>
+                                <input type="file" asp-for="Archivo_3" class="form-control form-control-lg"
+                                       accept=".pdf" required>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                <div class="col-md-6">
-                    <div class="mb-3">
-                        <label class="form-label"><strong>RH:</strong></label>
-                        <input type="text" class="form-control" asp-for="Conductor.GrupoSanguineo" placeholder="Grupo Sanguíneo (Ej: AB-)" required>
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-label"><strong>EPS:</strong></label>
-                        <input type="text" class="form-control" asp-for="Conductor.Eps" placeholder="EPS afiliado" required>
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-label"><strong>ARL:</strong></label>
-                        <input type="text" class="form-control" asp-for="Conductor.Arl" placeholder="ARL Afiliado" required>
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-label"><strong>Documento Cédula:</strong></label>
-                        <input type="file" class="form-control" asp-for="Archivo_1" accept=".pdf" required>
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-label"><strong>Documento EPS:</strong></label>
-                        <input type="file" class="form-control" asp-for="Archivo_2" placeholder="Documento EPS.pdf" required accept=".pdf">
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-label"><strong>Documento ARL:</strong></label>
-                        <input type="file" class="form-control" asp-for="Archivo_3" placeholder="Documento ARL.pdf" required accept=".pdf">
-                    </div>
+                <!-- Botones -->
+                <div class="d-grid gap-3 d-md-flex justify-content-md-end mt-5">
+                    <a href="javascript:history.back()" class="btn btn-lg btn-secondary px-5">
+                        <i class="fas fa-arrow-left me-2"></i>Volver
+                    </a>
+                    <button type="submit" class="btn btn-lg btn-primary px-5">
+                        <i class="fas fa-save me-2"></i>Guardar Conductor
+                    </button>
                 </div>
-            </div>
-
-            <div class="d-grid gap-2 col-md-6 mx-auto mt-3">
-                <button type="submit" class="btn btn-success w-100">Crear</button>
-                <a href="javascript:history.back()" class="btn btn-primary w-100">Volver</a>
-            </div>
-        </form>
+            </form>
+        </div>
     </div>
 </div>
 
-
 <!-- Modal de Confirmación -->
-<div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+<div class="modal fade" id="successModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="successModalLabel">Conductor Guardado</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title fs-4"><i class="fas fa-check-circle me-2"></i>Operación Exitosa</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
-                <p>El conductor ha sido guardado con éxito.</p>
-                <p><strong>ID del Conductor:</strong> @ViewBag.IdConductor</p>
+                <p class="fs-5">El conductor ha sido registrado exitosamente.</p>
+                <p class="fs-5"><strong>ID del Conductor:</strong> @ViewBag.IdConductor</p>
             </div>
             <div class="modal-footer">
-                <a href="@Url.Action("Conductores", "Empresa")" class="btn btn-success">Ir a Conductores</a>
+                <a href="@Url.Action("Conductores", "Empresa")" class="btn btn-primary btn-lg">
+                    <i class="fas fa-users me-2"></i>Ver Conductores
+                </a>
             </div>
         </div>
     </div>
 </div>
 
-<br />
-<p class="text-center">@ViewBag.Mensaje</p>
 @section Scripts {
     <script>
-        $(document).ready(function () {
+        document.addEventListener("DOMContentLoaded", function () {
             var exito = "@ViewBag.Exito";
             if (exito === "True") {
-                $('#successModal').modal('show'); // Muestra el modal automáticamente si el guardado fue exitoso
-            }
-        });
-        // Validación de correo antes de enviar el formulario
-        $("form").submit(function (event) {
-            var email = $("#Conductor_Correo").val(); // Obtiene el valor del campo de correo
-            var dominiosPermitidos = ["@@gmail.com", "@@hotmail.com", "@@outlook.com"];
-            var esValido = false;
-
-            // Recorre la lista de dominios permitidos y verifica si el correo tiene alguno de ellos
-            for (var i = 0; i < dominiosPermitidos.length; i++) {
-                if (email.endsWith(dominiosPermitidos[i])) {
-                    esValido = true;
-                    break;
-                }
-            }
-
-            // Si el correo no es válido, muestra una alerta y cancela el envío del formulario
-            if (!esValido) {
-                event.preventDefault(); // Evita que el formulario se envíe
-                alert("⚠️ El correo debe ser de dominio @@gmail.com, @@hotmail.com o @@outlook.com");
-                return false;
+                var successModal = new bootstrap.Modal(document.getElementById('successModal'));
+                successModal.show();
             }
         });
     </script>

@@ -3,82 +3,126 @@
     ViewData["Title"] = "Editar Horario";
     Layout = "~/Views/Shared/_LayoutEmpresa.cshtml";
 }
-<p class="text-sm-center"><strong>Cupos Disponibles : </strong>@ViewBag.Cupos</p>
-<br />
-@if (TempData["Mensaje"] != null)
-{
-    <div class="alert alert-info text-center">@TempData["Mensaje"]</div>
-}
-<div class="container mt-4">
 
+<div class="container-fluid">
+    <!-- Encabezado -->
+    <div class="d-flex justify-content-between align-items-center mb-5">
+        <h1 class="display-5 fw-bold text-primary"><i class="fas fa-calendar-edit me-2"></i>Editar Horario</h1>
+        <div class="bg-info rounded-pill px-4 py-2">
+            <span class="fs-5 text-white"><i class="fas fa-users me-2"></i>Cupos Disponibles: @ViewBag.Cupos</span>
+        </div>
+    </div>
+
+    <!-- Mensajes -->
+    @if (TempData["Mensaje"] != null)
+    {
+        <div class="alert alert-success fs-5 text-center mb-5" role="alert">
+            <i class="fas fa-info-circle me-2"></i>@TempData["Mensaje"]
+        </div>
+    }
+
+    <!-- Contenido Principal -->
     @if (Model != null)
     {
-        <p class="text-muted text-center">Llene los campos que desea editar. <br> Los campos que no se deseen editar pueden quedar vacíos.</p>
-
-        <div class="card shadow-lg">
+        <div class="card shadow-lg mx-auto" style="max-width: 800px;">
             <div class="card-header bg-primary text-white">
-                <h5 class="mb-0">Horario a Editar N° @Model.Horario.IdHorario</h5>
+                <h3 class="card-title mb-0">
+                    <i class="fas fa-clipboard-list me-2"></i>Horario N° @Model.Horario.IdHorario
+                </h3>
             </div>
-            <div class="card-body">
+
+            <div class="card-body p-4">
                 <form asp-action="Guardar_Horario" asp-controller="Empresa" method="post">
+                    <div class="row g-4">
+                        <!-- Información Básica -->
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label class="form-label fs-5"><i class="fas fa-hashtag me-2"></i>ID Horario</label>
+                                <input type="number" class="form-control form-control-lg bg-light"
+                                       asp-for="Horario.IdHorario" readonly>
+                            </div>
+                        </div>
 
-                    <div class="row mb-3">
+                        <!-- Selección de Conductor -->
                         <div class="col-md-6">
-                            <label class="form-label"><strong>Conductor Asignado:</strong></label>
-                            <select class="form-control" asp-for="Horario.IdConductor" required>
-                                <option value="">Seleccione un conductor</option>
-                                @foreach (var conductor in Model.Conductores)
-                                {
-                                    <option value="@conductor.IdConductor">@conductor.Nombre</option>
-                                }
-                            </select>
+                            <div class="form-group">
+                                <label class="form-label fs-5"><i class="fas fa-user-tie me-2"></i>Conductor</label>
+                                <select class="form-select form-select-lg" asp-for="Horario.IdConductor" required>
+                                    <option value="">Seleccione un conductor...</option>
+                                    @foreach (var conductor in Model.Conductores)
+                                    {
+                                        <option value="@conductor.IdConductor">@conductor.Nombre</option>
+                                    }
+                                </select>
+                            </div>
                         </div>
+
+                        <!-- Fecha y Horas -->
                         <div class="col-md-6">
-                            <label class="form-label"><strong>ID Horario:</strong></label>
-                            <input type="number" readonly class="form-control" asp-for="Horario.IdHorario">
+                            <div class="form-group">
+                                <label class="form-label fs-5"><i class="fas fa-calendar-day me-2"></i>Fecha</label>
+                                <input type="date" class="form-control form-control-lg"
+                                       asp-for="Horario.Fecha" value="@Model.Horario.Fecha.ToString("yyyy-MM-dd")" required>
+                            </div>
                         </div>
-                    </div>
 
-                    <div class="row mb-3">
                         <div class="col-md-6">
-                            <label class="form-label"><strong>Fecha:</strong></label>
-                            <input type="date" class="form-control" asp-for="Horario.Fecha" value="@Model.Horario.Fecha.ToString("yyyy-MM-dd")" required>
+                            <div class="form-group">
+                                <label class="form-label fs-5"><i class="fas fa-clock me-2"></i>Hora Inicio</label>
+                                <input type="time" class="form-control form-control-lg"
+                                       asp-for="Horario.HoraInicio" value="@Model.Horario.HoraInicio" required>
+                            </div>
                         </div>
-                        <div class="col-md-3">
-                            <label class="form-label"><strong>Desde:</strong></label>
-                            <input type="time" class="form-control" asp-for="Horario.HoraInicio" value="@Model.Horario.HoraInicio" required>
-                        </div>
-                        <div class="col-md-3">
-                            <label class="form-label"><strong>Hasta:</strong></label>
-                            <input type="time" class="form-control" asp-for="Horario.HoraFin" value="@Model.Horario.HoraFin" required>
-                        </div>
-                    </div>
 
-                    <div class="mb-3">
-                        <label class="form-label"><strong>Vehículo Asignado:</strong></label>
-                        <select class="form-control" asp-for="Horario.IdVehiculo" required>
-                            <option value="">Seleccione un vehículo</option>
-                            @foreach (var vehiculo in Model.Vehiculos)
-                            {
-                                <option value="@vehiculo.IdVehiculo">@vehiculo.Placa</option>
-                            }
-                        </select>
-                    </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="form-label fs-5"><i class="fas fa-clock me-2"></i>Hora Fin</label>
+                                <input type="time" class="form-control form-control-lg"
+                                       asp-for="Horario.HoraFin" value="@Model.Horario.HoraFin" required>
+                            </div>
+                        </div>
 
-                    <div class="d-flex justify-content-between mt-4">
-                        <button type="submit" class="btn btn-success px-4">Guardar Cambios</button>
-                        <a href="javascript:history.back()" class="btn btn-danger px-4">Cancelar</a>
+                        <!-- Selección de Vehículo -->
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label class="form-label fs-5"><i class="fas fa-car me-2"></i>Vehículo</label>
+                                <select class="form-select form-select-lg" asp-for="Horario.IdVehiculo" required>
+                                    <option value="">Seleccione un vehículo...</option>
+                                    @foreach (var vehiculo in Model.Vehiculos)
+                                    {
+                                        <option value="@vehiculo.IdVehiculo">@vehiculo.Placa</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Botones -->
+                        <div class="col-12">
+                            <div class="d-flex justify-content-center gap-3 mt-4">
+                                <button type="submit" class="btn btn-primary btn-lg px-5">
+                                    <i class="fas fa-save me-2"></i>Guardar
+                                </button>
+                                <a href="javascript:history.back()" class="btn btn-secondary btn-lg px-5">
+                                    <i class="fas fa-times me-2"></i>Cancelar
+                                </a>
+                            </div>
+                        </div>
                     </div>
                 </form>
-                <p class="text-center text-success mt-3">@ViewBag.Mensaje</p>
             </div>
         </div>
     }
     else
     {
-        <div class="alert alert-warning text-center mt-4">
-            <p>No se encontró el horario.</p>
-            <a href="javascript:history.back()" class="btn btn-primary">Volver</a>
+        <div class="card shadow-lg">
+            <div class="card-body text-center py-5">
+                <i class="fas fa-exclamation-triangle fa-3x text-muted mb-4"></i>
+                <h3 class="text-secondary mb-3">Horario no encontrado</h3>
+                <p class="fs-5 text-muted">Verifica los datos ingresados</p>
+                <a href="javascript:history.back()" class="btn btn-secondary px-5">
+                    <i class="fas fa-arrow-left me-2"></i>Volver
+                </a>
+            </div>
         </div>
     }
 </div>

@@ -4,120 +4,157 @@
     Layout = "~/Views/Shared/_LayoutEmpresa.cshtml";
 }
 
-<p class="text-sm-center"><strong>Cupos Disponibles : </strong>@ViewBag.Cupos</p>
-<br />
-@if (TempData["Mensaje"] != null)
-{
-    <div class="alert alert-info text-center">@TempData["Mensaje"]</div>
-}
+<div class="container-fluid">
+    <!-- Encabezado -->
+    <div class="d-flex justify-content-between align-items-center mb-5">
+        <h1 class="display-5 fw-bold text-primary">Agregar Propietario</h1>
+        <div class="bg-info rounded-pill px-4 py-2">
+            <span class="fs-5 text-white"><strong>Cupos Disponibles:</strong> @ViewBag.Cupos</span>
+        </div>
+    </div>
 
-<div class="card shadow-lg border-0 rounded-3">
-    <h5 class="card-header bg-primary text-white text-center py-3">Ingrese los Datos</h5>
-    <div class="card-body">
-        <form asp-action="Crear_Propietario" asp-controller="Empresa" method="post" enctype="multipart/form-data">
+    <!-- Mensajes Temporales -->
+    @if (TempData["Mensaje"] != null)
+    {
+        <div class="alert alert-success fs-5" role="alert">
+            @TempData["Mensaje"]
+        </div>
+    }
 
-            <div class="row mb-3">
-                <label class="col-sm-3 col-form-label"><strong>Foto:</strong></label>
-                <div class="col-sm-9">
-                    <input type="file" class="form-control" asp-for="Archivo_4" placeholder="Foto" required accept=".png, .jpg, .jpeg">
+    <!-- Formulario -->
+    <div class="card shadow-lg">
+        <div class="card-header bg-primary text-white py-3">
+            <h2 class="h4 mb-0"><i class="fas fa-user-tie me-2"></i>Datos del Propietario</h2>
+        </div>
+
+        <div class="card-body">
+            <form asp-action="Crear_Propietario" asp-controller="Empresa" method="post" enctype="multipart/form-data">
+                <div class="row g-4">
+                    <!-- Columna Izquierda -->
+                    <div class="col-md-6">
+                        <!-- Foto -->
+                        <div class="mb-4">
+                            <label class="form-label fs-5 fw-bold text-secondary">Fotografía</label>
+                            <div class="border rounded-3 p-3 bg-light">
+                                <input type="file" asp-for="Archivo_4" class="form-control form-control-lg"
+                                       required accept=".png, .jpg, .jpeg">
+                                <div class="form-text fs-6">Formatos permitidos: .png, .jpg, .jpeg</div>
+                            </div>
+                        </div>
+
+                        <!-- Datos Personales -->
+                        <div class="mb-4">
+                            <div class="form-floating mb-3">
+                                <input type="text" asp-for="Propietario.Nombre" class="form-control form-control-lg"
+                                       placeholder="Nombre Completo" required>
+                                <label>Nombre Completo</label>
+                            </div>
+
+                            <div class="form-floating mb-3">
+                                <input type="number" asp-for="Propietario.NumeroCedula" class="form-control form-control-lg"
+                                       placeholder="Número de Cédula" required>
+                                <label>Número de Cédula</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Columna Derecha -->
+                    <div class="col-md-6">
+                        <!-- Contacto -->
+                        <div class="mb-4">
+                            <label class="form-label fs-5 fw-bold text-secondary">Información de Contacto</label>
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <div class="form-floating">
+                                        <input type="number" asp-for="Propietario.Telefono" class="form-control form-control-lg"
+                                               placeholder="Teléfono" required>
+                                        <label>Teléfono Principal</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-floating">
+                                        <input type="number" asp-for="Propietario.Celular" class="form-control form-control-lg"
+                                               placeholder="Celular" required>
+                                        <label>Teléfono Secundario</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-floating my-3">
+                                <input type="email" asp-for="Propietario.Correo" class="form-control form-control-lg"
+                                       placeholder="Correo Electrónico" required>
+                                <label>Correo Electrónico</label>
+                            </div>
+
+                            <div class="form-floating mb-3">
+                                <input type="text" asp-for="Propietario.Direccion" class="form-control form-control-lg"
+                                       placeholder="Dirección" required>
+                                <label>Dirección Residencia</label>
+                            </div>
+
+                            <div class="form-floating">
+                                <input type="text" asp-for="Propietario.Ciudad" class="form-control form-control-lg"
+                                       placeholder="Ciudad" required>
+                                <label>Ciudad/Departamento</label>
+                            </div>
+                        </div>
+
+                        <!-- Documentos -->
+                        <div class="mb-4">
+                            <label class="form-label fs-5 fw-bold text-secondary">Documentación</label>
+                            <div class="mb-3">
+                                <label class="form-label fs-6">Cédula (PDF)</label>
+                                <input type="file" asp-for="Archivo_1" class="form-control form-control-lg"
+                                       accept=".pdf" required>
+                                <div class="form-text fs-6">Formato requerido: PDF</div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </div>
 
-            <div class="row mb-3">
-                <label class="col-sm-3 col-form-label"><strong>Nombre:</strong></label>
-                <div class="col-sm-9">
-                    <input type="text" class="form-control" asp-for="Propietario.Nombre" placeholder="Nombre Completo" required>
+                <!-- Botones -->
+                <div class="d-grid gap-3 d-md-flex justify-content-md-end mt-5">
+                    <a href="javascript:history.back()" class="btn btn-lg btn-secondary px-5">
+                        <i class="fas fa-arrow-left me-2"></i>Volver
+                    </a>
+                    <button type="submit" class="btn btn-lg btn-primary px-5">
+                        <i class="fas fa-save me-2"></i>Registrar Propietario
+                    </button>
                 </div>
-            </div>
-
-            <div class="row mb-3">
-                <label class="col-sm-3 col-form-label"><strong>Número de Cédula:</strong></label>
-                <div class="col-sm-9">
-                    <input type="number" class="form-control" asp-for="Propietario.NumeroCedula" placeholder="100000000" required>
-                </div>
-            </div>
-
-            <div class="row mb-3">
-                <label class="col-sm-3 col-form-label"><strong>Celular 1:</strong></label>
-                <div class="col-sm-9">
-                    <input type="number" class="form-control" asp-for="Propietario.Telefono" placeholder="Número de Teléfono" required>
-                </div>
-            </div>
-
-            <div class="row mb-3">
-                <label class="col-sm-3 col-form-label"><strong>Celular 2:</strong></label>
-                <div class="col-sm-9">
-                    <input type="number" class="form-control" asp-for="Propietario.Celular" placeholder="Número Celular" required>
-                </div>
-            </div>
-
-            <div class="row mb-3">
-                <label class="col-sm-3 col-form-label"><strong>Correo:</strong></label>
-                <div class="col-sm-9">
-                    <input type="email" class="form-control" asp-for="Propietario.Correo" placeholder="Correo Electrónico" required>
-                </div>
-            </div>
-
-            <div class="row mb-3">
-                <label class="col-sm-3 col-form-label"><strong>Dirección:</strong></label>
-                <div class="col-sm-9">
-                    <input type="text" class="form-control" asp-for="Propietario.Direccion" placeholder="Cra/Clle X # xx - xx" required>
-                </div>
-            </div>
-
-            <div class="row mb-3">
-                <label class="col-sm-3 col-form-label"><strong>Ciudad:</strong></label>
-                <div class="col-sm-9">
-                    <input type="text" class="form-control" asp-for="Propietario.Ciudad" placeholder="Ciudad o Departamento" required>
-                </div>
-            </div>
-
-            <div class="row mb-3">
-                <label class="col-sm-3 col-form-label"><strong>Documento Cédula:</strong></label>
-                <div class="col-sm-9">
-                    <input type="file" class="form-control" asp-for="Archivo_1" placeholder="Documento Cedula.pdf" required accept=".pdf">
-                </div>
-            </div>
-
-            <div class="d-flex justify-content-center mt-4">
-                <button type="submit" class="btn btn-success px-4 me-2"><i class="bi bi-check-circle"></i> Crear</button>
-                <a href="javascript:history.back()" class="btn btn-secondary px-4"><i class="bi bi-arrow-left"></i> Volver</a>
-            </div>
-
-        </form>
+            </form>
+        </div>
     </div>
 </div>
 
-
 <!-- Modal de Confirmación -->
-<div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+<div class="modal fade" id="successModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="successModalLabel">Propietario Guardado</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title fs-4"><i class="fas fa-check-circle me-2"></i>Registro Exitoso</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
-                <p>El propietario ha sido guardado con éxito.</p>
-                <p><strong>ID del Propietario:</strong> @ViewBag.IdPropietario</p>
+                <p class="fs-5">El propietario ha sido registrado exitosamente.</p>
+                <p class="fs-5"><strong>ID del Propietario:</strong> @ViewBag.IdPropietario</p>
             </div>
             <div class="modal-footer">
-                <a href="@Url.Action("Propietarios", "Empresa")" class="btn btn-success">Ir a Propietarios</a>
+                <a href="@Url.Action("Propietarios", "Empresa")" class="btn btn-primary btn-lg">
+                    <i class="fas fa-users me-2"></i>Ver Propietarios
+                </a>
             </div>
         </div>
     </div>
 </div>
-<br>
-<p class="text-center">@ViewBag.Mensaje</p>
+
 @section Scripts {
     <script>
-        $(document).ready(function () {
+        document.addEventListener("DOMContentLoaded", function () {
             var exito = "@ViewBag.Exito";
             if (exito === "True") {
-                $('#successModal').modal('show'); // Muestra el modal automáticamente si el guardado fue exitoso
+                var successModal = new bootstrap.Modal(document.getElementById('successModal'));
+                successModal.show();
             }
-
         });
     </script>
 }
-

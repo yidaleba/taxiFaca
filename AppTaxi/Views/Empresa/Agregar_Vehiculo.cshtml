@@ -3,100 +3,142 @@
     ViewData["Title"] = "Agregar Vehículo";
     Layout = "~/Views/Shared/_LayoutEmpresa.cshtml";
 }
-<p class="text-sm-center"><strong>Cupos Disponibles : </strong>@ViewBag.Cupos</p>
-<br />
 
-@if (TempData["Mensaje"] != null)
-{
-    <div class="alert alert-info text-center">@TempData["Mensaje"]</div>
-}
+<div class="container-fluid">
+    <!-- Encabezado -->
+    <div class="d-flex justify-content-between align-items-center mb-5">
+        <h1 class="display-5 fw-bold text-primary">Registrar Vehículo</h1>
+        <div class="bg-info rounded-pill px-4 py-2">
+            <span class="fs-5 text-white"><strong>Cupos Disponibles:</strong> @ViewBag.Cupos</span>
+        </div>
+    </div>
 
-<div class="card shadow-lg border-0 rounded-3">
-    <h5 class="card-header bg-primary text-white text-center py-3">Ingrese los Datos del Vehículo</h5>
-    <div class="card-body">
-        <form asp-action="Crear_Vehiculo" asp-controller="Empresa" method="post" enctype="multipart/form-data" class="needs-validation" novalidate id="formVehiculo">
+    <!-- Mensajes Temporales -->
+    @if (TempData["Mensaje"] != null)
+    {
+        <div class="alert alert-success fs-5 text-center" role="alert">
+            @TempData["Mensaje"]
+        </div>
+    }
 
-            <div class="row mb-3">
-                <label class="col-sm-3 col-form-label"><strong>Placa:</strong></label>
-                <div class="col-sm-9">
-                    <input type="text" class="form-control" asp-for="Vehiculo.Placa" placeholder="Ingrese la placa" required>
+    <!-- Formulario -->
+    <div class="card shadow-lg">
+        <div class="card-header bg-primary text-white py-3">
+            <h2 class="h4 mb-0"><i class="fas fa-car-side me-2"></i>Datos del Vehículo</h2>
+        </div>
+
+        <div class="card-body">
+            <form asp-action="Crear_Vehiculo" asp-controller="Empresa" method="post" enctype="multipart/form-data" >
+                <div class="row g-4">
+                    <!-- Placa -->
+                    <div class="col-12">
+                        <div class="form-floating mb-4">
+                            <input type="text" class="form-control form-control-lg"
+                                   asp-for="Vehiculo.Placa" placeholder="Placa" required>
+                            <label>Placa del Vehículo</label>
+                        </div>
+                    </div>
+
+                    <!-- Documentos -->
+                    <div class="col-md-6">
+                        <div class="mb-4">
+                            <label class="form-label fs-5 fw-bold text-secondary">Documentación SOAT</label>
+                            <div class="border rounded-3 p-3 bg-light">
+                                <input type="file" class="form-control form-control-lg"
+                                       asp-for="Archivo_1" accept=".pdf" required>
+                                <div class="form-text fs-6">Formato requerido: PDF</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="mb-4">
+                            <label class="form-label fs-5 fw-bold text-secondary">Revisión Técnica</label>
+                            <div class="border rounded-3 p-3 bg-light">
+                                <input type="file" class="form-control form-control-lg"
+                                       asp-for="Archivo_2" accept=".pdf" required>
+                                <div class="form-text fs-6">Formato requerido: PDF</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Fechas de Vencimiento -->
+                    <div class="col-md-6">
+                        <div class="form-floating mb-4">
+                            <input type="date" class="form-control form-control-lg"
+                                   asp-for="Vehiculo.VenceSoat" id="venceSoat" required>
+                            <label>Vencimiento SOAT</label>
+                            <div class="invalid-feedback fs-6">
+                                La fecha debe ser futura
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-floating mb-4">
+                            <input type="date" class="form-control form-control-lg"
+                                   asp-for="Vehiculo.VenceTecnicoMecanica" id="venceTecno" required>
+                            <label>Vencimiento Revisión Técnica</label>
+                            <div class="invalid-feedback fs-6">
+                                La fecha debe ser futura
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Propietario -->
+                    <div class="col-12">
+                        <div class="form-floating mb-4">
+                            <select class="form-select form-select-lg"
+                                    asp-for="Vehiculo.IdPropietario" required>
+                                <option value="">Seleccione un propietario</option>
+                                @foreach (var propietario in Model.Propietarios)
+                                {
+                                    <option value="@propietario.IdPropietario">@propietario.Nombre</option>
+                                }
+                            </select>
+                            <label>Propietario del Vehículo</label>
+                        </div>
+                    </div>
+
+                    <!-- Mensajes Adicionales -->
+                    @if (!string.IsNullOrEmpty(ViewBag.Mensaje))
+                    {
+                        <div class="alert alert-info fs-5 text-center" role="alert">
+                            @ViewBag.Mensaje
+                        </div>
+                    }
                 </div>
-            </div>
 
-            <!-- SOAT y Técnico Mecánica -->
-            <div class="row mb-3">
-                <div class="col-md-6">
-                    <label class="form-label"><strong>SOAT (Archivo PDF): </strong></label>
-                    <input type="file" class="form-control" asp-for="Archivo_1" accept=".pdf" required>
-                    <small class="text-muted">Suba el archivo del SOAT</small>
+                <!-- Botones -->
+                <div class="d-grid gap-3 d-md-flex justify-content-md-end mt-5">
+                    <a href="javascript:history.back()" class="btn btn-lg btn-secondary px-5">
+                        <i class="fas fa-arrow-left me-2"></i>Volver
+                    </a>
+                    <button type="submit" class="btn btn-lg btn-primary px-5">
+                        <i class="fas fa-save me-2"></i>Registrar Vehículo
+                    </button>
                 </div>
-
-                <div class="col-md-6">
-                    <label class="form-label"><strong>Técnico Mecánica (Archivo PDF): </strong></label>
-                    <input type="file" class="form-control" asp-for="Archivo_2" accept=".pdf" required>
-                    <small class="text-muted">Suba el archivo de la revisión técnico mecánica</small>
-                </div>
-            </div>
-
-            <!-- Fechas de Vencimiento -->
-            <div class="row mb-3">
-                <div class="col-md-6">
-                    <label class="form-label"><strong>Fecha de Vencimiento SOAT:</strong></label>
-                    <input type="date" class="form-control" asp-for="Vehiculo.VenceSoat" id="venceSoat" required>
-                    <small class="text-danger d-none" id="errorSoat">❌ La fecha debe ser mayor a hoy.</small>
-                </div>
-
-                <div class="col-md-6">
-                    <label class="form-label"><strong>Fecha de Vencimiento Técnico Mecánica:</strong></label>
-                    <input type="date" class="form-control" asp-for="Vehiculo.VenceTecnicoMecanica" id="venceTecno" required>
-                    <small class="text-danger d-none" id="errorTecno">❌ La fecha debe ser mayor a hoy.</small>
-                </div>
-            </div>
-
-            <!-- Propietario -->
-            <div class="row mb-3">
-                <label class="col-sm-3 col-form-label"><strong>Propietario:</strong></label>
-                <div class="col-sm-9">
-                    <select class="form-select" asp-for="Vehiculo.IdPropietario" required>
-                        <option value="">Seleccione un propietario</option>
-                        @foreach (var propietario in Model.Propietarios)
-                        {
-                            <option value="@propietario.IdPropietario">@propietario.Nombre</option>
-                        }
-                    </select>
-                </div>
-            </div>
-
-            @if (!string.IsNullOrEmpty(ViewBag.Mensaje))
-            {
-                <div class="alert alert-info text-center" role="alert">
-                    @ViewBag.Mensaje
-                </div>
-            }
-
-            <div class="d-flex justify-content-center mt-4">
-                <button type="submit" class="btn btn-success px-4 me-2"><i class="bi bi-check-circle"></i> Crear</button>
-                <a href="javascript:history.back()" class="btn btn-secondary px-4"><i class="bi bi-arrow-left"></i> Volver</a>
-            </div>
-
-        </form>
+            </form>
+        </div>
     </div>
 </div>
 
 <!-- Modal de Confirmación -->
-<div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+<div class="modal fade" id="successModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">🚀 Vehículo Guardado</h5>
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title fs-4"><i class="fas fa-check-circle me-2"></i>¡Vehículo Registrado!</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
-                <p>El vehículo ha sido guardado con éxito.</p>
-                <p><strong>ID del Vehículo:</strong> @ViewBag.IdVehiculo</p>
+                <p class="fs-5">El vehículo ha sido registrado exitosamente.</p>
+                <p class="fs-5"><strong>ID del Vehículo:</strong> @ViewBag.IdVehiculo</p>
             </div>
             <div class="modal-footer">
-                <a href="@Url.Action("Vehiculos", "Empresa")" class="btn btn-success">Ir a Vehículos</a>
+                <a href="@Url.Action("Vehiculos", "Empresa")" class="btn btn-primary btn-lg">
+                    <i class="fas fa-car me-2"></i>Ver Vehículos
+                </a>
             </div>
         </div>
     </div>
@@ -104,34 +146,36 @@
 
 @section Scripts {
     <script>
-        $(document).ready(function () {
+        document.addEventListener("DOMContentLoaded", function () {
             var exito = "@ViewBag.Exito";
             if (exito === "True") {
-                $('#successModal').modal('show'); // Muestra el modal automáticamente si el guardado fue exitoso
+                var successModal = new bootstrap.Modal(document.getElementById('successModal'));
+                successModal.show();
             }
 
-            $("#formVehiculo").submit(function (event) {
-                var fechaHoy = new Date().toISOString().split("T")[0]; // Obtener fecha actual en formato YYYY-MM-DD
-                var venceSoat = $("#venceSoat").val();
-                var venceTecno = $("#venceTecno").val();
-                var valido = true;
+            // Validación de fechas
+            const fechaHoy = new Date().toISOString().split('T')[0];
 
-                if (venceSoat && venceSoat <= fechaHoy) {
-                    $("#errorSoat").removeClass("d-none");
+            document.getElementById('formVehiculo').addEventListener('submit', function (e) {
+                let valido = true;
+
+                // Validar SOAT
+                const soatDate = document.getElementById('venceSoat').value;
+                if (soatDate <= fechaHoy) {
+                    document.querySelector('#venceSoat + .invalid-feedback').style.display = 'block';
                     valido = false;
-                } else {
-                    $("#errorSoat").addClass("d-none");
                 }
 
-                if (venceTecno && venceTecno <= fechaHoy) {
-                    $("#errorTecno").removeClass("d-none");
+                // Validar Técnico Mecánica
+                const tecnicoDate = document.getElementById('venceTecno').value;
+                if (tecnicoDate <= fechaHoy) {
+                    document.querySelector('#venceTecno + .invalid-feedback').style.display = 'block';
                     valido = false;
-                } else {
-                    $("#errorTecno").addClass("d-none");
                 }
 
                 if (!valido) {
-                    event.preventDefault(); // Evita el envío del formulario si hay errores
+                    e.preventDefault();
+                    this.classList.add('was-validated');
                 }
             });
         });

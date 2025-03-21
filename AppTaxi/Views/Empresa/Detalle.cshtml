@@ -1,63 +1,99 @@
 ﻿@model DatosEmpresa
-
 @{
     ViewData["Title"] = "Detalle";
     Layout = "~/Views/Shared/_LayoutEmpresa.cshtml";
 }
 
-<p class="text-sm-center"><strong>Cupos Disponibles : </strong>@ViewBag.Cupos</p>
-<br />
+<div class="container-fluid">
+    <!-- Encabezado -->
+    <div class="d-flex justify-content-between align-items-center mb-5">
+        <h1 class="display-5 fw-bold text-primary">Detalle del Registro</h1>
+        <div class="bg-info rounded-pill px-4 py-2">
+            <span class="fs-5 text-white"><strong>Cupos Disponibles:</strong> @ViewBag.Cupos</span>
+        </div>
+    </div>
 
-@if (TempData["Mensaje"] != null)
-{
-    <div class="alert alert-info text-center">@TempData["Mensaje"]</div>
-}
-<div class="container">
-    <h1 class="mb-4 text-center text-primary">Detalle del Registro</h1>
+    <!-- Mensajes -->
+    @if (TempData["Mensaje"] != null)
+    {
+        <div class="alert alert-success fs-5 text-center" role="alert">
+            @TempData["Mensaje"]
+        </div>
+    }
 
-
+    <!-- Contenido Principal -->
     @if (Model != null)
     {
-        <p class="text-center text-secondary">@ViewBag.Mensaje</p>
-
-        <div class="card mx-auto shadow-lg" style="max-width: 450px;">
-            <div class="text-center mt-3">
+        <div class="card shadow-lg mx-auto" style="max-width: 600px;">
+            <!-- Imagen -->
+            <div class="text-center mt-4">
                 <img src="@(string.IsNullOrEmpty(Model.Foto) ? "/imagenes/noimage.png" : "data:image/png;base64," + Model.Foto)"
                      class="img-fluid rounded-circle border shadow-sm p-2"
                      alt="Usuario"
                      style="max-width: 150px;"
                      onerror="this.onerror=null; this.src='/imagenes/noimage.png';">
-
             </div>
 
+            <!-- Información -->
             <div class="card-body">
-                <h4 class="card-title text-center mb-3">Información del Vehículo</h4>
-                <ul class="list-group list-group-flush">
-                    <li class="list-group-item"><strong>🚗 Id del Vehículo:</strong> @Model.IdVehiculo</li>
-                    <li class="list-group-item"><strong>🔖 Placa:</strong> @Model.Placa</li>
-                    <li class="list-group-item"><strong>👤 Propietario:</strong> @Model.NombrePropietario</li>
-                    <li class="list-group-item"><strong>👨‍✈️ Conductor:</strong> @Model.Conductor</li>
-                    <li class="list-group-item"><strong>📅 Fecha:</strong> @Model.Fecha.ToString("yyyy-MM-dd")</li>
-                    <li class="list-group-item"><strong>🕒 Hora de inicio:</strong> @Model.HoraInicio</li>
-                    <li class="list-group-item"><strong>🕕 Hora de fin:</strong> @Model.HoraFin</li>
-                </ul>
+                <h3 class="card-title text-center text-primary mb-4">
+                    <i class="fas fa-info-circle me-2"></i>Información del Vehículo
+                </h3>
+
+                <div class="list-group list-group-flush">
+                    <div class="list-group-item d-flex justify-content-between align-items-center">
+                        <span class="fw-bold"><i class="fas fa-hashtag me-2"></i>ID del Vehículo:</span>
+                        <span class="text-info fw-bold">@Model.IdVehiculo</span>
+                    </div>
+                    <div class="list-group-item d-flex justify-content-between align-items-center">
+                        <span class="fw-bold"><i class="fas fa-car me-2"></i>Placa:</span>
+                        <span>@Model.Placa</span>
+                    </div>
+                    <div class="list-group-item d-flex justify-content-between align-items-center">
+                        <span class="fw-bold"><i class="fas fa-user-tie me-2"></i>Propietario:</span>
+                        <span>@Model.NombrePropietario</span>
+                    </div>
+                    <div class="list-group-item d-flex justify-content-between align-items-center">
+                        <span class="fw-bold"><i class="fas fa-user me-2"></i>Conductor:</span>
+                        <span>@Model.Conductor</span>
+                    </div>
+                    <div class="list-group-item d-flex justify-content-between align-items-center">
+                        <span class="fw-bold"><i class="fas fa-calendar-day me-2"></i>Fecha:</span>
+                        <span>@Model.Fecha.ToString("yyyy-MM-dd")</span>
+                    </div>
+                    <div class="list-group-item d-flex justify-content-between align-items-center">
+                        <span class="fw-bold"><i class="fas fa-clock me-2"></i>Hora de Inicio:</span>
+                        <span>@Model.HoraInicio</span>
+                    </div>
+                    <div class="list-group-item d-flex justify-content-between align-items-center">
+                        <span class="fw-bold"><i class="fas fa-clock me-2"></i>Hora de Fin:</span>
+                        <span>@Model.HoraFin</span>
+                    </div>
+                </div>
             </div>
 
-            <div class="card-footer text-center">
-                <a class="btn btn-primary btn-lg" asp-action="Detalle_Vehiculo" asp-controller="Empresa" asp-route-IdVehiculo="@Model.IdVehiculo">
-                    Ver Vehículo
+            <!-- Acciones -->
+            <div class="card-footer text-center py-3">
+                <a class="btn btn-primary px-5" asp-action="Detalle_Vehiculo" asp-controller="Empresa" asp-route-IdVehiculo="@Model.IdVehiculo">
+                    <i class="fas fa-eye me-2"></i>Ver Vehículo
                 </a>
             </div>
         </div>
     }
     else
     {
-        <div class="alert alert-warning text-center mt-4">
-            <strong>⚠ No se encontró el objeto.</strong>
+        <div class="card shadow-lg">
+            <div class="card-body text-center py-5">
+                <i class="fas fa-exclamation-triangle fa-3x text-muted mb-4"></i>
+                <h3 class="text-secondary mb-3">No se encontró el registro solicitado</h3>
+            </div>
         </div>
     }
 
-    <div class="text-center mt-4 pb-5">
-        <a class="btn btn-success btn-lg" href="javascript:history.back()">Volver</a>
+    <!-- Botón de Volver -->
+    <div class="text-center mt-5">
+        <a href="javascript:history.back()" class="btn btn-secondary px-5">
+            <i class="fas fa-arrow-left me-2"></i>Volver
+        </a>
     </div>
 </div>

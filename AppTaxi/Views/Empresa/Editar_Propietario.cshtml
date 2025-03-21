@@ -4,89 +4,156 @@
     Layout = "~/Views/Shared/_LayoutEmpresa.cshtml";
 }
 
-<p class="text-sm-center"><strong>Cupos Disponibles : </strong>@ViewBag.Cupos</p>
-<br />
-@if (TempData["Mensaje"] != null)
-{
-    <div class="alert alert-info text-center">@TempData["Mensaje"]</div>
-}
-<div class="container mt-4">
+<div class="container-fluid">
+    <!-- Encabezado -->
+    <div class="d-flex justify-content-between align-items-center mb-5">
+        <h1 class="display-5 fw-bold text-primary"><i class="fas fa-user-edit me-2"></i>Editar Propietario</h1>
+        <div class="bg-info rounded-pill px-4 py-2">
+            <span class="fs-5 text-white"><i class="fas fa-users me-2"></i>Cupos Disponibles: @ViewBag.Cupos</span>
+        </div>
+    </div>
 
+    <!-- Mensajes -->
+    @if (TempData["Mensaje"] != null)
+    {
+        <div class="alert alert-success fs-5 text-center mb-5" role="alert">
+            <i class="fas fa-info-circle me-2"></i>@TempData["Mensaje"]
+        </div>
+    }
+
+    <!-- Contenido Principal -->
     @if (Model != null)
     {
-        <p class="text-muted text-center">Llene los campos que desea editar. <br> Los campos que no se deseen editar pueden quedar vacíos.</p>
-        <div class="card shadow-lg">
+        <div class="card shadow-lg mx-auto" style="max-width: 800px;">
             <div class="card-header bg-primary text-white">
-                <h5 class="mb-0">Señor/a @Model.Propietario.Nombre</h5>
+                <h3 class="card-title mb-0">
+                    <i class="fas fa-id-card me-2"></i>@Model.Propietario.Nombre
+                </h3>
             </div>
-            <div class="card-body">
+
+            <div class="card-body p-4">
                 <form asp-action="Guardar_Propietario" asp-controller="Empresa" method="post" enctype="multipart/form-data">
+                    <div class="row g-4">
+                        <!-- Documentación -->
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="form-label fs-5"><i class="fas fa-id-card me-2"></i>Documento</label>
+                                <input type="text" class="form-control form-control-lg"
+                                       asp-for="Propietario.NumeroCedula">
+                            </div>
+                        </div>
 
-                    <div class="row mb-3">
                         <div class="col-md-6">
-                            <label class="form-label"><strong>Documento: </strong></label>
-                            <input type="text" class="form-control" asp-for="Propietario.NumeroCedula">
+                            <div class="form-group">
+                                <label class="form-label fs-5"><i class="fas fa-camera me-2"></i>Actualizar Foto</label>
+                                <input type="file" class="form-control form-control-lg"
+                                       asp-for="Archivo_4" accept=".png, .jpg, .jpeg">
+                            </div>
                         </div>
-                        <div class="col-md-6">
-                            <label class="form-label"><strong>Foto: </strong></label>
-                            <input type="file" class="form-control" asp-for="Archivo_4" accept=".png, .jpg, .jpeg">
-                        </div>
-                    </div>
 
-                    <div class="row mb-3">
+                        <!-- Información Básica -->
                         <div class="col-md-6">
-                            <label class="form-label"><strong>ID: </strong></label>
-                            <input type="number" readonly class="form-control" asp-for="Propietario.IdPropietario">
+                            <div class="form-group">
+                                <label class="form-label fs-5"><i class="fas fa-fingerprint me-2"></i>ID Propietario</label>
+                                <input type="number" class="form-control form-control-lg bg-light"
+                                       asp-for="Propietario.IdPropietario" readonly>
+                            </div>
                         </div>
-                        <div class="col-md-6">
-                            <label class="form-label"><strong>Estado Actual: </strong></label>
-                            <input type="text" readonly class="form-control" asp-for="Propietario.Estado" value="@(Model.Propietario.Estado ? "Activo" : "Inactivo")">
-                        </div>
-                    </div>
 
-                    <div class="row mb-3">
                         <div class="col-md-6">
-                            <label class="form-label"><strong>Teléfono: </strong></label>
-                            <input type="number" class="form-control" asp-for="Propietario.Telefono" placeholder="@Model.Propietario.Telefono">
+                            <div class="form-group">
+                                <label class="form-label fs-5"><i class="fas fa-power-off me-2"></i>Estado Actual</label>
+                                <input type="text" class="form-control form-control-lg bg-light"
+                                       value="@(Model.Propietario.Estado ? "Activo" : "Inactivo")" readonly>
+                            </div>
                         </div>
-                        <div class="col-md-6">
-                            <label class="form-label"><strong>Celular: </strong></label>
-                            <input type="number" class="form-control" asp-for="Propietario.Celular" placeholder="@Model.Propietario.Celular">
-                        </div>
-                    </div>
 
-                    <div class="row mb-3">
+                        <!-- Contacto -->
                         <div class="col-md-6">
-                            <label class="form-label"><strong>Correo: </strong></label>
-                            <input type="email" class="form-control" asp-for="Propietario.Correo" placeholder="@Model.Propietario.Correo">
+                            <div class="form-group">
+                                <label class="form-label fs-5"><i class="fas fa-phone me-2"></i>Teléfono</label>
+                                <input type="number" class="form-control form-control-lg"
+                                       asp-for="Propietario.Telefono" placeholder="@Model.Propietario.Telefono">
+                            </div>
                         </div>
-                        <div class="col-md-6">
-                            <label class="form-label"><strong>Dirección: </strong></label>
-                            <input type="text" class="form-control" asp-for="Propietario.Direccion" placeholder="@Model.Propietario.Direccion">
-                        </div>
-                    </div>
 
-                    <div class="row mb-3">
                         <div class="col-md-6">
-                            <label class="form-label"><strong>Ciudad: </strong></label>
-                            <input type="text" class="form-control" asp-for="Propietario.Ciudad" placeholder="@Model.Propietario.Ciudad">
+                            <div class="form-group">
+                                <label class="form-label fs-5"><i class="fas fa-mobile-alt me-2"></i>Celular</label>
+                                <input type="number" class="form-control form-control-lg"
+                                       asp-for="Propietario.Celular" placeholder="@Model.Propietario.Celular">
+                            </div>
                         </div>
-                    </div>
 
-                    <div class="d-flex justify-content-between mt-4">
-                        <button type="submit" class="btn btn-success px-4">Guardar Cambios</button>
-                        <a href="javascript:history.back()" class="btn btn-danger px-4">Cancelar</a>
+                        <!-- Información Adicional -->
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="form-label fs-5"><i class="fas fa-envelope me-2"></i>Correo</label>
+                                <input type="email" class="form-control form-control-lg"
+                                       asp-for="Propietario.Correo" placeholder="@Model.Propietario.Correo">
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="form-label fs-5"><i class="fas fa-map-marker-alt me-2"></i>Dirección</label>
+                                <input type="text" class="form-control form-control-lg"
+                                       asp-for="Propietario.Direccion" placeholder="@Model.Propietario.Direccion">
+                            </div>
+                        </div>
+
+                        <!-- Ubicación -->
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label class="form-label fs-5"><i class="fas fa-city me-2"></i>Ciudad</label>
+                                <input type="text" class="form-control form-control-lg"
+                                       asp-for="Propietario.Ciudad" placeholder="@Model.Propietario.Ciudad">
+                            </div>
+                        </div>
+
+                        <!-- Documentos -->
+                        <div class="col-12">
+                            <h5 class="text-primary mb-3"><i class="fas fa-file-contract me-2"></i>Documentación</h5>
+                            <div class="row g-3">
+                                <div class="col-md-4">
+                                    <label class="form-label"><i class="fas fa-file-pdf me-2"></i>Cédula</label>
+                                    <input type="file" class="form-control" asp-for="Propietario.DocumentoCedula">
+                                    <small class="text-muted">
+                                        <i class="fas @(string.IsNullOrEmpty(Model.Propietario.DocumentoCedula) ? "fa-times-circle text-danger" : "fa-check-circle text-success") me-2"></i>
+                                        @(string.IsNullOrEmpty(Model.Propietario.DocumentoCedula) ? "No cargado" : "Cargado")
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Botones -->
+                        <div class="col-12">
+                            <div class="d-flex justify-content-center gap-3 mt-4">
+                                <button type="submit" class="btn btn-primary btn-lg px-5">
+                                    <i class="fas fa-save me-2"></i>Guardar Cambios
+                                </button>
+                                <a href="javascript:history.back()" class="btn btn-secondary btn-lg px-5">
+                                    <i class="fas fa-times me-2"></i>Cancelar
+                                </a>
+                            </div>
+                        </div>
                     </div>
                 </form>
-                <p class="text-center text-success mt-3">@ViewBag.Mensaje</p>
             </div>
         </div>
     }
     else
     {
-        <div class="alert alert-warning text-center mt-4">
-            <p>No se encontró el propietario.</p>
-            <a href="javascript:history.back()" class="btn btn-primary">Volver</a>
+        <div class="card shadow-lg">
+            <div class="card-body text-center py-5">
+                <i class="fas fa-exclamation-triangle fa-3x text-muted mb-4"></i>
+                <h3 class="text-secondary mb-3">Propietario no encontrado</h3>
+                <p class="fs-5 text-muted">Verifica los datos ingresados</p>
+                <a href="javascript:history.back()" class="btn btn-secondary px-5">
+                    <i class="fas fa-arrow-left me-2"></i>Volver
+                </a>
+            </div>
         </div>
     }
+</div>
 </div>

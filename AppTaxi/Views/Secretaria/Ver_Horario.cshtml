@@ -4,58 +4,89 @@
     Layout = "~/Views/Shared/_LayoutSecretaria.cshtml";
 }
 
-@if (TempData["Mensaje"] != null)
-{
-    <div class="alert alert-info text-center">@TempData["Mensaje"]</div>
-}
-<div class="container mt-4">
-
-    <div class="d-flex justify-content-between align-items-center mb-3">
-        <h5 class="mb-0">👤 Señor/a <strong>@Model.Conductor.Nombre</strong></h5>
-        
+<div class="container-fluid">
+    <!-- Encabezado -->
+    <div class="d-flex justify-content-between align-items-center mb-5">
+        <h1 class="display-5 fw-bold text-primary">Horario del Conductor</h1>
     </div>
 
+    <!-- Mensajes -->
+    @if (TempData["Mensaje"] != null)
+    {
+        <div class="alert alert-success fs-5 text-center" role="alert">
+            @TempData["Mensaje"]
+        </div>
+    }
+
+    <!-- Información del Conductor -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <h5 class="card-title text-primary mb-0">
+                <i class="fas fa-user me-2"></i>Conductor: <strong>@Model.Conductor.Nombre</strong>
+            </h5>
+        </div>
+    </div>
+
+    <!-- Tabla de Horarios -->
     @if (Model.Conductor != null && Model.Horarios != null && Model.Horarios.Any())
     {
-        <div class="table-responsive">
-            <table class="table table-hover table-striped text-center shadow">
-                <thead class="table-dark">
-                    <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">Vehículo</th>
-                        <th scope="col">Fecha</th>
-                        <th scope="col">Desde</th>
-                        <th scope="col">Hasta</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var item in Model.Horarios)
-                    {
-                        var vehiculo = Model.Vehiculos.FirstOrDefault(v => v.IdVehiculo == item.IdVehiculo);
-                        <tr>
-                            <td><strong>@item.IdHorario</strong></td>
-                            <td>@(vehiculo != null ? vehiculo.Placa : "N/A")</td>
-                            <td>@item.Fecha.ToString("yyyy-MM-dd")</td>
-                            <td>@item.HoraInicio</td>
-                            <td>@item.HoraFin</td>
-                            
-                        </tr>
-                    }
-                </tbody>
-            </table>
+        <div class="card shadow-lg">
+            <div class="card-header bg-primary text-white py-3">
+                <h2 class="h4 mb-0"><i class="fas fa-calendar-alt me-2"></i>Registro de Horarios</h2>
+            </div>
+
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="bg-light">
+                            <tr>
+                                <th class="text-center text-primary fs-5">#</th>
+                                <th class="text-primary fs-5"><i class="fas fa-car me-2"></i>Vehículo</th>
+                                <th class="text-primary fs-5"><i class="fas fa-calendar-day me-2"></i>Fecha</th>
+                                <th class="text-primary fs-5"><i class="fas fa-clock me-2"></i>Desde</th>
+                                <th class="text-primary fs-5"><i class="fas fa-clock me-2"></i>Hasta</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.Horarios)
+                            {
+                                var vehiculo = Model.Vehiculos.FirstOrDefault(v => v.IdVehiculo == item.IdVehiculo);
+                                <tr>
+                                    <td class="text-center fw-bold text-info">@item.IdHorario</td>
+                                    <td>@(vehiculo != null ? vehiculo.Placa : "N/A")</td>
+                                    <td>@item.Fecha.ToString("yyyy-MM-dd")</td>
+                                    <td>@item.HoraInicio</td>
+                                    <td>@item.HoraFin</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     }
     else
     {
-        <div class="alert alert-warning text-center mt-4">
-            <p>⚠ No se encontraron horarios registrados.</p>
+        <div class="card shadow-lg">
+            <div class="card-body text-center py-5">
+                <i class="fas fa-calendar-times fa-3x text-muted mb-4"></i>
+                <h3 class="text-secondary mb-3">No hay horarios registrados</h3>
+            </div>
         </div>
     }
 
-    <p class="text-success text-center">@ViewBag.Mensaje</p>
-    <div class="text-center mt-3">
-        <a href="javascript:history.back()" class="btn btn-success">Volver</a>
+    <!-- Botón de Volver -->
+    <div class="text-center mt-5">
+        <a href="javascript:history.back()" class="btn btn-secondary px-5">
+            <i class="fas fa-arrow-left me-2"></i>Volver
+        </a>
     </div>
+
+    <!-- Mensaje de Error -->
+    @if (!string.IsNullOrEmpty(ViewBag.Mensaje))
+    {
+        <div class="alert alert-danger mt-4 fs-5 text-center" role="alert">
+            @ViewBag.Mensaje
+        </div>
+    }
 </div>
-
-

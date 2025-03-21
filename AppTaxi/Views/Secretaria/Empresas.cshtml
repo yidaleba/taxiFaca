@@ -4,73 +4,83 @@
     Layout = "~/Views/Shared/_LayoutSecretaria.cshtml";
 }
 
-<div class="container">
-    <h1 class="mb-4 text-center text-primary">Empresas Actuales</h1>
+<div class="container-fluid">
+    <!-- Encabezado -->
+    <div class="d-flex justify-content-between align-items-center mb-5">
+        <h1 class="display-5 fw-bold text-primary">Gestión de Empresas</h1>
+    </div>
 
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <a asp-action="Vista_Agregar_Empresa" asp-controller="Secretaria" class="btn btn-success">
-            <i class="bi bi-plus-lg"></i> <strong>Agregar Empresa</strong>
-        </a>
+    <!-- Controles Superiores -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-body py-3">
+            <div class="d-flex justify-content-between align-items-center">
+                <a asp-action="Vista_Agregar_Empresa" asp-controller="Secretaria"
+                   class="btn btn-primary px-5">
+                    <i class="fas fa-plus me-2"></i>Nueva Empresa
+                </a>
 
-        <div class="w-25">
-            <input type="text" id="buscarEmpresa" class="form-control"
-                   placeholder="🔎Buscar por nombre..." onkeyup="filtrarEmpresas()">
+                <div class="input-group w-25">
+                    <span class="input-group-text bg-primary text-white">
+                        <i class="fas fa-search"></i>
+                    </span>
+                    <input type="text" id="buscarEmpresa" class="form-control form-control-lg"
+                           placeholder="Buscar empresa..." onkeyup="filtrarEmpresas()">
+                </div>
+            </div>
         </div>
     </div>
 
+    <!-- Listado de Empresas -->
     @if (Model != null && Model.Empresas.Any())
     {
         <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4" id="contenedor-empresas">
             @foreach (var item in Model.Empresas)
             {
                 <div class="col fila-empresa" data-empresa-nombre="@item.Nombre.ToLower()">
-                    <div class="card h-100 shadow-sm">
-                        <div class="card-header bg-primary text-white">
-                            <h5 class="card-title mb-0 text-center"><strong>@item.Nombre</strong></h5>
+                    <div class="card h-100 shadow-lg">
+                        <div class="card-header bg-primary text-white py-3">
+                            <h5 class="card-title mb-0 text-center fw-bold">@item.Nombre</h5>
                         </div>
 
                         <div class="card-body">
                             <dl class="row mb-0">
-                                <dt class="col-sm-5">NIT:</dt>
-                                <dd class="col-sm-7">@item.Nit</dd>
+                                <dt class="col-sm-5 text-secondary">NIT:</dt>
+                                <dd class="col-sm-7 fw-bold">@item.Nit</dd>
 
-                                <dt class="col-sm-5">ID Empresa:</dt>
-                                <dd class="col-sm-7">@item.IdEmpresa</dd>
+                                <dt class="col-sm-5 text-secondary">ID Empresa:</dt>
+                                <dd class="col-sm-7 fw-bold text-info">@item.IdEmpresa</dd>
 
-                                <dt class="col-sm-5">Representante:</dt>
+                                <dt class="col-sm-5 text-secondary">Representante:</dt>
                                 <dd class="col-sm-7">@item.Representante</dd>
 
-                                <dt class="col-sm-5">Cupos:</dt>
-                                <dd class="col-sm-7">@item.Cupos</dd>
+                                <dt class="col-sm-5 text-secondary">Cupos:</dt>
+                                <dd class="col-sm-7 fw-bold">@item.Cupos</dd>
 
-                                <dt class="col-sm-5">Usuario:</dt>
-                                @if (Model.Usuarios.FirstOrDefault(u => u.IdUsuario == item.IdUsuario) != null)
-                                {
-                                    <dd class="col-sm-7">
+                                <dt class="col-sm-5 text-secondary">Usuario:</dt>
+                                <dd class="col-sm-7">
+                                    @if (Model.Usuarios.FirstOrDefault(u => u.IdUsuario == item.IdUsuario) != null)
+                                    {
                                         @Model.Usuarios.FirstOrDefault(u => u.IdUsuario == item.IdUsuario)?.Nombre
-                                    </dd>
-                                }
-                                else
-                                {
-                                    <dd class="col-sm-7">
-                                        <i>Vacío</i>
-                                    </dd>
-                                }
-                                
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">Sin asignar</span>
+                                    }
+                                </dd>
                             </dl>
                         </div>
 
-                        <div class="card-footer bg-transparent">
+                        <div class="card-footer bg-transparent py-3">
                             <div class="d-grid gap-2 d-md-flex justify-content-between">
                                 <a asp-action="Detalle_Empresa" asp-controller="Secretaria"
                                    asp-route-IdEmpresa="@item.IdEmpresa"
-                                   class="btn btn-outline-primary btn-sm">
-                                    <i class="bi bi-info-circle"></i> <strong>Detalle</strong>
+                                   class="btn btn-sm btn-primary px-4">
+                                    <i class="fas fa-info-circle me-2"></i>Detalle
                                 </a>
                                 <a asp-action="Editar_Empresa" asp-controller="Secretaria"
                                    asp-route-IdEmpresa="@item.IdEmpresa"
-                                   class="btn btn-outline-warning btn-sm">
-                                    <i class="bi bi-pencil-square"></i> <strong>Editar</strong>
+                                   class="btn btn-sm btn-warning px-4">
+                                    <i class="fas fa-edit me-2"></i>Editar
                                 </a>
                             </div>
                         </div>
@@ -81,22 +91,33 @@
     }
     else
     {
-        <div class="alert alert-warning text-center mt-4">
-            <strong><i class="bi bi-exclamation-triangle"></i> No se encontraron empresas registradas</strong>
+        <div class="card shadow-lg">
+            <div class="card-body text-center py-5">
+                <i class="fas fa-building fa-3x text-muted mb-4"></i>
+                <h3 class="text-secondary mb-3">No hay empresas registradas</h3>
+            </div>
         </div>
     }
 
-    <p class="text-danger text-center mt-3">@ViewBag.Mensaje</p>
+    <!-- Mensaje de Error -->
+    @if (!string.IsNullOrEmpty(ViewBag.Mensaje))
+    {
+        <div class="alert alert-danger mt-4 fs-5 text-center" role="alert">
+            @ViewBag.Mensaje
+        </div>
+    }
 </div>
 
-<script>
-    function filtrarEmpresas() {
-        const input = document.getElementById('buscarEmpresa').value.toLowerCase();
-        const cards = document.querySelectorAll('.fila-empresa');
+@section Scripts {
+    <script>
+        function filtrarEmpresas() {
+            const input = document.getElementById('buscarEmpresa').value.toLowerCase();
+            const cards = document.querySelectorAll('.fila-empresa');
 
-        cards.forEach(card => {
-            const nombreEmpresa = card.dataset.empresaNombre;
-            card.style.display = nombreEmpresa.includes(input) ? 'block' : 'none';
-        });
-    }
-</script>
+            cards.forEach(card => {
+                const nombreEmpresa = card.dataset.empresaNombre;
+                card.style.display = nombreEmpresa.includes(input) ? 'block' : 'none';
+            });
+        }
+    </script>
+}
