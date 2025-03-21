@@ -8,14 +8,22 @@
 
 @if (TempData["Mensaje"] != null)
 {
-    <div class="alert alert-info text-center">@TempData["Mensaje"]</div>
-    @if(TempData["Mensaje"].ToString() == "No se encontró usuario asignado")
-    {
-        <a asp-action="Crear_Usuario" asp-controller="Empresa" asp-route-IdConductor="@Model.Conductor.IdConductor" class="btn btn-outline-success"><strong>Crear</strong></a>
-    }
-    
+    <div class="alert alert-info d-flex align-items-center justify-content-between mb-4">
+        <div class="d-flex align-items-center">
+            <i class="bi bi-info-circle-fill me-3 fs-5"></i>
+            <div>@TempData["Mensaje"]</div>
+        </div>
+        @if (TempData["Mensaje"].ToString() == "No se encontró usuario asignado")
+        {
+            <a asp-action="Crear_Usuario"
+               asp-controller="Empresa"
+               asp-route-IdConductor="@Model.Conductor.IdConductor"
+               class="btn btn-success d-flex align-items-center">
+                <i class="bi bi-plus-circle me-2"></i>Crear Usuario
+            </a>
+        }
+    </div>
 }
-
 @if (Model != null)
 {
     <p class="text-muted text-center">Llene los campos que desea editar.</p>

@@ -1,0 +1,162 @@
+﻿@model ModeloVista
+@{
+    ViewData["Title"] = "Perfil del Conductor";
+    Layout = "~/Views/Shared/_LayoutConductor.cshtml";
+}
+
+<div class="container py-4">
+    @if (TempData["Mensaje"] != null)
+    {
+        <div class="alert alert-info alert-dismissible fade show" role="alert">
+            <i class="bi bi-info-circle-fill me-2"></i>@TempData["Mensaje"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    @if (Model != null)
+    {
+        <div class="card shadow-lg">
+            <div class="card-header bg-primary text-white">
+                <h2 class="h4 mb-0"><i class="bi bi-person-badge me-2"></i>Detalles del Conductor</h2>
+            </div>
+
+            <div class="card-body">
+                <div class="row align-items-start">
+                    <!-- Columna Imagen -->
+                    <div class="col-md-4 text-center mb-4 mb-md-0">
+                        <img src="@(string.IsNullOrEmpty(Model.Conductor.Foto) ? "/imagenes/noimage.png" : "data:image/png;base64," + Model.Conductor.Foto)"
+                             alt="Foto del conductor"
+                             class="img-fluid rounded-circle shadow-sm"
+                             style="width: 200px; height: 200px; object-fit: cover;"
+                             onerror="this.onerror=null; this.src='/imagenes/noimage.png';">
+                    </div>
+
+                    <!-- Columna Información -->
+                    <div class="col-md-8">
+                        <div class="row g-3">
+                            <!-- Sección 1 -->
+                            <div class="col-md-6">
+                                <dl>
+                                    <dt class="fw-bold">Nombre:</dt>
+                                    <dd>@Model.Conductor.Nombre</dd>
+
+                                    <dt class="fw-bold mt-3">Cédula:</dt>
+                                    <dd>@Model.Conductor.NumeroCedula</dd>
+
+                                    <dt class="fw-bold mt-3">Teléfono:</dt>
+                                    <dd>@Model.Conductor.Telefono</dd>
+
+                                    <dt class="fw-bold mt-3">Correo:</dt>
+                                    <dd>@Model.Conductor.Correo</dd>
+                                </dl>
+                            </div>
+
+                            <!-- Sección 2 -->
+                            <div class="col-md-6">
+                                <dl>
+                                    <dt class="fw-bold">Dirección:</dt>
+                                    <dd>@Model.Conductor.Direccion</dd>
+
+                                    <dt class="fw-bold mt-3">Ciudad:</dt>
+                                    <dd>@Model.Conductor.Ciudad</dd>
+
+                                    <dt class="fw-bold mt-3">Estado:</dt>
+                                    <dd>
+                                        <span class="badge @(Model.Conductor.Estado ? "bg-success" : "bg-danger")">
+                                            @(Model.Conductor.Estado ? "Activo" : "Inactivo")
+                                        </span>
+                                    </dd>
+                                </dl>
+                            </div>
+
+                            <!-- Sección Médica -->
+                            <div class="col-12">
+                                <hr>
+                                <h5 class="mb-3"><i class="bi bi-heart-pulse me-2"></i>Información Médica</h5>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <dt class="fw-bold">Grupo Sanguíneo:</dt>
+                                        <dd>@Model.Conductor.GrupoSanguineo</dd>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <dt class="fw-bold">EPS:</dt>
+                                        <dd>@Model.Conductor.Eps</dd>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <dt class="fw-bold">ARL:</dt>
+                                        <dd>@Model.Conductor.Arl</dd>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Documentos -->
+                            <div class="col-12 mt-4">
+                                <hr>
+                                <h5 class="mb-3"><i class="bi bi-files me-2"></i>Documentos</h5>
+                                <div class="d-grid gap-2 d-md-block">
+                                    <button class="btn btn-primary me-2 mb-2"
+                                            onclick="abrirDocumento('@Model.Conductor.DocumentoCedula')">
+                                        <i class="bi bi-file-earmark-text me-2"></i>Ver Cédula
+                                    </button>
+
+                                    <button class="btn btn-info me-2 mb-2"
+                                            onclick="abrirDocumento('@Model.Conductor.DocumentoEps')">
+                                        <i class="bi bi-file-earmark-medical me-2"></i>Ver EPS
+                                    </button>
+
+                                    <button class="btn btn-warning mb-2"
+                                            onclick="abrirDocumento('@Model.Conductor.DocumentoArl')">
+                                        <i class="bi bi-file-earmark-lock me-2"></i>Ver ARL
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Sección Empresa -->
+                            <div class="col-12 mt-4">
+                                <hr>
+                                <h5 class="mb-3"><i class="bi bi-building me-2"></i>Datos de la Empresa</h5>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <dl>
+                                            <dt class="fw-bold">Nombre:</dt>
+                                            <dd>@Model.Empresa.Nombre</dd>
+
+                                            <dt class="fw-bold mt-3">NIT:</dt>
+                                            <dd>@Model.Empresa.Nit</dd>
+                                        </dl>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <dl>
+                                            <dt class="fw-bold">Contacto 1:</dt>
+                                            <dd>@Model.Empresa.RedPrincipal</dd>
+
+                                            <dt class="fw-bold mt-3">Contacto 2:</dt>
+                                            <dd>@Model.Empresa.RedSecundaria</dd>
+                                        </dl>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-danger text-center py-4">
+            <h2 class="alert-heading mb-3"><i class="bi bi-exclamation-triangle-fill me-2"></i>Error al cargar</h2>
+            <p class="lead">No se encontraron registros. Por favor verifica los datos ingresados.</p>
+        </div>
+    }
+</div>
+<script>
+    function abrirDocumento(base64) {
+        if (base64 && base64.trim() !== "") {
+            var nuevaVentana = window.open();
+            nuevaVentana.document.write('<iframe width="100%" height="100%" src="data:application/pdf;base64,' + base64 + '"></iframe>');
+        } else {
+            alert("No hay documento disponible.");
+        }
+    }
+</script>
