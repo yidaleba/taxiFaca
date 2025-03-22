@@ -57,6 +57,44 @@ namespace AppTaxi.Controllers
         }
         //------------ Métodos auxiliares ------------
 
+        //Encripta Todo
+        public async void Contrasenas(Models.Login login)
+        {
+            // Obtener la lista completa de usuarios
+            List<Usuario> listaUsuarios = await _usuario.Lista(login);
+
+            if (listaUsuarios == null || !listaUsuarios.Any())
+            {
+                //return Content("No se encontraron usuarios para actualizar.");
+            }
+
+            int actualizados = 0;
+            foreach (var usuario in listaUsuarios)
+            {
+                if (usuario.Correo != login.Correo)
+                {
+                    // Solo encriptar si la contraseña no está en formato hash
+                    if (usuario.Contrasena.Length != 64)
+                    {
+                        string contrasena = Encriptado.GetSHA256(usuario.Contrasena);
+                        usuario.Contrasena = contrasena;
+
+                        // Actualizamos el usuario en la base de datos mediante el método Editar de la API
+                        bool resultado = await _usuario.Editar(usuario, login);
+
+                        if (resultado)
+                        {
+                            actualizados++;
+                        }
+
+                    }
+                }
+            }
+
+            //return Content($"Proceso completado. Se han actualizado {actualizados} contraseñas.");
+        }
+
+
         // Obtiene el usuario actual desde la sesión.
         private Usuario GetUsuarioFromSession()
         {
@@ -112,7 +150,8 @@ namespace AppTaxi.Controllers
             }
 
             var login = CreateLogin(usuario);
-            
+
+            //Contrasenas(login);
             // Ejecutar todas las llamadas API en paralelo para reducir el tiempo de espera
             var empresasTask = _empresa.Lista(login);
             var vehiculosTask = _vehiculo.Lista(login);
@@ -991,11 +1030,11 @@ namespace AppTaxi.Controllers
             {
                 modelo.Conductor.Foto = "N/F";
             }
-            Encriptado enc = new Encriptado();
+            
             string contrasenaBase;
             if (modelo.Conductor.NumeroCedula != 0 && modelo.Conductor.Nombre != null)
             {
-                contrasenaBase = enc.GenerarContrasena(modelo.Conductor.NumeroCedula.ToString(), modelo.Conductor.Nombre);
+                contrasenaBase = Encriptado.GenerarContrasena(modelo.Conductor.NumeroCedula.ToString(), modelo.Conductor.Nombre);
 
             }
             else
@@ -1003,9 +1042,7 @@ namespace AppTaxi.Controllers
                 contrasenaBase = "Password123";
             }
 
-            //---------------------------------------------- Encriptado
-            //string Contrasena = enc.EncriptarSimple(contrasenaBase);
-            //modelo.Conductor.Contrasena = Contrasena;
+            
             modelo.Conductor.Contrasena = contrasenaBase;
 
 
@@ -1014,6 +1051,7 @@ namespace AppTaxi.Controllers
             valida = ValidarModelos.validarConductor(modelo.Conductor);
             if(valida.Respuesta)
             {
+                
                 bool respuesta = await _conductor.Guardar(modelo.Conductor, login);
 
                 if (respuesta)

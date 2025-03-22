@@ -66,7 +66,8 @@ namespace AppTaxi.Controllers
 
         public async Task<IActionResult> Autenticar(Login login)
         {
-            
+            string contrasena = Encriptado.GetSHA256(login.Contrasena);
+            login.Contrasena = contrasena;
             List<Usuario> lista = new List<Usuario>();
             Usuario usuario = new Usuario();
             ViewBag.Mensaje = "";
@@ -87,8 +88,8 @@ namespace AppTaxi.Controllers
             if (lista != null && lista.Any())
             {
 
-
-                usuario = lista.Where(item => item.Correo == login.Correo && item.Contrasena == item.Contrasena).FirstOrDefault();
+                
+                usuario = lista.Where(item => item.Correo == login.Correo && item.Contrasena == login.Contrasena).FirstOrDefault();
                 if (usuario.Estado == true)
                 {
                     
@@ -134,7 +135,7 @@ namespace AppTaxi.Controllers
             }
             else
             {
-                string msg = "Usuario o Contraseña incorrecta ";
+                string msg = "Usuario o Contraseña incorrecta";
                 ViewBag.Mensaje = msg;
                 return View("Login");
             }
