@@ -539,7 +539,7 @@ namespace AppTaxi.Controllers
             ViewBag.Cupos = empresa.Cupos - await Cupos();
             if (empresa.Cupos - await Cupos() <= 0)
             {
-                ViewBag.Mensaje = "No se puede agregar, No hay Cupos";
+                TempData["Mensaje"] = "No se puede agregar, No hay Cupos";
                 //var propietariosTotales = await _propietario.Lista(login);
                 //viewModel.Propietarios = propietariosTotales?.Where(p => p.IdEmpresa == viewModel.Vehiculo.IdEmpresa && p.Estado).ToList();
 
@@ -948,7 +948,7 @@ namespace AppTaxi.Controllers
             modelo.Conductor.IdEmpresa = empresas.FirstOrDefault(e => e.IdUsuario == usuario.IdUsuario)?.IdEmpresa ?? 0;
 
             // Valida si el conductor ya está registrado.
-            if (conductores.Any(c => c.NumeroCedula == modelo.Conductor.NumeroCedula))
+            if (conductores.Any(c => c.NumeroCedula == modelo.Conductor.NumeroCedula || c.Correo == modelo.Conductor.Correo || c.Nombre == modelo.Conductor.Nombre))
             {
                 TempData["Mensaje"] = "El conductor ya está registrado";
                 return View("Agregar_Conductor");
@@ -1325,11 +1325,12 @@ namespace AppTaxi.Controllers
             ViewBag.Cupos = empresa.Cupos - await Cupos();
             var propietarios = await _propietario.Lista(login);
 
+            
             modelo.Propietario.Estado = true;
             modelo.Propietario.IdEmpresa = empresas.FirstOrDefault(e => e.IdUsuario == usuario.IdUsuario)?.IdEmpresa ?? 0;
 
             // Valida si el propietario ya está registrado.
-            if (propietarios.Any(c => c.NumeroCedula == modelo.Propietario.NumeroCedula))
+            if (propietarios.Any(c => c.NumeroCedula == modelo.Propietario.NumeroCedula || c.Correo == modelo.Propietario.Correo || c.Nombre == modelo.Propietario.Nombre))
             {
                 ViewBag.Mensaje = "El propietario ya está registrado";
                 return View("Agregar_Propietario");

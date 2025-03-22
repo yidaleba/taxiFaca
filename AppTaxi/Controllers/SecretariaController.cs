@@ -455,6 +455,12 @@ namespace AppTaxi.Controllers
 
             var login = CreateLogin(usuario);
 
+            var empresas = await _empresa.Lista(login);
+            if(empresas.Any(e => e.Nit == modelo.Empresa.Nit || e.Nombre == modelo.Empresa.Nombre))
+            {
+                TempData["Mensaje"] = "La empresa ya está registrada";
+                return View("Vista_Agregar_Empresa");
+            }
             Empresa empresa = modelo.Empresa;
 
             ValidarModelo val = new ValidarModelo();
@@ -590,6 +596,13 @@ namespace AppTaxi.Controllers
             }
             var login = CreateLogin(usuario);
 
+            var usuarios = await _usuario.Lista(login);
+
+            if(usuarios.Any(u => u.Nombre == modelo.Usuario.Nombre || u.Correo == modelo.Usuario.Correo))
+            {
+                TempData["Mensaje"] = "Usuario ya existe";
+                return View("Agregar_Usuario");
+            }
             modelo.Usuario.IdRol = 1;
             if (modelo.Archivo_4 != null)
             {

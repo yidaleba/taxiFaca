@@ -1,38 +1,73 @@
 ﻿@model Login
 @{
-    ViewData["Title"] = "Inicio Sesion";
+    ViewData["Title"] = "Iniciar Sesión";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-@if (TempData["Mensaje"] != null)
-{
-    <div class="alert alert-info text-center">@TempData["Mensaje"]</div>
-}
-<div class="d-flex justify-content-center align-items-center vh-100">
-    <div class="card p-4 shadow" style="width: 350px;">
-        <h2 class="text-center mb-4">Iniciar Sesión</h2>
-        <form asp-action="Autenticar" asp-controller="Inicio" method="post">
-            <!-- Email input -->
-            <div data-mdb-input-init class="form-outline mb-3">
-                <label class="form-label">Correo Electrónico:</label>
-                <input type="text" placeholder="ejemplo@gmail.com" class="form-control" asp-for="Correo" />
-            </div>
 
-            <!-- Password input -->
-            <div data-mdb-input-init class="form-outline mb-3">
-                <label class="form-label">Contraseña:</label>
-                <input type="password" placeholder="contraseña123" class="form-control" asp-for="Contrasena" />
-            </div>
+<div class="container d-flex justify-content-center align-items-center min-vh-100 py-5">
+    <div class="card shadow-lg rounded-3" style="width: 100%; max-width: 450px;">
+        <div class="card-header bg-primary text-white text-center py-3">
+            <h2 class="h3 mb-0">
+                <i class="bi bi-person-circle me-2"></i>Acceso al Sistema
+            </h2>
+        </div>
 
-            <!-- Submit button -->
-            <button type="submit" class="btn btn-primary w-100">Iniciar Sesión</button>
-        </form>
-        <br />
-        <p class="card-text text-center">¿Eres conductor de alguna de las empresas?</p>
-        <a href="#" class="card-link text-center">Ingresa Aquí</a>
-        <p class="text-center text-danger mt-3">@ViewBag.Mensaje</p>
+        <div class="card-body p-4">
+            @if (TempData["Mensaje"] != null)
+            {
+                <div class="alert alert-info alert-dismissible fade show mb-4" role="alert">
+                    <i class="bi bi-info-circle-fill me-2"></i>@TempData["Mensaje"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+                </div>
+            }
+
+            <form asp-action="Autenticar" asp-controller="Inicio" method="post">
+                <!-- Correo Electrónico -->
+                <div class="mb-4">
+                    <label class="form-label fw-bold mb-2">
+                        <i class="bi bi-envelope-fill me-2"></i>Correo Electrónico
+                    </label>
+                    <input type="email"
+                           asp-for="Correo"
+                           class="form-control form-control-lg"
+                           placeholder="ejemplo@facatativa.gov.co"
+                           required>
+                </div>
+
+                <!-- Contraseña -->
+                <div class="mb-4">
+                    <label class="form-label fw-bold mb-2">
+                        <i class="bi bi-lock-fill me-2"></i>Contraseña
+                    </label>
+                    <input type="password"
+                           asp-for="Contrasena"
+                           class="form-control form-control-lg"
+                           placeholder="Ingrese su contraseña"
+                           required>
+                </div>
+
+                <!-- Botón de Acceso -->
+                <div class="d-grid gap-2 mb-4">
+                    <button type="submit" class="btn btn-primary btn-lg">
+                        <i class="bi bi-box-arrow-in-right me-2"></i>Ingresar al Sistema
+                    </button>
+                </div>
+
+                <!-- Enlace de recuperación -->
+                <div class="text-center">
+                    <a href="#" class="text-decoration-none">
+                        <i class="bi bi-question-circle me-2"></i>¿Olvidaste tu contraseña?
+                    </a>
+                </div>
+            </form>
+
+            <!-- Mensaje de error -->
+            @if (!string.IsNullOrEmpty(ViewBag.Mensaje))
+            {
+                <div class="alert alert-danger mt-4">
+                    <i class="bi bi-exclamation-triangle-fill me-2"></i>@ViewBag.Mensaje
+                </div>
+            }
+        </div>
     </div>
 </div>
-
-
-
-
