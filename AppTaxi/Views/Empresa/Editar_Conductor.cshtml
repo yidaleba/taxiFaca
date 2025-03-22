@@ -15,9 +15,22 @@
     <!-- Mensajes -->
     @if (TempData["Mensaje"] != null)
     {
-        <div class="alert alert-success fs-5 text-center" role="alert">
+        <div class="alert alert-success fs-5 text-center mb-4" role="alert">
             @TempData["Mensaje"]
         </div>
+
+        @if (TempData["Mensaje"].ToString() == "No se encontró usuario asignado")
+        {
+            <div class="d-flex justify-content-center mb-5">
+                <!-- Contenedor nuevo -->
+                <a asp-action="Crear_Usuario"
+                   asp-controller="Empresa"
+                   asp-route-IdConductor="@Model.Conductor.IdConductor"
+                   class="btn btn-success btn-lg px-5 d-inline-flex align-items-center">
+                    <i class="fas fa-plus-circle me-2"></i>Crear Usuario
+                </a>
+            </div>
+        }
     }
 
     <!-- Contenido Principal -->
@@ -170,8 +183,8 @@
                 <i class="fas fa-exclamation-triangle fa-3x text-muted mb-4"></i>
                 <h3 class="text-secondary mb-3">Conductor no encontrado</h3>
                 <p class="fs-5 text-muted">Verifica los datos ingresados</p>
-                <a href="javascript:history.back()" class="btn btn-secondary px-5">
-                    <i class="fas fa-arrow-left me-2"></i>Volver
+                <a asp-controller="Empresa" asp-action="Detalle_Conductor" asp-route-IdConductor="@Model.Conductor.IdConductor" class="btn btn-secondary btn-lg px-5">
+                    <i class="fas fa-times me-2"></i>Cancelar
                 </a>
             </div>
         </div>

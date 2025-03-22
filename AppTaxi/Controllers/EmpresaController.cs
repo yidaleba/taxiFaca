@@ -382,21 +382,32 @@ namespace AppTaxi.Controllers
                     modelo.Vehiculo.TecnicoMecanica = Convert.ToBase64String(ms.ToArray());
                 }
             }
-            
-            bool respuesta = await _vehiculo.Editar(modelo.Vehiculo, login);
 
-            if (respuesta)
+            ValidarModelo valida = ValidarModelos.validarVehiculo(modelo.Vehiculo);
+            if(valida.Respuesta)
             {
-                Transaccion t = Crear_Transaccion("Editar", "Vehiculo");
-                bool guardar = await _transaccion.Guardar(t, login);
-                return RedirectToAction("Vehiculos");
+                bool respuesta = await _vehiculo.Editar(modelo.Vehiculo, login);
+
+                if (respuesta)
+                {
+                    Transaccion t = Crear_Transaccion("Editar", "Vehiculo");
+                    bool guardar = await _transaccion.Guardar(t, login);
+
+                    return RedirectToAction("Vehiculos");
+                }
+                else
+                {
+                    ViewBag.Mensaje = "No se pudo Guardar";
+                    TempData["Mensaje"] = "No se pudo Guardar";
+                    return RedirectToAction("Editar_Vehiculo", new { IdVehiculo = modelo.Vehiculo.IdVehiculo });
+                }
             }
             else
             {
-                ViewBag.Mensaje = "No se pudo Guardar";
-                TempData["Mensaje"] = "No se pudo Guardar";
+                TempData["Mensaje"] = valida.Mensaje;
                 return RedirectToAction("Editar_Vehiculo", new { IdVehiculo = modelo.Vehiculo.IdVehiculo });
             }
+            
         }
 
         // Desactiva un vehículo (cambia su estado a false).
@@ -534,26 +545,36 @@ namespace AppTaxi.Controllers
             }
 
 
-
-            // Guardar el vehículo en la BD
-            bool respuesta = await _vehiculo.Guardar(viewModel.Vehiculo, login);
-
-            if (respuesta)
+            ValidarModelo valida = new ValidarModelo();
+            valida = ValidarModelos.validarVehiculo(viewModel.Vehiculo);
+            if(valida.Respuesta)
             {
-                Transaccion t = Crear_Transaccion("Guardar", "Vehiculo");
-                bool guardar = await _transaccion.Guardar(t, login);
+                // Guardar el vehículo en la BD
+                bool respuesta = await _vehiculo.Guardar(viewModel.Vehiculo, login);
 
+                if (respuesta)
+                {
+                    Transaccion t = Crear_Transaccion("Guardar", "Vehiculo");
+                    bool guardar = await _transaccion.Guardar(t, login);
 
-                return RedirectToAction("Vehiculos");
+                    TempData["Mensaje"] = "Agregado Correctamente";
+                    return RedirectToAction("Vehiculos");
+                }
+                else
+                {
+                    ViewBag.Mensaje = $"No se pudo Guardar {viewModel.Vehiculo.Placa}";
+                    var propietariosTotales = await _propietario.Lista(login);
+                    viewModel.Propietarios = propietariosTotales?.Where(p => p.IdEmpresa == viewModel.Vehiculo.IdEmpresa && p.Estado).ToList();
+
+                    return View("Agregar_Vehiculo", viewModel);
+                }
             }
             else
             {
-                ViewBag.Mensaje = $"No se pudo Guardar {viewModel.Vehiculo.Placa}";
-                var propietariosTotales = await _propietario.Lista(login);
-                viewModel.Propietarios = propietariosTotales?.Where(p => p.IdEmpresa == viewModel.Vehiculo.IdEmpresa && p.Estado).ToList();
-
-                return View("Agregar_Vehiculo", viewModel);
+                TempData["Mensaje"] = valida.Mensaje;
+                return RedirectToAction("Agregar_Vehiculo","Empresa");
             }
+            
         }
 
 
@@ -676,7 +697,7 @@ namespace AppTaxi.Controllers
             var conductor = await _conductor.Obtener(modelo.Conductor.IdConductor, login);
             var usuarios = await _usuario.Lista(login);
 
-            var usuarioConductor = usuarios.Where(u => u.Correo == conductor.Correo && enc.DesencriptarSimple(u.Contrasena) == enc.DesencriptarSimple(conductor.Contrasena)).FirstOrDefault();
+            var usuarioConductor = usuarios.Where(u => u.Correo == conductor.Correo && u.Contrasena == conductor.Contrasena).FirstOrDefault();
 
             // Convertir archivos PDF a Base64
             if (modelo.Archivo_1 != null && modelo.Archivo_1.Length > 0)
@@ -752,44 +773,57 @@ namespace AppTaxi.Controllers
                 //modelo.Conductor.Contrasena = Contrasena;
             }
 
-            
-            
+
+            ValidarModelo valida = new ValidarModelo();
 
             if (usuarioConductor != null)
             {
-                bool respuesta = await _conductor.Editar(modelo.Conductor, login);
-                if (respuesta)
+                valida = ValidarModelos.validarConductor(modelo.Conductor);
+                if(valida.Respuesta)
                 {
-                    usuarioConductor.Correo = modelo.Conductor.Correo;
-                    usuarioConductor.Contrasena = modelo.Conductor.Contrasena;
-                    usuarioConductor.Foto = modelo.Conductor.Foto;
-                    usuarioConductor.Nombre = modelo.Conductor.Nombre;
-                    usuarioConductor.Telefono = modelo.Conductor.Telefono;
-                    usuarioConductor.Direccion = modelo.Conductor.Direccion;
-                    usuarioConductor.Ciudad = modelo.Conductor.Ciudad;
-                    usuarioConductor.Celular = modelo.Conductor.Celular;
-                    usuarioConductor.Estado = true;
-                    bool respuestaUsuario = await _usuario.Editar(usuarioConductor, login);
-                    if (respuestaUsuario)
+                    bool respuesta = await _conductor.Editar(modelo.Conductor, login);
+                    if (respuesta)
                     {
-                        Transaccion t1 = Crear_Transaccion("Editar", "Conductor");
-                        bool guardar1 = await _transaccion.Guardar(t1, login);
-                        Transaccion t2 = Crear_Transaccion("Editar", "Usuario");
-                        bool guardar2 = await _transaccion.Guardar(t2, login);
-                        return RedirectToAction("Conductores");
+                        usuarioConductor.Correo = modelo.Conductor.Correo;
+                        usuarioConductor.Contrasena = modelo.Conductor.Contrasena;
+                        usuarioConductor.Foto = modelo.Conductor.Foto;
+                        usuarioConductor.Nombre = modelo.Conductor.Nombre;
+                        usuarioConductor.Telefono = modelo.Conductor.Telefono;
+                        usuarioConductor.Direccion = modelo.Conductor.Direccion;
+                        usuarioConductor.Ciudad = modelo.Conductor.Ciudad;
+                        usuarioConductor.Celular = modelo.Conductor.Celular;
+                        usuarioConductor.Estado = true;
+                        bool respuestaUsuario = await _usuario.Editar(usuarioConductor, login);
+                        if (respuestaUsuario)
+                        {
+                            Transaccion t1 = Crear_Transaccion("Editar", "Conductor");
+                            bool guardar1 = await _transaccion.Guardar(t1, login);
+                            Transaccion t2 = Crear_Transaccion("Editar", "Usuario");
+                            bool guardar2 = await _transaccion.Guardar(t2, login);
+
+
+                            return RedirectToAction("Conductores");
+                        }
+                        else
+                        {
+                            TempData["Mensaje"] = "No se pudo Guardar el Usuario";
+                            return RedirectToAction("Editar_Conductor", new { IdConductor = modelo.Conductor.IdConductor });
+                        }
+
                     }
                     else
                     {
-                        TempData["Mensaje"] = "No se pudo Guardar el Usuario";
+                        TempData["Mensaje"] = $"Respuesta Negativa al Guardar";
                         return RedirectToAction("Editar_Conductor", new { IdConductor = modelo.Conductor.IdConductor });
                     }
-
                 }
                 else
                 {
-                    TempData["Mensaje"] = $"Respuesta Negativa al Guardar";
+                    TempData["Mensaje"] = valida.Mensaje;
+
                     return RedirectToAction("Editar_Conductor", new { IdConductor = modelo.Conductor.IdConductor });
                 }
+                
 
             }
             else
@@ -976,52 +1010,63 @@ namespace AppTaxi.Controllers
 
 
             // Guarda el conductor.
-            bool respuesta = await _conductor.Guardar(modelo.Conductor, login);
-
-            if (respuesta)
+            ValidarModelo valida = new ValidarModelo();
+            valida = ValidarModelos.validarConductor(modelo.Conductor);
+            if(valida.Respuesta)
             {
-                Usuario usuarioConductor = new Usuario();
+                bool respuesta = await _conductor.Guardar(modelo.Conductor, login);
 
-                usuarioConductor.Correo =modelo.Conductor.Correo;
-                usuarioConductor.Contrasena = modelo.Conductor.Contrasena;
-                usuarioConductor.Foto = modelo.Conductor.Foto;
-                usuarioConductor.Nombre = modelo.Conductor.Nombre;
-                usuarioConductor.Telefono = modelo.Conductor.Telefono;
-                usuarioConductor.Direccion = modelo.Conductor.Direccion;
-                usuarioConductor.Ciudad = modelo.Conductor.Ciudad;
-                usuarioConductor.Celular = modelo.Conductor.Celular;
-                usuarioConductor.Estado = true;
-                usuarioConductor.IdRol = 1006;
-
-                bool crearUsuario = await _usuario.Guardar(usuarioConductor, login);
-                if(crearUsuario)
+                if (respuesta)
                 {
-                    var conductoresGuardados = await _conductor.Lista(login);
-                    var conductorGuardado = conductoresGuardados.FirstOrDefault(c => c.NumeroCedula == modelo.Conductor.NumeroCedula);
-                    ViewBag.IdConductor = conductorGuardado?.IdConductor;
-                    ViewBag.Exito = true;
+                    Usuario usuarioConductor = new Usuario();
+
+                    usuarioConductor.Correo = modelo.Conductor.Correo;
+                    usuarioConductor.Contrasena = modelo.Conductor.Contrasena;
+                    usuarioConductor.Foto = modelo.Conductor.Foto;
+                    usuarioConductor.Nombre = modelo.Conductor.Nombre;
+                    usuarioConductor.Telefono = modelo.Conductor.Telefono;
+                    usuarioConductor.Direccion = modelo.Conductor.Direccion;
+                    usuarioConductor.Ciudad = modelo.Conductor.Ciudad;
+                    usuarioConductor.Celular = modelo.Conductor.Celular;
+                    usuarioConductor.Estado = true;
+                    usuarioConductor.IdRol = 1006;
+
+                    bool crearUsuario = await _usuario.Guardar(usuarioConductor, login);
+                    if (crearUsuario)
+                    {
+                        var conductoresGuardados = await _conductor.Lista(login);
+                        var conductorGuardado = conductoresGuardados.FirstOrDefault(c => c.NumeroCedula == modelo.Conductor.NumeroCedula);
+                        ViewBag.IdConductor = conductorGuardado?.IdConductor;
+                        ViewBag.Exito = true;
 
 
-                    Transaccion t1 = Crear_Transaccion("Guardar", "Conductor");
-                    bool guardar1 = await _transaccion.Guardar(t1, login);
-                    Transaccion t2 = Crear_Transaccion("Guardar", "Usuario");
-                    bool guardar2 = await _transaccion.Guardar(t2, login);
+                        Transaccion t1 = Crear_Transaccion("Guardar", "Conductor");
+                        bool guardar1 = await _transaccion.Guardar(t1, login);
+                        Transaccion t2 = Crear_Transaccion("Guardar", "Usuario");
+                        bool guardar2 = await _transaccion.Guardar(t2, login);
 
-                    TempData["Mensaje"] = "Guardado Exitosamente";
-                    return RedirectToAction("Conductores");
+                        TempData["Mensaje"] = "Guardado Exitosamente";
+                        return RedirectToAction("Conductores");
+                    }
+                    else
+                    {
+                        TempData["Mensaje"] = "No se pudo Crear el Usuario";
+                        return View("Agregar_Conductor");
+                    }
+
                 }
                 else
                 {
-                    TempData["Mensaje"] = $"No se pudo Crear el Usuario";
+                    TempData["Mensaje"] = "No se pudo Guardar";
                     return View("Agregar_Conductor");
                 }
-                
             }
             else
             {
-                TempData["Mensaje"] = $"No se pudo Guardar {modelo.Conductor.Eps}";
+                TempData["Mensaje"] = valida.Mensaje;
                 return View("Agregar_Conductor");
             }
+            
         }
 
         //---------------------------- Propietarios ------------------------------------
@@ -1145,20 +1190,31 @@ namespace AppTaxi.Controllers
                     modelo.Propietario.Foto = Convert.ToBase64String(ms.ToArray());
                 }
             }
-            bool respuesta = await _propietario.Editar(modelo.Propietario, login);
-
-            if (respuesta)
+            ValidarModelo valida = new ValidarModelo();
+            valida = ValidarModelos.validarPropietario(modelo.Propietario);
+            if(valida.Respuesta)
             {
-                Transaccion t = Crear_Transaccion("Editar", "Propietario");
-                bool guardar = await _transaccion.Guardar(t, login);
-                return RedirectToAction("Propietarios");
+                bool respuesta = await _propietario.Editar(modelo.Propietario, login);
+
+                if (respuesta)
+                {
+                    Transaccion t = Crear_Transaccion("Editar", "Propietario");
+                    bool guardar = await _transaccion.Guardar(t, login);
+                    return RedirectToAction("Propietarios");
+                }
+                else
+                {
+                    ViewBag.Mensaje = "No se pudo Guardar";
+                    TempData["Mensaje"] = "No se pudo Guardar";
+                    return RedirectToAction("Editar_Propietario", new { IdPropietario = modelo.Propietario.IdPropietario });
+                }
             }
             else
             {
-                ViewBag.Mensaje = "No se pudo Guardar";
-                TempData["Mensaje"] = "No se pudo Guardar";
+                TempData["Mensaje"] = valida.Mensaje;
                 return RedirectToAction("Editar_Propietario", new { IdPropietario = modelo.Propietario.IdPropietario });
             }
+            
         }
 
         // Desactiva un propietario (cambia su estado a false).
@@ -1288,25 +1344,35 @@ namespace AppTaxi.Controllers
                 ViewBag.Mensaje = "No se ha subido ningún archivo.";
                 return View("Agregar_Propietario");
             }
-
-            // Guarda el propietario.
-            bool respuesta = await _propietario.Guardar(modelo.Propietario, login);
-
-            if (respuesta)
+            ValidarModelo valida = new ValidarModelo();
+            valida = ValidarModelos.validarPropietario(modelo.Propietario);
+            if(valida.Respuesta)
             {
-                var propietariosGuardados = await _propietario.Lista(login);
-                var propietarioGuardado = propietariosGuardados.FirstOrDefault(p => p.NumeroCedula == modelo.Propietario.NumeroCedula);
-                ViewBag.IdPropietario = modelo.Propietario?.IdPropietario;
-                ViewBag.Exito = true;
-                Transaccion t = Crear_Transaccion("Guardar", "Propietario");
-                bool guardar = await _transaccion.Guardar(t, login);
-                return RedirectToAction("Propietarios");
+                // Guarda el propietario.
+                bool respuesta = await _propietario.Guardar(modelo.Propietario, login);
+
+                if (respuesta)
+                {
+                    var propietariosGuardados = await _propietario.Lista(login);
+                    var propietarioGuardado = propietariosGuardados.FirstOrDefault(p => p.NumeroCedula == modelo.Propietario.NumeroCedula);
+                    ViewBag.IdPropietario = modelo.Propietario?.IdPropietario;
+                    ViewBag.Exito = true;
+                    Transaccion t = Crear_Transaccion("Guardar", "Propietario");
+                    bool guardar = await _transaccion.Guardar(t, login);
+                    return RedirectToAction("Propietarios");
+                }
+                else
+                {
+                    TempData["Mensaje"] = "No se pudo Guardar";
+                    return View("Agregar_Propietario");
+                }
             }
             else
             {
-                ViewBag.Mensaje = $"No se pudo Guardar {modelo.Propietario.IdEmpresa}";
+                TempData["Mensaje"] = valida.Mensaje;
                 return View("Agregar_Propietario");
             }
+            
         }
 
         //------------------------- Horario ----------------------------------------------
@@ -1839,18 +1905,28 @@ namespace AppTaxi.Controllers
             usuarioConductor.Estado = true;
             usuarioConductor.IdRol = 1006;
 
-            bool respuesta = await _usuario.Guardar(usuarioConductor,login);
-            if(respuesta)
+            ValidarModelo valida = new ValidarModelo();
+            valida = ValidarModelos.validarUsuario(usuarioConductor);
+            if(valida.Respuesta)
             {
-                TempData["Mensaje"] = "Usuario Creado";
-                
+                bool respuesta = await _usuario.Guardar(usuarioConductor, login);
+                if (respuesta)
+                {
+                    TempData["Mensaje"] = "Usuario Creado";
 
+
+                }
+                else
+                {
+                    TempData["Mensaje"] = "Error al Crear Usuario";
+
+                }
             }
             else
             {
-                TempData["Mensaje"] = "Error al Crear Usuario";
-                
+                TempData["Mensaje"] = $"No se pudo Crear: {valida.Mensaje}";
             }
+            
             return RedirectToAction("Detalle_Conductor", new { IdConductor = IdConductor });
 
         }

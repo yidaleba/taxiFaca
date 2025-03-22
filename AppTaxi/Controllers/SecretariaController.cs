@@ -411,20 +411,33 @@ namespace AppTaxi.Controllers
             }
 
             var login = CreateLogin(usuario);
-            bool respuesta = await _empresa.Editar(modelo.Empresa, login);
 
-            if (respuesta)
+            ValidarModelo val = new ValidarModelo();
+            val = ValidarModelos.validarEmpresa(modelo.Empresa);
+
+            if(val.Respuesta)
             {
-                Transaccion t = Crear_Transaccion("Editar", "Empresa");
-                bool guardar = await _transaccion.Guardar(t, login);
-                return RedirectToAction("Empresas");
+                bool respuesta = await _empresa.Editar(modelo.Empresa, login);
+
+                if (respuesta)
+                {
+                    Transaccion t = Crear_Transaccion("Editar", "Empresa");
+                    bool guardar = await _transaccion.Guardar(t, login);
+                    return RedirectToAction("Empresas");
+                }
+                else
+                {
+                    ViewBag.Mensaje = "No se pudo guardar";
+                    TempData["Mensaje"] = "No se pudo guardar";
+                    return RedirectToAction("Editar_Empresa", new { IdEmpresa = modelo.Empresa.IdEmpresa });
+                }
             }
             else
             {
-                ViewBag.Mensaje = "No se pudo guardar";
-                TempData["Mensaje"] = "No se pudo guardar";
+                TempData["Mensaje"] = val.Mensaje;
                 return RedirectToAction("Editar_Empresa", new { IdEmpresa = modelo.Empresa.IdEmpresa });
             }
+            
 
             
         }
@@ -444,20 +457,27 @@ namespace AppTaxi.Controllers
 
             Empresa empresa = modelo.Empresa;
 
-            bool respuesta = await _empresa.Guardar(empresa, login);
+            ValidarModelo val = new ValidarModelo();
+            val = ValidarModelos.validarEmpresa(modelo.Empresa);
 
-            if(respuesta)
+            if (val.Respuesta)
             {
-                Transaccion t = Crear_Transaccion("Guardar", "Empresa");
-                bool guardar = await _transaccion.Guardar(t, login);
-                TempData["Mensaje"] = "Editado Correctamente";
-                return RedirectToAction("Empresas","Secretaria");
+                bool respuesta = await _empresa.Guardar(empresa, login);
+
+                if (respuesta)
+                {
+                    Transaccion t = Crear_Transaccion("Guardar", "Empresa");
+                    bool guardar = await _transaccion.Guardar(t, login);
+                    TempData["Mensaje"] = "Editado Correctamente";
+                    return RedirectToAction("Empresas", "Secretaria");
+                }
+                else
+                {
+                    TempData["Mensaje"] = val.Mensaje;
+                    return View("Vista_Agregar_Empresa");
+                }
             }
-            else
-            {
-                ViewBag.Mensaje = "No se Pudo Guardar";
-                return View("Vista_Agregar_Empresa");
-            }
+            
         }
 
 
@@ -580,20 +600,31 @@ namespace AppTaxi.Controllers
             }
 
             modelo.Usuario.Estado = true;
-            bool respuesta = await _usuario.Guardar(modelo.Usuario, login);
-
-            if (respuesta)
+            ValidarModelo valida = new ValidarModelo();
+            valida = ValidarModelos.validarUsuario(modelo.Usuario);
+            if (valida.Respuesta)
             {
-                Transaccion t = Crear_Transaccion("Guardar", "Usuario");
-                bool guardar = await _transaccion.Guardar(t, login);
-                TempData["Mensaje"] = "Guardado Correctamente";
-                return RedirectToAction("Usuarios", "Secretaria");
+                bool respuesta = await _usuario.Guardar(modelo.Usuario, login);
+
+                if (respuesta)
+                {
+                    Transaccion t = Crear_Transaccion("Guardar", "Usuario");
+                    bool guardar = await _transaccion.Guardar(t, login);
+                    TempData["Mensaje"] = "Guardado Correctamente";
+                    return RedirectToAction("Usuarios", "Secretaria");
+                }
+                else
+                {
+                    TempData["Mensaje"] = "No se Pudo Guardar";
+                    return View("Agregar_Usuario");
+                }
             }
             else
             {
-                ViewBag.Mensaje = "No se Pudo Guardar";
+                TempData["Mensaje"] = valida.Mensaje;
                 return View("Agregar_Usuario");
             }
+            
 
         }
         [HttpPost]
@@ -689,20 +720,31 @@ namespace AppTaxi.Controllers
             
 
             modelo.Usuario.Estado = true;
-            bool respuesta = await _usuario.Editar(modelo.Usuario, login);
-
-            if (respuesta)
+            ValidarModelo val = new ValidarModelo();
+            val = ValidarModelos.validarUsuario(modelo.Usuario);
+            if(val.Respuesta)
             {
-                Transaccion t = Crear_Transaccion("Editar", "Usuario");
-                bool guardar = await _transaccion.Guardar(t, login);
-                TempData["Mensaje"] = "Editado Correctamente";
-                return RedirectToAction("Usuarios", "Secretaria");
+                bool respuesta = await _usuario.Editar(modelo.Usuario, login);
+
+                if (respuesta)
+                {
+                    Transaccion t = Crear_Transaccion("Editar", "Usuario");
+                    bool guardar = await _transaccion.Guardar(t, login);
+                    TempData["Mensaje"] = "Editado Correctamente";
+                    return RedirectToAction("Usuarios", "Secretaria");
+                }
+                else
+                {
+                    TempData["Mensaje"] = "No se Pudo Editar";
+                    return View("Agregar_Usuario");
+                }
             }
             else
             {
-                ViewBag.Mensaje = "No se Pudo Editar";
+                TempData["Mensaje"] = val.Mensaje;
                 return View("Agregar_Usuario");
             }
+            
         }
         public async Task<IActionResult> Transacciones()
         {

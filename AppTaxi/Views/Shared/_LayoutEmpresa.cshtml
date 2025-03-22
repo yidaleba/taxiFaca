@@ -14,15 +14,29 @@
             background-color: #305ca7 !important;
         }
 
-        /* Opcional: Si quieres que sea el color primario de todo Bootstrap */
         :root {
             --bs-primary: #305ca7;
             --bs-primary-rgb: 48, 92, 167;
         }
+
+        /* Efectos Hover para el menú */
+        .nav-pills .nav-link {
+            transition: all 0.3s ease;
+            border-radius: 0.5rem !important;
+        }
+
+            .nav-pills .nav-link:hover {
+                background-color: rgba(255, 255, 255, 0.15) !important;
+                transform: translateX(5px);
+            }
+
+            .nav-pills .nav-link.active {
+                background-color: var(--bs-primary) !important;
+                border: 2px solid white;
+            }
     </style>
 </head>
 <body class="d-flex min-vh-100">
-    <!-- Mejor uso de clases de Bootstrap -->
     <!-- Sidebar - Versión Desktop -->
     <aside class="d-none d-lg-flex flex-column bg-custom-primary text-white p-3" style="width: 280px;">
         <div class="mb-5 text-center">
@@ -34,7 +48,7 @@
             <hr class="border-2 border-white my-3">
         </div>
 
-        <nav class="flex-grow-1">
+        <nav class="flex-grow-1 d-flex flex-column">
             <ul class="nav nav-pills flex-column gap-2">
                 <li class="nav-item">
                     <a class="nav-link text-white fs-5 py-3" asp-controller="Empresa" asp-action="Conductores">
@@ -62,13 +76,14 @@
                     </a>
                 </li>
             </ul>
-        </nav>
 
-        <div class="mt-auto">
-            <a class="btn btn-danger w-100 fs-5 py-3" asp-controller="Inicio" asp-action="CerrarSesion">
-                <i class="fa-solid fa-power-off me-2"></i>Cerrar Sesión
-            </a>
-        </div>
+            <!-- Botón Cerrar Sesión ajustado -->
+            <div class="mt-auto">
+                <a class="btn btn-danger w-100 fs-5 py-3 mt-3" asp-controller="Inicio" asp-action="CerrarSesion">
+                    <i class="fa-solid fa-power-off me-2"></i>Cerrar Sesión
+                </a>
+            </div>
+        </nav>
     </aside>
 
     <!-- Contenido Principal -->
@@ -81,14 +96,13 @@
             <span class="h4 ms-3 fw-bold">@ViewData["Title"]</span>
         </header>
 
-        <!-- Menú Mobile (Offcanvas) - Versión Optimizada -->
+        <!-- Menú Mobile (Offcanvas) -->
         <div class="offcanvas offcanvas-start" tabindex="-1" id="mobileMenu">
             <div class="offcanvas-header bg-custom-primary text-white">
-                <h2 class="offcanvas-title h5">Menú Principal</h2> <!-- Mejor jerarquía de encabezados -->
+                <h2 class="offcanvas-title h5">Menú Principal</h2>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Cerrar menú"></button>
             </div>
             <div class="offcanvas-body p-0 d-flex flex-column">
-                <!-- Menú móvil simplificado -->
                 <div class="text-center p-3 bg-custom-primary text-white">
                     <h3 class="h5 mb-0">
                         <i class="fa-solid fa-taxi me-2"></i>Taxis Faca
@@ -97,7 +111,6 @@
 
                 <nav class="flex-grow-1">
                     <ul class="nav nav-pills flex-column gap-2 p-3">
-                        <!-- Mismos elementos del menú -->
                         <li class="nav-item">
                             <a class="nav-link text-dark fs-5 py-3" asp-controller="Empresa" asp-action="Conductores">
                                 <i class="fa-solid fa-id-card me-3"></i>Conductores
@@ -123,16 +136,14 @@
                                 <i class="fa-solid fa-trash-can me-3"></i>Papelera
                             </a>
                         </li>
-
-                        <!-- Repetir para otros elementos del menú -->
+                        <a class="btn btn-danger w-100 fs-5 py-3" asp-controller="Inicio" asp-action="CerrarSesion">
+                            <i class="fa-solid fa-power-off me-2"></i>Cerrar Sesión
+                        </a>
                     </ul>
                 </nav>
 
-                <div class="p-3">
-                    <a class="btn btn-danger w-100 fs-5 py-3" asp-controller="Inicio" asp-action="CerrarSesion">
-                        <i class="fa-solid fa-power-off me-2"></i>Cerrar Sesión
-                    </a>
-                </div>
+                <!-- Botón Cerrar Sesión mobile -->
+                
             </div>
         </div>
 
