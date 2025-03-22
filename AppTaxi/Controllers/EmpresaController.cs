@@ -1488,7 +1488,7 @@ namespace AppTaxi.Controllers
                 Transaccion t = Crear_Transaccion("Eliminar", "Horario");
                 bool guardar = await _transaccion.Guardar(t, login);
                 TempData["Mensaje"] = "Eliminado Correctamente";
-                return RedirectToAction("Horarios");
+                return RedirectToAction("Ver_Horario_Conductor", new { IdConductor = horario.IdConductor});
             }
             else
             {

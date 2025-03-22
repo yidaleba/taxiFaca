@@ -473,9 +473,14 @@ namespace AppTaxi.Controllers
                 }
                 else
                 {
-                    TempData["Mensaje"] = val.Mensaje;
+                    TempData["Mensaje"] = "No se pudo Guardar";
                     return View("Vista_Agregar_Empresa");
                 }
+            }
+            else
+            {
+                TempData["Mensaje"] = val.Mensaje;
+                return View("Vista_Agregar_Empresa");
             }
             
         }
