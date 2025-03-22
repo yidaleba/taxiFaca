@@ -93,7 +93,7 @@
             <!-- Botones de Acción -->
             <div class="card-footer bg-transparent py-4">
                 <div class="d-flex justify-content-center gap-3">
-                    <a href="javascript:history.back()" class="btn btn-secondary px-5">
+                    <a asp-action="Vehiculos" asp-controller="Empresa" class="btn btn-secondary px-5">
                         <i class="fas fa-arrow-left me-2"></i>Volver
                     </a>
                     <a asp-action="Editar_Vehiculo" asp-controller="Empresa" asp-route-IdVehiculo="@Model.IdVehiculo"
