@@ -109,6 +109,7 @@ namespace AppTaxi.Controllers
         // Crea un objeto Login a partir del usuario actual.
         private Models.Login CreateLogin(Usuario usuario)
         {
+
             return new Models.Login { Correo = usuario.Correo, Contrasena = usuario.Contrasena };
         }
 
@@ -676,9 +677,6 @@ namespace AppTaxi.Controllers
             var login = CreateLogin(usuario);
             var conductor = await _conductor.Obtener(IdConductor, login);
             Encriptado enc = new Encriptado();
-            //------------------------------------ Encriptado ----------------------------
-            //string Contrasena = enc.DesencriptarSimple(conductor.Contrasena);
-            //conductor.Contrasena = Contrasena;
 
             List<Empresa> empresasTot = await _empresa.Lista(login);
 
@@ -772,11 +770,7 @@ namespace AppTaxi.Controllers
                     return RedirectToAction("Editar_Conductor", new { IdConductor = modelo.Conductor.IdConductor });
                 }
             }
-            /*else
-            {
-                TempData["Mensaje"] = "No se ha subido ningún archivo.";
-                return RedirectToAction("Editar_Conductor", new { IdConductor = modelo.Conductor.IdConductor });
-            }*/
+            string contraSinSha = "";
 
             if (modelo.Archivo_2 != null)
             {
@@ -808,8 +802,9 @@ namespace AppTaxi.Controllers
             {
                 //--------------------------------------------- Encriptado
 
-                //string Contrasena = enc.EncriptarSimple(modelo.Conductor.Contrasena);
-                //modelo.Conductor.Contrasena = Contrasena;
+                 contraSinSha = modelo.Conductor.Contrasena;
+                string Contrasena = Encriptado.GetSHA256(modelo.Conductor.Contrasena);
+                modelo.Conductor.Contrasena = Contrasena;
             }
 
 
@@ -840,7 +835,9 @@ namespace AppTaxi.Controllers
                             Transaccion t2 = Crear_Transaccion("Editar", "Usuario");
                             bool guardar2 = await _transaccion.Guardar(t2, login);
 
-
+                            TempData["Mensaje"] = $"Editado Correctamente \n" +
+                                $"Correo: {usuarioConductor.Correo}  \n" +
+                                $"Contraseña: {contraSinSha}";
                             return RedirectToAction("Conductores");
                         }
                         else
@@ -1042,8 +1039,8 @@ namespace AppTaxi.Controllers
                 contrasenaBase = "Password123";
             }
 
-            
-            modelo.Conductor.Contrasena = contrasenaBase;
+            string contrasena = Encriptado.GetSHA256(contrasenaBase);
+            modelo.Conductor.Contrasena = contrasena;
 
 
             // Guarda el conductor.
@@ -1083,7 +1080,9 @@ namespace AppTaxi.Controllers
                         Transaccion t2 = Crear_Transaccion("Guardar", "Usuario");
                         bool guardar2 = await _transaccion.Guardar(t2, login);
 
-                        TempData["Mensaje"] = "Guardado Exitosamente";
+                        TempData["Mensaje"] = "Guardado Exitosamente \n" +
+                            $"Correo: {usuarioConductor.Correo} \n" +
+                            $"Contraseña: {contrasenaBase}";
                         return RedirectToAction("Conductores");
                     }
                     else

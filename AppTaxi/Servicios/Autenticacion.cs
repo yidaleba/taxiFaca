@@ -1,4 +1,5 @@
-﻿using AppTaxi.Models;
+﻿using AppTaxi.Funciones;
+using AppTaxi.Models;
 using Newtonsoft.Json;
 using System.Net.Http.Headers;
 using System.Text;
@@ -34,7 +35,7 @@ namespace AppTaxi.Servicios
             {
                 Correo = login.Correo,
                 Contrasena = login.Contrasena
-                
+
             };
 
             var content = new StringContent(JsonConvert.SerializeObject(credenciales), Encoding.UTF8, "application/json");

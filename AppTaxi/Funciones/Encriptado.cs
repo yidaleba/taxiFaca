@@ -10,7 +10,7 @@ namespace AppTaxi.Funciones
         // Función existente para obtener SHA256
         public static string GetSHA256(string contrasena)
         {
-            SHA256 sha256 = SHA256Managed.Create();
+            SHA256 sha256 = SHA256.Create();
             ASCIIEncoding encoding = new ASCIIEncoding();
             byte[] stream = null;
             StringBuilder sb = new StringBuilder();
