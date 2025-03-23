@@ -18,7 +18,7 @@ namespace AppTaxi.Funciones
             bool ciu = ValidacionDato.ValidarTexto(c.Ciudad);
             bool eps = ValidacionDato.ValidarTexto(c.Eps);
             bool arl = ValidacionDato.ValidarTexto(c.Arl);
-            bool rh = ValidacionDato.ValidarTexto(c.GrupoSanguineo);
+            
 
             if (!nom) vm.Mensaje = "El Nombre no debe contener simbolos";
             if (!ced) vm.Mensaje = "La cedula debe contener entre 8 y 10 digitos";
@@ -27,9 +27,8 @@ namespace AppTaxi.Funciones
             if (!ciu) vm.Mensaje = "La ciudad no debe contener simbolos";
             if (!eps) vm.Mensaje = "El campo EPS no debe contener simbolos";
             if (!arl) vm.Mensaje = "El campo ARL no debe contener simbolos";
-            if (!rh) vm.Mensaje = "El campo RH no debe contener simbolos";
 
-            if(nom && ced && tel && cel && ciu && eps && arl && rh)
+            if(nom && ced && tel && cel && ciu && eps && arl)
             {
                 vm.Respuesta = true;
             }

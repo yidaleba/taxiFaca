@@ -951,7 +951,7 @@ namespace AppTaxi.Controllers
             if (conductores.Any(c => c.NumeroCedula == modelo.Conductor.NumeroCedula || c.Correo == modelo.Conductor.Correo || c.Nombre == modelo.Conductor.Nombre))
             {
                 TempData["Mensaje"] = "El conductor ya está registrado";
-                return View("Agregar_Conductor");
+                return RedirectToAction("Agregar_Conductor");
             }
 
             // Convertir archivos PDF a Base64
@@ -959,6 +959,7 @@ namespace AppTaxi.Controllers
             {
                 try
                 {
+
                     ValidacionDocumentos sistema = new ValidacionDocumentos();
 
                     // Aplicar OCR al PDF y extraer texto
@@ -978,20 +979,20 @@ namespace AppTaxi.Controllers
                     else
                     {
                         //TempData["Mensaje"] = textoExtraido;
-                        ViewBag.Mensaje = $"El documento ingresado no es una Cédula o no es legible";
-                        return View("Agregar_Conductor");
+                        TempData["Mensaje"] = $"El documento ingresado no es una Cédula o no es legible";
+                        return RedirectToAction("Agregar_Conductor");
                     }
                 }
                 catch (Exception ex)
                 {
-                    ViewBag.Mensaje = $"Error al procesar el documento: {ex.Message}";
-                    return View("Agregar_Conductor");
+                    TempData["Mensaje"] = $"Error al procesar el documento: {ex.Message}";
+                    return RedirectToAction("Agregar_Conductor");
                 }
             }
             else
             {
-                ViewBag.Mensaje = "No se ha subido ningún archivo.";
-                return View("Agregar_Conductor");
+                TempData["Mensaje"] = "No se ha subido ningún archivo.";
+                return RedirectToAction("Agregar_Conductor");
             }
 
 
@@ -1088,20 +1089,20 @@ namespace AppTaxi.Controllers
                     else
                     {
                         TempData["Mensaje"] = "No se pudo Crear el Usuario";
-                        return View("Agregar_Conductor");
+                        return RedirectToAction("Agregar_Conductor");
                     }
 
                 }
                 else
                 {
                     TempData["Mensaje"] = "No se pudo Guardar";
-                    return View("Agregar_Conductor");
+                    return RedirectToAction("Agregar_Conductor");
                 }
             }
             else
             {
                 TempData["Mensaje"] = valida.Mensaje;
-                return View("Agregar_Conductor");
+                return RedirectToAction("Agregar_Conductor");
             }
             
         }

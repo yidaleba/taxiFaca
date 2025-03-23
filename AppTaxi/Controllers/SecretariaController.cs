@@ -459,7 +459,7 @@ namespace AppTaxi.Controllers
             if(empresas.Any(e => e.Nit == modelo.Empresa.Nit || e.Nombre == modelo.Empresa.Nombre))
             {
                 TempData["Mensaje"] = "La empresa ya está registrada";
-                return View("Vista_Agregar_Empresa");
+                return RedirectToAction("Vista_Agregar_Empresa");
             }
             Empresa empresa = modelo.Empresa;
 
@@ -480,13 +480,13 @@ namespace AppTaxi.Controllers
                 else
                 {
                     TempData["Mensaje"] = "No se pudo Guardar";
-                    return View("Vista_Agregar_Empresa");
+                    return RedirectToAction("Vista_Agregar_Empresa");
                 }
             }
             else
             {
                 TempData["Mensaje"] = val.Mensaje;
-                return View("Vista_Agregar_Empresa");
+                return RedirectToAction("Vista_Agregar_Empresa");
             }
             
         }
